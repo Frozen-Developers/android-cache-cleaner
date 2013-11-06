@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Globals -->
+    <string name="app_name">Cache Cleaner</string>
+
+    <!-- Menu items -->
+    <string name="action_clean">Clean</string>
+    <string name="action_rescan">Rescan</string>
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- LinearColorBar -->
+    <string name="internal_storage">Internal storage</string>
+
+    <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> free</string>
+    <string name="service_foreground_processes"><xliff:g id="memory">%1$s</xliff:g> used</string>
+
+    <!-- Empty list view -->
+    <string name="empty_cache">Cache is empty.</string>
+    <string name="no_such_app">No such application.</string>
+
+    <!-- Progress dialog -->
+    <string name="scanning_cache">Scanning cache</string>
+    <string name="scanning">Scanning</string>
+    <string name="cleaning_cache">Cleaning cache</string>
+    <string name="cleaning_in_progress">Cleaning of cache partition is in progress...</string>
+
+    <!-- Toasts -->
+    <string name="cleaned">Cache cleaned</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="main_preferences">Main preferences</string>
+
+        <!-- Clean on startup preference -->
+    <string name="clean_on_startup">Clean cache on startup</string>
+    <string name="clean_on_startup_summary">Automatically clean cache on application startup</string>
+    <string name="clean_on_startup_key">clean_on_startup</string>
+
+        <!-- Exit after clean up -->
+    <string name="exit_after_clean">Exit after cache clean up</string>
+    <string name="exit_after_clean_summary">Exit after Clean is clicked and clean up is complete</string>
+    <string name="exit_after_clean_key">exit_after_clean</string>
+
+</resources>

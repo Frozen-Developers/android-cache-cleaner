@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip"
+    android:paddingTop="8dip"
+    android:paddingBottom="8dip" >
+
+    <ImageView android:id="@+id/app_icon"
+        android:layout_width="@android:dimen/app_icon_size"
+        android:layout_height="@android:dimen/app_icon_size"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@null" >
+    </ImageView>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="8dip"
+        android:layout_marginRight="8dip" >
+
+        <TextView android:id="@+id/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/item_name"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:textAppearance="?android:attr/textAppearanceMedium" >
+        </TextView>
+
+        <TextView android:id="@+id/app_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" >
+        </TextView>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/app_settings"
+        android:layout_height="@dimen/app_settings_icon_size"
+        android:layout_width="@dimen/app_settings_icon_size"
+        android:src="@drawable/ic_action_settings"
+        android:clickable="true"
+        android:contentDescription="@null"
+        android:background="?android:attr/selectableItemBackground"
+        android:layout_gravity="center_vertical" />
+
+</LinearLayout>
