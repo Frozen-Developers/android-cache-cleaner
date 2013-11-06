@@ -17,6 +17,8 @@ import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AppsListAdapter extends BaseAdapter {
@@ -101,6 +103,13 @@ public class AppsListAdapter extends BaseAdapter {
 
     public void setItems(List<AppsListItem> items) {
         this.items = items;
+
+        Collections.sort(this.items, new Comparator<AppsListItem>() {
+            @Override
+            public int compare(AppsListItem lhs, AppsListItem rhs) {
+                return (int)(rhs.getCacheSize() - lhs.getCacheSize());
+            }
+        });
     }
 
     public List<AppsListItem> getItemsFilteredByAppName(String filter) {
