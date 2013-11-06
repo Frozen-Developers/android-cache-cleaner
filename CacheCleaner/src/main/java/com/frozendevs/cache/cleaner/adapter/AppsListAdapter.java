@@ -107,7 +107,7 @@ public class AppsListAdapter extends BaseAdapter {
         List<AppsListItem> filteredItems = new ArrayList<AppsListItem>();
 
         for(AppsListItem item : items)
-            if(item.getApplicationName().contains(filter))
+            if(item.getApplicationName().toLowerCase().contains(filter.toLowerCase()))
                 filteredItems.add(item);
 
         return filteredItems;

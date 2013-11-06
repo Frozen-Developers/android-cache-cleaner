@@ -37,6 +37,7 @@ public class CleanerActivity extends Activity {
     private ListView listView;
     private TextView emptyView;
     private SharedPreferences sharedPreferences;
+    private boolean updateChart = true;
 
     private static boolean alreadyScanned = false;
     private static boolean alreadyCleaned = false;
@@ -81,7 +82,10 @@ public class CleanerActivity extends Activity {
         appsListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                updateStorageUsage();
+                if(updateChart)
+                    updateStorageUsage();
+                updateChart = true;
+
                 listView.invalidateViews();
                 emptyView.invalidate();
             }
@@ -143,6 +147,7 @@ public class CleanerActivity extends Activity {
             public boolean onQueryTextChange(String newText) {
                 appsListAdapter.setItems(cacheManager.getAppsList());
                 appsListAdapter.setItems(appsListAdapter.getItemsFilteredByAppName(newText));
+                updateChart = false;
                 appsListAdapter.notifyDataSetChanged();
                 return true;
             }
