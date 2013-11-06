@@ -1,7 +1,7 @@
-Android Cachce Cleaner
+Android Cache Cleaner
 ======================
 
-Cahce cleaner for android:
+Cahce Cleaner for Android:
 
   - Keep it simple, stupid
   - **No ads**
