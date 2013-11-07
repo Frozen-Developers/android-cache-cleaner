@@ -7,5 +7,6 @@ Cache Cleaner for Android:
   - **No ads**
   - Holo look and feel
   - Fast and clean
+  - Does not require root
 
 That says it all.
