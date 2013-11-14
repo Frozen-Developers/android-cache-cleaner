@@ -40,6 +40,7 @@ public class CleanerActivity extends Activity {
     private SharedPreferences sharedPreferences;
     private boolean updateChart = true;
     private List<AppsListItem> appsList = new ArrayList<AppsListItem>();
+    private SearchView searchView;
 
     private static boolean alreadyScanned = false;
     private static boolean alreadyCleaned = false;
@@ -88,7 +89,13 @@ public class CleanerActivity extends Activity {
         cacheManager.setOnScanCompletedListener(new CacheManager.OnScanCompletedListener() {
             @Override
             public void onScanCompleted() {
-                appsListAdapter.setItems(appsList =  cacheManager.getAppsList());
+                appsListAdapter.setItems(appsList = cacheManager.getAppsList());
+                if(searchView != null) {
+                    if(searchView.isShown()) {
+                        appsListAdapter.filterAppsByName(searchView.getQuery().toString());
+                        updateChart = false;
+                    }
+                }
                 appsListAdapter.notifyDataSetChanged();
 
                 if(!alreadyScanned) {
@@ -125,7 +132,7 @@ public class CleanerActivity extends Activity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         MenuItem searchItem = menu.getItem(2);
-        final SearchView searchView = ((SearchView)searchItem.getActionView());
+        searchView = ((SearchView)searchItem.getActionView());
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
