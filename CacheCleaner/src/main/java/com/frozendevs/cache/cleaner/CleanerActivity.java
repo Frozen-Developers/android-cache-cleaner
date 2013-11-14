@@ -25,6 +25,7 @@ import com.frozendevs.cache.cleaner.view.LinearColorBar;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CleanerActivity extends Activity {
 
@@ -38,6 +39,7 @@ public class CleanerActivity extends Activity {
     private TextView emptyView;
     private SharedPreferences sharedPreferences;
     private boolean updateChart = true;
+    private List<AppsListItem> appsList = new ArrayList<AppsListItem>();
 
     private static boolean alreadyScanned = false;
     private static boolean alreadyCleaned = false;
@@ -47,18 +49,6 @@ public class CleanerActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.cleaner_activity);
-
-        try {
-            ViewConfiguration config = ViewConfiguration.get(this);
-            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
-
-            if(menuKeyField != null) {
-                menuKeyField.setAccessible(true);
-                menuKeyField.setBoolean(config, false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) <
                 Configuration.SCREENLAYOUT_SIZE_LARGE)
@@ -98,7 +88,7 @@ public class CleanerActivity extends Activity {
         cacheManager.setOnScanCompletedListener(new CacheManager.OnScanCompletedListener() {
             @Override
             public void onScanCompleted() {
-                appsListAdapter.setItems(cacheManager.getAppsList());
+                appsListAdapter.setItems(appsList =  cacheManager.getAppsList());
                 appsListAdapter.notifyDataSetChanged();
 
                 if(!alreadyScanned) {
@@ -106,7 +96,7 @@ public class CleanerActivity extends Activity {
 
                     if(sharedPreferences.getBoolean(getString(R.string.clean_on_startup_key), false)) {
                         alreadyCleaned = true;
-                        cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
+                        cacheManager.cleanCache(getTotalCacheSize());
                     }
                 }
             }
@@ -114,7 +104,7 @@ public class CleanerActivity extends Activity {
         cacheManager.setOnCleanCompletedListener(new CacheManager.OnCleanCompletedListener() {
             @Override
             public void OnCleanCompleted() {
-                appsListAdapter.setItems(new ArrayList<AppsListItem>());
+                appsListAdapter.setItems(appsList = new ArrayList<AppsListItem>());
                 appsListAdapter.notifyDataSetChanged();
 
                 if(!alreadyCleaned) {
@@ -145,8 +135,8 @@ public class CleanerActivity extends Activity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                appsListAdapter.setItems(cacheManager.getAppsList());
-                appsListAdapter.setItems(appsListAdapter.getItemsFilteredByAppName(newText));
+                appsListAdapter.setItems(appsList);
+                appsListAdapter.filterAppsByName(newText);
                 updateChart = false;
                 appsListAdapter.notifyDataSetChanged();
                 return true;
@@ -161,7 +151,7 @@ public class CleanerActivity extends Activity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                appsListAdapter.setItems(cacheManager.getAppsList());
+                appsListAdapter.setItems(appsList);
                 appsListAdapter.notifyDataSetChanged();
                 emptyView.setText(R.string.empty_cache);
                 return true;
@@ -176,7 +166,7 @@ public class CleanerActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.action_clean:
                 alreadyCleaned = false;
-                cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
+                cacheManager.cleanCache(getTotalCacheSize());
                 return true;
 
             case R.id.action_refresh:
@@ -209,7 +199,7 @@ public class CleanerActivity extends Activity {
         totalStorage = (long)stat.getBlockCount() * (long)stat.getBlockSize();
         freeStorage = (long)stat.getAvailableBlocks() * (long)stat.getBlockSize();
 
-        appStorage = appsListAdapter.getTotalCacheSize();
+        appStorage = getTotalCacheSize();
 
         if (totalStorage > 0) {
             colorBar.setRatios((totalStorage - freeStorage - appStorage) / (float)totalStorage,
@@ -238,4 +228,12 @@ public class CleanerActivity extends Activity {
         }
     }
 
+    private long getTotalCacheSize() {
+        long size = 0;
+
+        for(AppsListItem app : appsList)
+            size += app.getCacheSize();
+
+        return size;
+    }
 }

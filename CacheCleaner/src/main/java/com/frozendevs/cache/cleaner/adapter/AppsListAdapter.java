@@ -92,15 +92,6 @@ public class AppsListAdapter extends BaseAdapter {
         return items.size() == 0;
     }
 
-    public long getTotalCacheSize() {
-        long total = 0;
-
-        for(AppsListItem item : items)
-            total += item.getCacheSize();
-
-        return total;
-    }
-
     public void setItems(List<AppsListItem> items) {
         this.items = items;
 
@@ -112,13 +103,13 @@ public class AppsListAdapter extends BaseAdapter {
         });
     }
 
-    public List<AppsListItem> getItemsFilteredByAppName(String filter) {
+    public void filterAppsByName(String filter) {
         List<AppsListItem> filteredItems = new ArrayList<AppsListItem>();
 
         for(AppsListItem item : items)
             if(item.getApplicationName().toLowerCase().contains(filter.toLowerCase()))
                 filteredItems.add(item);
 
-        return filteredItems;
+        items = filteredItems;
     }
 }
