@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.text.format.Formatter;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewConfiguration;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -23,7 +22,6 @@ import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.model.CacheManager;
 import com.frozendevs.cache.cleaner.view.LinearColorBar;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
