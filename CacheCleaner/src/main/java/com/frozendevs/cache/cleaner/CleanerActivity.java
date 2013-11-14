@@ -131,7 +131,7 @@ public class CleanerActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
-        MenuItem searchItem = menu.getItem(2);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = ((SearchView)searchItem.getActionView());
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
