@@ -24,7 +24,7 @@
     <string name="scanning_cache">Scanning cache</string>
     <string name="scanning">Scanning</string>
     <string name="cleaning_cache">Cleaning cache</string>
-    <string name="cleaning_in_progress">Cleaning of cache partition is in progress...</string>
+    <string name="cleaning_in_progress">Cleaning in progress…</string>
 
     <!-- Toasts -->
     <string name="cleaned">Cache cleaned</string>
@@ -40,7 +40,7 @@
 
         <!-- Exit after clean up -->
     <string name="exit_after_clean">Exit after cache clean up</string>
-    <string name="exit_after_clean_summary">Exit after Clean is clicked and clean up is complete</string>
+    <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is complete</string>
     <string name="exit_after_clean_key">exit_after_clean</string>
 
 </resources>

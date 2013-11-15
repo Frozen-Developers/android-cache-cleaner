@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Globals -->
+    <string name="app_name">Čistič medzipamäte</string>
+
+    <!-- Menu items -->
+    <string name="action_clean">Vyčistiť</string>
+    <string name="action_rescan">Reskenovať</string>
+    <string name="action_search">Hľadať</string>
+    <string name="action_settings">Nastavenia</string>
+
+    <!-- LinearColorBar -->
+    <string name="internal_storage">Interný ukl. priestor</string>
+
+    <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> voľných</string>
+    <string name="service_foreground_processes"><xliff:g id="memory">%1$s</xliff:g> využitých</string>
+
+    <!-- Empty list view -->
+    <string name="empty_cache">Medzipamäť je prázdna.</string>
+    <string name="no_such_app">Žiadna podobná aplikácia.</string>
+
+    <!-- Progress dialog -->
+    <string name="scanning_cache">Skenovanie medzipamäte</string>
+    <string name="scanning">Skenovanie</string>
+    <string name="cleaning_cache">Čistenie medzipamäte</string>
+    <string name="cleaning_in_progress">Prebieha čistenie…</string>
+
+    <!-- Toasts -->
+    <string name="cleaned">Medzipamäť vyčistená</string>
+
+    <!-- Settings -->
+    <string name="settings">Nastavenia</string>
+    <string name="main_preferences">Hlavné nastavenia</string>
+
+        <!-- Clean on startup preference -->
+    <string name="clean_on_startup">Vyčistiť medzipamäť pri štarte</string>
+    <string name="clean_on_startup_summary">Automaticky vyčistiť medzipamäť pri štarte aplikácie</string>
+
+        <!-- Exit after clean up -->
+    <string name="exit_after_clean">Odchod po vyčistení medzipamäte</string>
+    <string name="exit_after_clean_summary">Odchod po slačení tlačidla Vyčistiť a ukončení čistenia</string>
+
+</resources>
