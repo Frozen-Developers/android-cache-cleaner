@@ -55,6 +55,13 @@ public class AppsListAdapter extends BaseAdapter {
         final AppsListItem item = items.get(i);
 
         LinearLayout layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.list_item, null);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + item.getPackageName())));
+            }
+        });
 
         ImageView imageView = (ImageView)layout.findViewById(R.id.app_icon);
         imageView.setImageDrawable(item.getApplicationIcon());
@@ -64,15 +71,6 @@ public class AppsListAdapter extends BaseAdapter {
 
         TextView sizeView = (TextView)layout.findViewById(R.id.app_size);
         sizeView.setText(Formatter.formatShortFileSize(context, item.getCacheSize()));
-
-        ImageButton imageButton = (ImageButton)layout.findViewById(R.id.app_settings);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:" + item.getPackageName())));
-            }
-        });
 
         return layout;
     }
