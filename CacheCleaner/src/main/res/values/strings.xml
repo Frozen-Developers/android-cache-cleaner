@@ -8,6 +8,7 @@
     <string name="action_clean">Clean</string>
     <string name="action_rescan">Rescan</string>
     <string name="action_search">Search</string>
+    <string name="action_sort_by">Sort by</string>
     <string name="action_settings">Settings</string>
 
     <!-- LinearColorBar -->
@@ -43,5 +44,10 @@
     <string name="exit_after_clean">Exit after cache clean up</string>
     <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is complete</string>
     <string name="exit_after_clean_key">exit_after_clean</string>
+
+    <!-- 'Sort by' dialog -->
+    <string name="sort_by_app_name">Application name</string>
+    <string name="sort_by_cache_size">Cache size</string>
+    <string name="sort_by_key">sort_by</string>
 
 </resources>

@@ -36,6 +36,7 @@ public class CleanerActivity extends Activity {
     private ListView listView;
     private TextView emptyView;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor sharedPreferencesEditor;
     private boolean updateChart = true;
     private List<AppsListItem> appsList = new ArrayList<AppsListItem>();
     private SearchView searchView;
@@ -56,6 +57,7 @@ public class CleanerActivity extends Activity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferencesEditor = sharedPreferences.edit();
 
         colorBar = (LinearColorBar)findViewById(R.id.storage_color_bar);
         usedStorageText = (TextView)findViewById(R.id.usedStorageText);
@@ -66,7 +68,7 @@ public class CleanerActivity extends Activity {
         listView = (ListView)findViewById(android.R.id.list);
         listView.setEmptyView(findViewById(android.R.id.empty));
         if(appsListAdapter == null)
-            appsListAdapter = new AppsListAdapter(this);
+            appsListAdapter = new AppsListAdapter(this, sharedPreferences);
         listView.setAdapter(appsListAdapter);
         appsListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -141,9 +143,7 @@ public class CleanerActivity extends Activity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 updateChart = false;
-                appsListAdapter.setItems(appsList);
-                appsListAdapter.filterAppsByName(newText);
-                appsListAdapter.notifyDataSetChanged();
+                reloadAdapterItems(newText);
                 return true;
             }
         });
@@ -180,6 +180,20 @@ public class CleanerActivity extends Activity {
 
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+
+            case R.id.action_sort_by_app_name:
+                sharedPreferencesEditor.putInt(getString(R.string.sort_by_key),
+                        AppsListAdapter.SORT_BY_APP_NAME);
+                sharedPreferencesEditor.commit();
+                reloadAdapterItems(searchView.getQuery().toString());
+                return true;
+
+            case R.id.action_sort_by_cache_size:
+                sharedPreferencesEditor.putInt(getString(R.string.sort_by_key),
+                        AppsListAdapter.SORT_BY_CACHE_SIZE);
+                sharedPreferencesEditor.commit();
+                reloadAdapterItems(searchView.getQuery().toString());
                 return true;
         }
 
@@ -240,5 +254,11 @@ public class CleanerActivity extends Activity {
             size += app.getCacheSize();
 
         return size;
+    }
+
+    private void reloadAdapterItems(String filter) {
+        appsListAdapter.setItems(appsList);
+        appsListAdapter.filterAppsByName(filter);
+        appsListAdapter.notifyDataSetChanged();
     }
 }

@@ -2,6 +2,7 @@ package com.frozendevs.cache.cleaner.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -23,11 +24,16 @@ import java.util.List;
 
 public class AppsListAdapter extends BaseAdapter {
 
+    public static final int SORT_BY_APP_NAME = 0;
+    public static final int SORT_BY_CACHE_SIZE = 1;
+
     private List<AppsListItem> items = new ArrayList<AppsListItem>();
     private Context context;
+    private SharedPreferences sharedPreferences;
 
-    public AppsListAdapter(Context context) {
+    public AppsListAdapter(Context context, SharedPreferences sharedPreferences) {
         this.context = context;
+        this.sharedPreferences = sharedPreferences;
     }
 
     @Override
@@ -96,7 +102,15 @@ public class AppsListAdapter extends BaseAdapter {
         Collections.sort(this.items, new Comparator<AppsListItem>() {
             @Override
             public int compare(AppsListItem lhs, AppsListItem rhs) {
-                return (int)(rhs.getCacheSize() - lhs.getCacheSize());
+                switch (sharedPreferences.getInt(context.getString(R.string.sort_by_key), SORT_BY_CACHE_SIZE)) {
+                    case SORT_BY_APP_NAME:
+                        return lhs.getApplicationName().compareToIgnoreCase(rhs.getApplicationName());
+
+                    case SORT_BY_CACHE_SIZE:
+                        return (int)(rhs.getCacheSize() - lhs.getCacheSize());
+                }
+
+                return 0;
             }
         });
     }
