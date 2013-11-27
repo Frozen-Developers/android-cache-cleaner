@@ -20,9 +20,10 @@
     <string name="empty_cache">Cache is empty.</string>
     <string name="no_such_app">No such application.</string>
 
+    <!-- Progress bar -->
+    <string name="scanning">Scanning…</string>
+
     <!-- Progress dialog -->
-    <string name="scanning_cache">Scanning cache</string>
-    <string name="scanning">Scanning</string>
     <string name="cleaning_cache">Cleaning cache</string>
     <string name="cleaning_in_progress">Cleaning in progress…</string>
 

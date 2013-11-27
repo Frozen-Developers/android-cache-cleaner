@@ -20,9 +20,10 @@
     <string name="empty_cache">Medzipamäť je prázdna.</string>
     <string name="no_such_app">Žiadna podobná aplikácia.</string>
 
+    <!-- Progress bar -->
+    <string name="scanning">Skenovanie…</string>
+
     <!-- Progress dialog -->
-    <string name="scanning_cache">Skenovanie medzipamäte</string>
-    <string name="scanning">Skenovanie</string>
     <string name="cleaning_cache">Čistenie medzipamäte</string>
     <string name="cleaning_in_progress">Prebieha čistenie…</string>
 

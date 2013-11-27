@@ -140,9 +140,9 @@ public class CleanerActivity extends Activity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                updateChart = false;
                 appsListAdapter.setItems(appsList);
                 appsListAdapter.filterAppsByName(newText);
-                updateChart = false;
                 appsListAdapter.notifyDataSetChanged();
                 return true;
             }

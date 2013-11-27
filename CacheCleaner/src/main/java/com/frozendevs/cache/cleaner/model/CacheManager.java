@@ -13,6 +13,8 @@ import android.os.RemoteException;
 import android.os.StatFs;
 import android.text.format.Formatter;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.frozendevs.cache.cleaner.R;
@@ -30,9 +32,6 @@ public class CacheManager {
     private List<AppsListItem> apps;
     private OnScanCompletedListener onScanCompletedListener = null;
     private OnCleanCompletedListener onCleanCompletedListener = null;
-    private ProgressDialog progressDialog;
-    private int currentPackage;
-    private boolean scanningStopped = false;
 
     public static abstract class OnScanCompletedListener {
         public abstract void onScanCompleted();
@@ -45,10 +44,6 @@ public class CacheManager {
     public CacheManager(Activity activity) {
         this.activity = activity;
         packageManager = activity.getPackageManager();
-
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
     }
 
     private Method getPackageManagersMethod(String methodName) {
@@ -70,24 +65,24 @@ public class CacheManager {
         }
     }
 
+    private void showProgressBar(boolean show) {
+        View progressBar = activity.findViewById(R.id.progressBar);
+
+        if(show) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        else {
+            progressBar.startAnimation(AnimationUtils.loadAnimation(activity, android.R.anim.fade_out));
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
     public void scanCache() {
-        scanningStopped = false;
-
-        packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-
         apps = new ArrayList<AppsListItem>();
 
-        progressDialog.setTitle(R.string.scanning_cache);
-        progressDialog.setMessage(activity.getString(R.string.scanning) + " 0/" + packages.size());
-        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                stopScanning();
-            }
-        });
-        progressDialog.show();
+        showProgressBar(true);
 
-        currentPackage = 0;
+        packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
         new Thread(new Runnable() {
             @Override
@@ -97,14 +92,6 @@ public class CacheManager {
 
                         @Override
                         public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressDialog.setMessage(activity.getString(R.string.scanning) +
-                                            " " + currentPackage++ + "/" + packages.size());
-                                }
-                            });
-
                             if (succeeded) {
                                 try {
                                     if (pStats.cacheSize > 0)
@@ -117,17 +104,15 @@ public class CacheManager {
                             }
 
                             if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
-                                if (onScanCompletedListener != null && !scanningStopped) {
+                                if (onScanCompletedListener != null) {
                                     activity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             onScanCompletedListener.onScanCompleted();
+
+                                            showProgressBar(false);
                                         }
                                     });
-                                }
-
-                                if (!scanningStopped) {
-                                    progressDialog.dismiss();
                                 }
                             }
                         }
@@ -137,35 +122,26 @@ public class CacheManager {
         }).start();
     }
 
-    public void stopScanning() {
-        scanningStopped = true;
-
-        if (progressDialog.isShowing())
-            progressDialog.dismiss();
-    }
-
     public List<AppsListItem> getAppsList() {
         return new ArrayList<AppsListItem>(apps);
     }
 
     public void setOnScanCompletedListener(OnScanCompletedListener listener) {
-        if (listener == null) throw new IllegalArgumentException();
-
         onScanCompletedListener = listener;
     }
 
     public void setOnCleanCompletedListener(OnCleanCompletedListener listener) {
-        if (listener == null) throw new IllegalArgumentException();
-
         onCleanCompletedListener = listener;
     }
 
     public void cleanCache(final long cacheSize) {
-        if(cacheSize == 0)
-            return;
+        if(cacheSize == 0) return;
 
         apps = new ArrayList<AppsListItem>();
 
+        final ProgressDialog progressDialog = new ProgressDialog(activity);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setTitle(R.string.cleaning_cache);
         progressDialog.setMessage(activity.getString(R.string.cleaning_in_progress));
         progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
