@@ -66,7 +66,7 @@ public class CleanerActivity extends Activity {
         emptyView = (TextView)findViewById(android.R.id.empty);
 
         listView = (ListView)findViewById(android.R.id.list);
-        listView.setEmptyView(findViewById(android.R.id.empty));
+        listView.setEmptyView(emptyView);
         if(appsListAdapter == null)
             appsListAdapter = new AppsListAdapter(this, sharedPreferences);
         listView.setAdapter(appsListAdapter);
@@ -183,17 +183,11 @@ public class CleanerActivity extends Activity {
                 return true;
 
             case R.id.action_sort_by_app_name:
-                sharedPreferencesEditor.putInt(getString(R.string.sort_by_key),
-                        AppsListAdapter.SORT_BY_APP_NAME);
-                sharedPreferencesEditor.commit();
-                reloadAdapterItems(searchView.getQuery().toString());
+                setSortBy(AppsListAdapter.SORT_BY_APP_NAME);
                 return true;
 
             case R.id.action_sort_by_cache_size:
-                sharedPreferencesEditor.putInt(getString(R.string.sort_by_key),
-                        AppsListAdapter.SORT_BY_CACHE_SIZE);
-                sharedPreferencesEditor.commit();
-                reloadAdapterItems(searchView.getQuery().toString());
+                setSortBy(AppsListAdapter.SORT_BY_CACHE_SIZE);
                 return true;
         }
 
@@ -260,5 +254,11 @@ public class CleanerActivity extends Activity {
         appsListAdapter.setItems(appsList);
         appsListAdapter.filterAppsByName(filter);
         appsListAdapter.notifyDataSetChanged();
+    }
+
+    private void setSortBy(int sortBy) {
+        sharedPreferencesEditor.putInt(getString(R.string.sort_by_key), sortBy);
+        sharedPreferencesEditor.commit();
+        reloadAdapterItems(searchView.getQuery().toString());
     }
 }
