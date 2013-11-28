@@ -3,8 +3,6 @@ package com.frozendevs.cache.cleaner;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,7 +36,7 @@ public class CleanerActivity extends Activity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferencesEditor;
     private boolean updateChart = true;
-    private List<AppsListItem> appsList = new ArrayList<AppsListItem>();
+    private static List<AppsListItem> appsList = new ArrayList<AppsListItem>();
     private SearchView searchView;
 
     private static boolean alreadyScanned = false;
@@ -49,12 +47,6 @@ public class CleanerActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.cleaner_activity);
-
-        if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) <
-                Configuration.SCREENLAYOUT_SIZE_LARGE)
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        else
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferencesEditor = sharedPreferences.edit();
@@ -196,12 +188,33 @@ public class CleanerActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
-        appsListAdapter = null;
         cacheManager = null;
+
+        super.onDestroy();
+    }
+
+    @Override
+    public void finish() {
+        appsListAdapter = null;
+        appsList = new ArrayList<AppsListItem>();
         alreadyScanned = false;
         alreadyCleaned = false;
+
+        super.finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        cacheManager.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        cacheManager.onStop();
+
+        super.onStop();
     }
 
     private void updateStorageUsage() {

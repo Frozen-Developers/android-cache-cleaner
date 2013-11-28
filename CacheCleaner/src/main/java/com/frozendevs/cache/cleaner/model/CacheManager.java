@@ -8,6 +8,7 @@ import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
+import android.content.res.Configuration;
 import android.os.Environment;
 import android.os.RemoteException;
 import android.os.StatFs;
@@ -29,9 +30,11 @@ public class CacheManager {
     private PackageManager packageManager;
     private Activity activity;
     private List<ApplicationInfo> packages;
-    private List<AppsListItem> apps;
+    private static List<AppsListItem> apps;
     private OnScanCompletedListener onScanCompletedListener = null;
     private OnCleanCompletedListener onCleanCompletedListener = null;
+    private ProgressDialog progressDialog;
+    private static boolean cleaning = false;
 
     public static abstract class OnScanCompletedListener {
         public abstract void onScanCompleted();
@@ -44,6 +47,18 @@ public class CacheManager {
     public CacheManager(Activity activity) {
         this.activity = activity;
         packageManager = activity.getPackageManager();
+
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setTitle(R.string.cleaning_cache);
+        progressDialog.setMessage(activity.getString(R.string.cleaning_in_progress));
+        progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                return true;
+            }
+        });
     }
 
     private Method getPackageManagersMethod(String methodName) {
@@ -139,17 +154,8 @@ public class CacheManager {
 
         apps = new ArrayList<AppsListItem>();
 
-        final ProgressDialog progressDialog = new ProgressDialog(activity);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setTitle(R.string.cleaning_cache);
-        progressDialog.setMessage(activity.getString(R.string.cleaning_in_progress));
-        progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                return true;
-            }
-        });
+        cleaning = true;
+
         progressDialog.show();
 
         StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
@@ -164,6 +170,8 @@ public class CacheManager {
                         if (onCleanCompletedListener != null)
                             onCleanCompletedListener.OnCleanCompleted();
 
+                        cleaning = false;
+
                         progressDialog.dismiss();
 
                         Toast.makeText(activity, activity.getString(R.string.cleaned) + " (" +
@@ -173,5 +181,15 @@ public class CacheManager {
                 });
             }
         });
+    }
+
+    public void onStart() {
+        if(cleaning && !progressDialog.isShowing())
+            progressDialog.show();
+    }
+
+    public void onStop() {
+        if(progressDialog.isShowing())
+            progressDialog.dismiss();
     }
 }
