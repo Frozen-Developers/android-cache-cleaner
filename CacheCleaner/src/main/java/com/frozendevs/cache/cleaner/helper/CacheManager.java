@@ -8,6 +8,7 @@ import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
+import android.os.Build;
 import android.os.Environment;
 import android.os.RemoteException;
 import android.os.StatFs;
@@ -28,7 +29,6 @@ public class CacheManager {
 
     private PackageManager packageManager;
     private Activity activity;
-    private List<ApplicationInfo> packages;
     private static List<AppsListItem> apps;
     private OnScanCompletedListener onScanCompletedListener = null;
     private OnCleanCompletedListener onCleanCompletedListener = null;
@@ -105,7 +105,7 @@ public class CacheManager {
 
         showProgressBar(true);
 
-        packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
         new Thread(new Runnable() {
             @Override
@@ -170,8 +170,13 @@ public class CacheManager {
 
         StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-        invokePackageManagersMethod("freeStorageAndNotify", (cacheSize * 2) + ((long) stat.getAvailableBlocks() *
-                (long) stat.getBlockSize()), new IPackageDataObserver.Stub() {
+        long freeSpace;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            freeSpace = stat.getFreeBytes();
+        else
+            freeSpace = (long) stat.getFreeBlocks() * (long) stat.getBlockSize();
+
+        invokePackageManagersMethod("freeStorageAndNotify", cacheSize + freeSpace, new IPackageDataObserver.Stub() {
             @Override
             public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
                 activity.runOnUiThread(new Runnable() {
