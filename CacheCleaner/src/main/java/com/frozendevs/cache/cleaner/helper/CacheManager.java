@@ -33,7 +33,8 @@ public class CacheManager {
     private OnScanCompletedListener onScanCompletedListener = null;
     private OnCleanCompletedListener onCleanCompletedListener = null;
     private ProgressDialog progressDialog;
-    private static boolean cleaning = false;
+    private static boolean isScanning = false;
+    private static boolean isCleaning = false;
 
     public static abstract class OnScanCompletedListener {
         public abstract void onScanCompleted();
@@ -79,6 +80,10 @@ public class CacheManager {
         }
     }
 
+    private boolean isProgressBarShowing() {
+        return activity.findViewById(R.id.progressBar).getVisibility() == View.VISIBLE;
+    }
+
     private void showProgressBar(boolean show) {
         View progressBar = activity.findViewById(R.id.progressBar);
 
@@ -93,6 +98,8 @@ public class CacheManager {
 
     public void scanCache() {
         apps = new ArrayList<AppsListItem>();
+
+        isScanning = true;
 
         showProgressBar(true);
 
@@ -124,6 +131,8 @@ public class CacheManager {
                                         public void run() {
                                             onScanCompletedListener.onScanCompleted();
 
+                                            isScanning = false;
+
                                             showProgressBar(false);
                                         }
                                     });
@@ -153,7 +162,7 @@ public class CacheManager {
 
         apps = new ArrayList<AppsListItem>();
 
-        cleaning = true;
+        isCleaning = true;
 
         progressDialog.show();
 
@@ -169,7 +178,7 @@ public class CacheManager {
                         if (onCleanCompletedListener != null)
                             onCleanCompletedListener.OnCleanCompleted();
 
-                        cleaning = false;
+                        isCleaning = false;
 
                         progressDialog.dismiss();
 
@@ -183,7 +192,12 @@ public class CacheManager {
     }
 
     public void onStart() {
-        if(cleaning && !progressDialog.isShowing())
+        if(isScanning && !isProgressBarShowing())
+            showProgressBar(true);
+        else if(!isScanning && isProgressBarShowing())
+            showProgressBar(false);
+
+        if(isCleaning && !progressDialog.isShowing())
             progressDialog.show();
     }
 
