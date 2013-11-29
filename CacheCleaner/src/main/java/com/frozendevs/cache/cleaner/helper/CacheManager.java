@@ -97,6 +97,8 @@ public class CacheManager {
     }
 
     public void scanCache() {
+        if(isScanning) return;
+
         apps = new ArrayList<AppsListItem>();
 
         isScanning = true;
@@ -158,7 +160,7 @@ public class CacheManager {
     }
 
     public void cleanCache(final long cacheSize) {
-        if(cacheSize == 0) return;
+        if(cacheSize == 0 || isCleaning) return;
 
         apps = new ArrayList<AppsListItem>();
 
