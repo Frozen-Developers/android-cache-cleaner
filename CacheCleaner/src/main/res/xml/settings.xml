@@ -17,4 +17,41 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/about">
+
+        <PreferenceScreen
+            android:title="@string/about_app"
+            android:persistent="false"
+            android:key="about">
+
+            <PreferenceCategory
+                android:title="@string/about">
+
+                <Preference
+                    android:title="@string/author"
+                    android:summary="@string/author_name"
+                    android:key="author">
+
+                    <intent
+                        android:action="android.intent.action.VIEW"
+                        android:data="@string/authors_url" />
+
+                </Preference>
+
+                <Preference
+                    android:title="@string/version_number"
+                    android:summary="@string/version_name"
+                    android:key="version"/>
+
+                <Preference
+                    android:title="@string/open_source_licences"
+                    android:key="licences"/>
+
+            </PreferenceCategory>
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

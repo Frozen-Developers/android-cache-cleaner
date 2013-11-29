@@ -34,6 +34,7 @@
     <!-- Settings -->
     <string name="settings">Nastavenia</string>
     <string name="main_preferences">Hlavné nastavenia</string>
+    <string name="about">O aplikácii</string>
 
         <!-- Clean on startup preference -->
     <string name="clean_on_startup">Vyčistiť medzipamäť pri štarte</string>
@@ -42,6 +43,12 @@
         <!-- Exit after clean up -->
     <string name="exit_after_clean">Odchod po vyčistení medzipamäte</string>
     <string name="exit_after_clean_summary">Odchod po slačení tlačidla Vyčistiť a ukončení čistenia</string>
+
+        <!-- About -->
+    <string name="about_app">O Čističi medzipamäte</string>
+    <string name="author">Autor</string>
+    <string name="version_number">Verzia</string>
+    <string name="open_source_licences">Open-source licencie</string>
 
     <!-- 'Sort by' dialog -->
     <string name="sort_by_app_name">Názvu aplikácie</string>

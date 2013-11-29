@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.frozendevs.cache.cleaner"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="@string/version_name" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -28,7 +28,17 @@
         </activity>
 
         <activity android:name=".SettingsActivity"
-            android:label="@string/settings">
+            android:label="@string/settings"
+            android:parentActivityName=".CleanerActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CleanerActivity" />
+
+            <intent-filter>
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
+
         </activity>
 
     </application>

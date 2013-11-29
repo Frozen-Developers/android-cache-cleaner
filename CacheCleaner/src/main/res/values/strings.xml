@@ -3,6 +3,8 @@
 
     <!-- Globals -->
     <string name="app_name">Cache Cleaner</string>
+    <string name="author_name">Frozen Developers</string>
+    <string name="version_name">1.0</string>
 
     <!-- Menu items -->
     <string name="action_clean">Clean</string>
@@ -34,6 +36,7 @@
     <!-- Settings -->
     <string name="settings">Settings</string>
     <string name="main_preferences">Main preferences</string>
+    <string name="about">About</string>
 
         <!-- Clean on startup preference -->
     <string name="clean_on_startup">Clean cache on startup</string>
@@ -44,6 +47,12 @@
     <string name="exit_after_clean">Exit after cache clean up</string>
     <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is complete</string>
     <string name="exit_after_clean_key">exit_after_clean</string>
+
+        <!-- About -->
+    <string name="about_app">About Cache Cleaner</string>
+    <string name="author">Author</string>
+    <string name="version_number">Version number</string>
+    <string name="open_source_licences">Open-source licences</string>
 
     <!-- 'Sort by' dialog -->
     <string name="sort_by_app_name">Application name</string>
