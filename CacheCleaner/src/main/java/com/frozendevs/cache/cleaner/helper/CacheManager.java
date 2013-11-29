@@ -170,8 +170,8 @@ public class CacheManager {
 
         StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-        invokePackageManagersMethod("freeStorageAndNotify", (cacheSize + ((long) stat.getAvailableBlocks() *
-                (long) stat.getBlockSize())) * 2, new IPackageDataObserver.Stub() {
+        invokePackageManagersMethod("freeStorageAndNotify", (cacheSize * 2) + ((long) stat.getAvailableBlocks() *
+                (long) stat.getBlockSize()), new IPackageDataObserver.Stub() {
             @Override
             public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
                 activity.runOnUiThread(new Runnable() {
