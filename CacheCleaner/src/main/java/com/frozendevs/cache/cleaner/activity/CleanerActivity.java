@@ -1,4 +1,4 @@
-package com.frozendevs.cache.cleaner;
+package com.frozendevs.cache.cleaner.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,9 +15,10 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.frozendevs.cache.cleaner.adapter.AppsListAdapter;
-import com.frozendevs.cache.cleaner.model.AppsListItem;
-import com.frozendevs.cache.cleaner.model.CacheManager;
+import com.frozendevs.cache.cleaner.R;
+import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
+import com.frozendevs.cache.cleaner.helper.AppsListItem;
+import com.frozendevs.cache.cleaner.helper.CacheManager;
 import com.frozendevs.cache.cleaner.view.LinearColorBar;
 
 import java.util.ArrayList;

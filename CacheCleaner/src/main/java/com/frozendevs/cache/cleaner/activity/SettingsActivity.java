@@ -1,4 +1,4 @@
-package com.frozendevs.cache.cleaner;
+package com.frozendevs.cache.cleaner.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.webkit.WebView;
+
+import com.frozendevs.cache.cleaner.R;
 
 public class SettingsActivity extends PreferenceActivity {
 

@@ -1,4 +1,4 @@
-package com.frozendevs.cache.cleaner.adapter;
+package com.frozendevs.cache.cleaner.model.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,12 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.frozendevs.cache.cleaner.model.AppsListItem;
+import com.frozendevs.cache.cleaner.helper.AppsListItem;
 import com.frozendevs.cache.cleaner.R;
 
 import java.util.ArrayList;

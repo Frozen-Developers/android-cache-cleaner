@@ -1,4 +1,4 @@
-package com.frozendevs.cache.cleaner.model;
+package com.frozendevs.cache.cleaner.helper;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -8,7 +8,6 @@ import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
-import android.content.res.Configuration;
 import android.os.Environment;
 import android.os.RemoteException;
 import android.os.StatFs;
