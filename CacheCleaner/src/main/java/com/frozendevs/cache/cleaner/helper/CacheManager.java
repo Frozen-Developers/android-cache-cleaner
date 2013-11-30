@@ -97,41 +97,40 @@ public class CacheManager {
     }
 
     public void scanCache() {
-        if(isScanning) return;
+        if(!isScanning) {
+            isScanning = true;
 
-        apps = new ArrayList<AppsListItem>();
+            apps = new ArrayList<AppsListItem>();
 
-        isScanning = true;
+            showProgressBar(true);
 
-        showProgressBar(true);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
-        final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+                    for (final ApplicationInfo pkg : packages) {
+                        invokePackageManagersMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (final ApplicationInfo pkg : packages) {
-                    invokePackageManagersMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
-
-                        @Override
-                        public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
-                            if (succeeded) {
-                                try {
-                                    if (pStats.cacheSize > 0)
-                                        apps.add(new AppsListItem(pStats.packageName, packageManager.getApplicationLabel(
-                                                packageManager.getApplicationInfo(pStats.packageName, PackageManager.GET_META_DATA)).toString(),
-                                                packageManager.getApplicationIcon(pStats.packageName), pStats.cacheSize));
-                                } catch (PackageManager.NameNotFoundException e) {
-                                    e.printStackTrace();
+                            @Override
+                            public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
+                                if (succeeded) {
+                                    try {
+                                        if (pStats.cacheSize > 0)
+                                            apps.add(new AppsListItem(pStats.packageName, packageManager.getApplicationLabel(
+                                                    packageManager.getApplicationInfo(pStats.packageName, PackageManager.GET_META_DATA)).toString(),
+                                                    packageManager.getApplicationIcon(pStats.packageName), pStats.cacheSize));
+                                    } catch (PackageManager.NameNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            }
 
-                            if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
-                                if (onScanCompletedListener != null) {
+                                if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
                                     activity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            onScanCompletedListener.onScanCompleted();
+                                            @Override
+                                            public void run() {
+                                            if (onScanCompletedListener != null)
+                                                onScanCompletedListener.onScanCompleted();
 
                                             isScanning = false;
 
@@ -140,11 +139,11 @@ public class CacheManager {
                                     });
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        }).start();
+            }).start();
+        }
     }
 
     public List<AppsListItem> getAppsList() {
@@ -160,42 +159,47 @@ public class CacheManager {
     }
 
     public void cleanCache(final long cacheSize) {
-        if(cacheSize == 0 || isCleaning) return;
+        if(cacheSize > 0 && !isCleaning) {
+            isCleaning = true;
 
-        apps = new ArrayList<AppsListItem>();
+            apps = new ArrayList<AppsListItem>();
 
-        isCleaning = true;
+            progressDialog.show();
 
-        progressDialog.show();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-        StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+                    long freeSpace;
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                        freeSpace = stat.getFreeBytes();
+                    else
+                        freeSpace = (long) stat.getFreeBlocks() * (long) stat.getBlockSize();
 
-        long freeSpace;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-            freeSpace = stat.getFreeBytes();
-        else
-            freeSpace = (long) stat.getFreeBlocks() * (long) stat.getBlockSize();
+                    invokePackageManagersMethod("freeStorageAndNotify", 2 * cacheSize + freeSpace, new IPackageDataObserver.Stub() {
+                        @Override
+                        public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (onCleanCompletedListener != null)
+                                        onCleanCompletedListener.OnCleanCompleted();
 
-        invokePackageManagersMethod("freeStorageAndNotify", cacheSize + freeSpace, new IPackageDataObserver.Stub() {
-            @Override
-            public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (onCleanCompletedListener != null)
-                            onCleanCompletedListener.OnCleanCompleted();
+                                    isCleaning = false;
 
-                        isCleaning = false;
+                                    progressDialog.dismiss();
 
-                        progressDialog.dismiss();
-
-                        Toast.makeText(activity, activity.getString(R.string.cleaned) + " (" +
-                                Formatter.formatShortFileSize(activity, cacheSize) + ")",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
+                                    Toast.makeText(activity, activity.getString(R.string.cleaned) + " (" +
+                                            Formatter.formatShortFileSize(activity, cacheSize) + ")",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    });
+                }
+            }).start();
+        }
     }
 
     public void onStart() {
