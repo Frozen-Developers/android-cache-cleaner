@@ -100,9 +100,9 @@ public class CacheManager {
         if(!isScanning) {
             isScanning = true;
 
-            apps = new ArrayList<AppsListItem>();
-
             showProgressBar(true);
+
+            apps = new ArrayList<AppsListItem>();
 
             new Thread(new Runnable() {
                 @Override
@@ -127,8 +127,8 @@ public class CacheManager {
 
                                 if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
                                     activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
+                                        @Override
+                                        public void run() {
                                             if (onScanCompletedListener != null)
                                                 onScanCompletedListener.onScanCompleted();
 
@@ -162,10 +162,10 @@ public class CacheManager {
         if(cacheSize > 0 && !isCleaning) {
             isCleaning = true;
 
-            apps = new ArrayList<AppsListItem>();
-
             progressDialog.show();
 
+            apps = new ArrayList<AppsListItem>();
+            
             new Thread(new Runnable() {
                 @Override
                 public void run() {
