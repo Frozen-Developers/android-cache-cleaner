@@ -1,6 +1,5 @@
 package com.frozendevs.cache.cleaner.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
@@ -8,11 +7,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.text.format.Formatter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.frozendevs.cache.cleaner.R;
@@ -24,7 +25,7 @@ import com.frozendevs.cache.cleaner.view.LinearColorBar;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CleanerActivity extends Activity {
+public class CleanerActivity extends ActionBarActivity {
 
     private LinearColorBar colorBar;
     private TextView usedStorageText;
@@ -125,7 +126,7 @@ public class CleanerActivity extends Activity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = ((SearchView)searchItem.getActionView());
+        searchView = ((SearchView)MenuItemCompat.getActionView(searchItem));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -140,7 +141,7 @@ public class CleanerActivity extends Activity {
                 return true;
             }
         });
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 emptyView.setText(R.string.no_such_app);

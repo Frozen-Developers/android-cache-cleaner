@@ -165,7 +165,7 @@ public class CacheManager {
             progressDialog.show();
 
             apps = new ArrayList<AppsListItem>();
-            
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {

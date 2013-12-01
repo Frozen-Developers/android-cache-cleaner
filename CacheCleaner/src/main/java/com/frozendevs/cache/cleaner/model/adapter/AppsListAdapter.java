@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,8 +64,23 @@ public class AppsListAdapter extends BaseAdapter {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:" + item.getPackageName())));
+                Intent intent = new Intent();
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+                    intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(Uri.parse("package:" + item.getPackageName()));
+                }
+                else {
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+
+                    if(Build.VERSION.SDK_INT == Build.VERSION_CODES.FROYO)
+                        intent.putExtra("pkg", item.getPackageName());
+                    else
+                        intent.putExtra("com.android.settings.ApplicationPkgName", item.getPackageName());
+                }
+
+                context.startActivity(intent);
             }
         });
 

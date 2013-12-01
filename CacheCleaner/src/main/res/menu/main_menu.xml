@@ -1,28 +1,29 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_clean"
         android:icon="@drawable/ic_action_delete"
         android:title="@string/action_clean"
-        android:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_action_refresh"
         android:title="@string/action_rescan"
-        android:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_action_search"
         android:title="@string/action_search"
-        android:showAsAction="ifRoom|collapseActionView"
-        android:actionViewClass="android.widget.SearchView" />
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
 
     <item
         android:id="@+id/action_sort_by"
         android:title="@string/action_sort_by"
-        android:showAsAction="never" >
+        app:showAsAction="never" >
 
         <menu>
 
@@ -39,6 +40,6 @@
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
 
 </menu>
