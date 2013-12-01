@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.frozendevs.cache.cleaner.R;
+import com.frozendevs.cache.cleaner.activity.CleanerActivity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -81,11 +82,11 @@ public class CacheManager {
     }
 
     private boolean isProgressBarShowing() {
-        return activity.findViewById(R.id.progressBar).getVisibility() == View.VISIBLE;
+        return CleanerActivity.activity.findViewById(R.id.progressBar).getVisibility() == View.VISIBLE;
     }
 
     private void showProgressBar(boolean show) {
-        View progressBar = activity.findViewById(R.id.progressBar);
+        View progressBar = CleanerActivity.activity.findViewById(R.id.progressBar);
 
         if(show) {
             progressBar.setVisibility(View.VISIBLE);

@@ -1,5 +1,6 @@
 package com.frozendevs.cache.cleaner.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
@@ -40,6 +41,7 @@ public class CleanerActivity extends ActionBarActivity {
     private boolean updateChart = true;
     private static List<AppsListItem> appsList = new ArrayList<AppsListItem>();
     private SearchView searchView;
+    public static Activity activity;
 
     private static boolean alreadyScanned = false;
     private static boolean alreadyCleaned = false;
@@ -47,6 +49,8 @@ public class CleanerActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activity = this;
 
         setContentView(R.layout.cleaner_activity);
 
