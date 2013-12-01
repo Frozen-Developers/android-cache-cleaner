@@ -27,23 +27,26 @@ public class AppsListAdapter extends BaseAdapter {
     public static final int SORT_BY_APP_NAME = 0;
     public static final int SORT_BY_CACHE_SIZE = 1;
 
-    private List<AppsListItem> items = new ArrayList<AppsListItem>();
+    private List<AppsListItem> items, filteredItems;
     private Context context;
     private SharedPreferences sharedPreferences;
 
     public AppsListAdapter(Context context, SharedPreferences sharedPreferences) {
         this.context = context;
         this.sharedPreferences = sharedPreferences;
+
+        items = new ArrayList<AppsListItem>();
+        filteredItems = new ArrayList<AppsListItem>(items);
     }
 
     @Override
     public int getCount() {
-        return items.size();
+        return filteredItems.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return items.get(i);
+        return filteredItems.get(i);
     }
 
     @Override
@@ -58,7 +61,7 @@ public class AppsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        final AppsListItem item = items.get(i);
+        final AppsListItem item = filteredItems.get(i);
 
         LinearLayout layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.list_item, null);
         layout.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +111,7 @@ public class AppsListAdapter extends BaseAdapter {
 
     @Override
     public boolean isEmpty() {
-        return items.size() == 0;
+        return filteredItems.size() == 0;
     }
 
     public void setItems(List<AppsListItem> items) {
@@ -128,6 +131,8 @@ public class AppsListAdapter extends BaseAdapter {
                 return 0;
             }
         });
+
+        filteredItems = new ArrayList<AppsListItem>(items);
     }
 
     public void filterAppsByName(String filter) {
@@ -137,6 +142,23 @@ public class AppsListAdapter extends BaseAdapter {
             if(item.getApplicationName().toLowerCase().contains(filter.toLowerCase()))
                 filteredItems.add(item);
 
-        items = filteredItems;
+        this.filteredItems = filteredItems;
+
+        notifyDataSetChanged();
+    }
+
+    public void clearFilter() {
+        filteredItems = new ArrayList<AppsListItem>(items);
+
+        notifyDataSetChanged();
+    }
+
+    public long getTotalCacheSize() {
+        long size = 0;
+
+        for(AppsListItem app : items)
+            size += app.getCacheSize();
+
+        return size;
     }
 }

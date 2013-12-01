@@ -39,7 +39,6 @@ public class CleanerActivity extends ActionBarActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferencesEditor;
     private boolean updateChart = true;
-    private static List<AppsListItem> appsList = new ArrayList<AppsListItem>();
     private SearchView searchView;
     public static Activity activity;
 
@@ -87,7 +86,7 @@ public class CleanerActivity extends ActionBarActivity {
         cacheManager.setOnScanCompletedListener(new CacheManager.OnScanCompletedListener() {
             @Override
             public void onScanCompleted() {
-                appsListAdapter.setItems(appsList = cacheManager.getAppsList());
+                appsListAdapter.setItems(cacheManager.getAppsList());
                 if(searchView != null) {
                     if(searchView.isShown()) {
                         appsListAdapter.filterAppsByName(searchView.getQuery().toString());
@@ -101,7 +100,7 @@ public class CleanerActivity extends ActionBarActivity {
 
                     if(sharedPreferences.getBoolean(getString(R.string.clean_on_startup_key), false)) {
                         alreadyCleaned = true;
-                        cacheManager.cleanCache(getTotalCacheSize());
+                        cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
                     }
                 }
             }
@@ -109,7 +108,7 @@ public class CleanerActivity extends ActionBarActivity {
         cacheManager.setOnCleanCompletedListener(new CacheManager.OnCleanCompletedListener() {
             @Override
             public void OnCleanCompleted() {
-                appsListAdapter.setItems(appsList = new ArrayList<AppsListItem>());
+                appsListAdapter.setItems(new ArrayList<AppsListItem>());
                 appsListAdapter.notifyDataSetChanged();
 
                 if(!alreadyCleaned) {
@@ -141,7 +140,7 @@ public class CleanerActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 updateChart = false;
-                reloadAdapterItems(newText);
+                appsListAdapter.filterAppsByName(newText);
                 return true;
             }
         });
@@ -154,8 +153,7 @@ public class CleanerActivity extends ActionBarActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                appsListAdapter.setItems(appsList);
-                appsListAdapter.notifyDataSetChanged();
+                appsListAdapter.clearFilter();
                 emptyView.setText(R.string.empty_cache);
                 return true;
             }
@@ -169,7 +167,7 @@ public class CleanerActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.action_clean:
                 alreadyCleaned = false;
-                cacheManager.cleanCache(getTotalCacheSize());
+                cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
                 return true;
 
             case R.id.action_refresh:
@@ -195,6 +193,8 @@ public class CleanerActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         cacheManager = null;
+        if(appsListAdapter != null)
+            appsListAdapter.clearFilter();
 
         super.onDestroy();
     }
@@ -202,7 +202,6 @@ public class CleanerActivity extends ActionBarActivity {
     @Override
     public void finish() {
         appsListAdapter = null;
-        appsList = new ArrayList<AppsListItem>();
         alreadyScanned = false;
         alreadyCleaned = false;
 
@@ -231,7 +230,7 @@ public class CleanerActivity extends ActionBarActivity {
         totalStorage = (long)stat.getBlockCount() * (long)stat.getBlockSize();
         freeStorage = (long)stat.getAvailableBlocks() * (long)stat.getBlockSize();
 
-        appStorage = getTotalCacheSize();
+        appStorage = appsListAdapter.getTotalCacheSize();
 
         if (totalStorage > 0) {
             colorBar.setRatios((totalStorage - freeStorage - appStorage) / (float)totalStorage,
@@ -260,24 +259,9 @@ public class CleanerActivity extends ActionBarActivity {
         }
     }
 
-    private long getTotalCacheSize() {
-        long size = 0;
-
-        for(AppsListItem app : appsList)
-            size += app.getCacheSize();
-
-        return size;
-    }
-
-    private void reloadAdapterItems(String filter) {
-        appsListAdapter.setItems(appsList);
-        appsListAdapter.filterAppsByName(filter);
-        appsListAdapter.notifyDataSetChanged();
-    }
-
     private void setSortBy(int sortBy) {
         sharedPreferencesEditor.putInt(getString(R.string.sort_by_key), sortBy);
         sharedPreferencesEditor.commit();
-        reloadAdapterItems(searchView.getQuery().toString());
+        appsListAdapter.filterAppsByName(searchView.getQuery().toString());
     }
 }
