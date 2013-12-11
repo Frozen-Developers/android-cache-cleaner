@@ -82,18 +82,25 @@ public class CacheManager {
     }
 
     private boolean isProgressBarShowing() {
-        return CleanerActivity.activity.findViewById(R.id.progressBar).getVisibility() == View.VISIBLE;
+        View progressBar = CleanerActivity.activity.findViewById(R.id.progressBar);
+
+        if(progressBar != null)
+            return progressBar.getVisibility() == View.VISIBLE;
+
+        return false;
     }
 
     private void showProgressBar(boolean show) {
         View progressBar = CleanerActivity.activity.findViewById(R.id.progressBar);
 
-        if(show) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        else {
-            progressBar.startAnimation(AnimationUtils.loadAnimation(activity, android.R.anim.fade_out));
-            progressBar.setVisibility(View.GONE);
+        if(progressBar != null) {
+            if(show) {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+            else {
+                progressBar.startAnimation(AnimationUtils.loadAnimation(activity, android.R.anim.fade_out));
+                progressBar.setVisibility(View.GONE);
+            }
         }
     }
 
