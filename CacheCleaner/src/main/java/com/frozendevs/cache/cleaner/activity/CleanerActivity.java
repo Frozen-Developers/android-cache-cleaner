@@ -86,21 +86,23 @@ public class CleanerActivity extends ActionBarActivity {
         cacheManager.setOnScanCompletedListener(new CacheManager.OnScanCompletedListener() {
             @Override
             public void onScanCompleted() {
-                appsListAdapter.setItems(cacheManager.getAppsList());
-                if(searchView != null) {
-                    if(searchView.isShown()) {
-                        appsListAdapter.filterAppsByName(searchView.getQuery().toString());
-                        updateChart = false;
+                if(appsListAdapter != null) {
+                    appsListAdapter.setItems(cacheManager.getAppsList());
+                    if(searchView != null) {
+                        if(searchView.isShown()) {
+                            appsListAdapter.filterAppsByName(searchView.getQuery().toString());
+                            updateChart = false;
+                        }
                     }
-                }
-                appsListAdapter.notifyDataSetChanged();
+                    appsListAdapter.notifyDataSetChanged();
 
-                if(!alreadyScanned) {
-                    alreadyScanned = true;
+                    if(!alreadyScanned) {
+                        alreadyScanned = true;
 
-                    if(sharedPreferences.getBoolean(getString(R.string.clean_on_startup_key), false)) {
-                        alreadyCleaned = true;
-                        cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
+                        if(sharedPreferences.getBoolean(getString(R.string.clean_on_startup_key), false)) {
+                            alreadyCleaned = true;
+                            cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
+                        }
                     }
                 }
             }
@@ -108,8 +110,10 @@ public class CleanerActivity extends ActionBarActivity {
         cacheManager.setOnCleanCompletedListener(new CacheManager.OnCleanCompletedListener() {
             @Override
             public void OnCleanCompleted() {
-                appsListAdapter.setItems(new ArrayList<AppsListItem>());
-                appsListAdapter.notifyDataSetChanged();
+                if(appsListAdapter != null) {
+                    appsListAdapter.setItems(new ArrayList<AppsListItem>());
+                    appsListAdapter.notifyDataSetChanged();
+                }
 
                 if(!alreadyCleaned) {
                     if(sharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
