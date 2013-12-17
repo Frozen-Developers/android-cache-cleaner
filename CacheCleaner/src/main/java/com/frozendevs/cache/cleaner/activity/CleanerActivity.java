@@ -24,9 +24,8 @@ import com.frozendevs.cache.cleaner.helper.CacheManager;
 import com.frozendevs.cache.cleaner.view.LinearColorBar;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class CleanerActivity extends ActionBarActivity {
+public class CleanerActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private LinearColorBar colorBar;
     private TextView usedStorageText;
@@ -216,12 +215,14 @@ public class CleanerActivity extends ActionBarActivity {
     protected void onStart() {
         super.onStart();
 
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         cacheManager.onStart();
     }
 
     @Override
     protected void onStop() {
         cacheManager.onStop();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onStop();
     }
@@ -267,5 +268,19 @@ public class CleanerActivity extends ActionBarActivity {
         sharedPreferencesEditor.putInt(getString(R.string.sort_by_key), sortBy);
         sharedPreferencesEditor.commit();
         appsListAdapter.filterAppsByName(searchView.getQuery().toString());
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals(getString(R.string.sort_by_key))) {
+            if(appsListAdapter != null) {
+                appsListAdapter.sort();
+                if(searchView != null) {
+                    if(searchView.isShown())
+                        appsListAdapter.filterAppsByName(searchView.getQuery().toString());
+                }
+                appsListAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

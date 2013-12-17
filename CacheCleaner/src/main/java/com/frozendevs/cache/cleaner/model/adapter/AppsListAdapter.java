@@ -117,22 +117,7 @@ public class AppsListAdapter extends BaseAdapter {
     public void setItems(List<AppsListItem> items) {
         this.items = items;
 
-        Collections.sort(this.items, new Comparator<AppsListItem>() {
-            @Override
-            public int compare(AppsListItem lhs, AppsListItem rhs) {
-                switch (sharedPreferences.getInt(context.getString(R.string.sort_by_key), SORT_BY_CACHE_SIZE)) {
-                    case SORT_BY_APP_NAME:
-                        return lhs.getApplicationName().compareToIgnoreCase(rhs.getApplicationName());
-
-                    case SORT_BY_CACHE_SIZE:
-                        return (int)(rhs.getCacheSize() - lhs.getCacheSize());
-                }
-
-                return 0;
-            }
-        });
-
-        filteredItems = new ArrayList<AppsListItem>(items);
+        sort();
     }
 
     public void filterAppsByName(String filter) {
@@ -160,5 +145,24 @@ public class AppsListAdapter extends BaseAdapter {
             size += app.getCacheSize();
 
         return size;
+    }
+
+    public void sort() {
+        Collections.sort(this.items, new Comparator<AppsListItem>() {
+            @Override
+            public int compare(AppsListItem lhs, AppsListItem rhs) {
+                switch (sharedPreferences.getInt(context.getString(R.string.sort_by_key), SORT_BY_CACHE_SIZE)) {
+                    case SORT_BY_APP_NAME:
+                        return lhs.getApplicationName().compareToIgnoreCase(rhs.getApplicationName());
+
+                    case SORT_BY_CACHE_SIZE:
+                        return (int)(rhs.getCacheSize() - lhs.getCacheSize());
+                }
+
+                return 0;
+            }
+        });
+
+        filteredItems = new ArrayList<AppsListItem>(items);
     }
 }
