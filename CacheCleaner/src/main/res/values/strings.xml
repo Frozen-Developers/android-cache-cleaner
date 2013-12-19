@@ -45,7 +45,7 @@
 
         <!-- Exit after clean up -->
     <string name="exit_after_clean">Exit after cache clean up</string>
-    <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is complete</string>
+    <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is completed</string>
     <string name="exit_after_clean_key">exit_after_clean</string>
 
         <!-- About -->
