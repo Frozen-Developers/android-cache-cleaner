@@ -33,7 +33,7 @@
 
         </LinearLayout>
 
-        <view class="com.frozendevs.cache.cleaner.view.LinearColorBar"
+        <view class="com.android.settings.applications.LinearColorBar"
             android:id="@+id/storage_color_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

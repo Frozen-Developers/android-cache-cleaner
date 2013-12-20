@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.frozendevs.cache.cleaner.view;
+package com.android.settings.applications;
 
 import android.content.Context;
 import android.graphics.Canvas;

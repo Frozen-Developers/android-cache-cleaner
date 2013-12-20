@@ -17,11 +17,11 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.settings.applications.LinearColorBar;
 import com.frozendevs.cache.cleaner.R;
 import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
 import com.frozendevs.cache.cleaner.helper.AppsListItem;
 import com.frozendevs.cache.cleaner.helper.CacheManager;
-import com.frozendevs.cache.cleaner.view.LinearColorBar;
 
 import java.util.ArrayList;
 
