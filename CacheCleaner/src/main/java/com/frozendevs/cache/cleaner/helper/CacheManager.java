@@ -8,7 +8,6 @@ import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
-import android.os.Build;
 import android.os.Environment;
 import android.os.RemoteException;
 import android.os.StatFs;
@@ -179,13 +178,9 @@ public class CacheManager {
                 public void run() {
                     StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-                    long freeSpace;
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
-                        freeSpace = stat.getFreeBytes();
-                    else
-                        freeSpace = (long) stat.getFreeBlocks() * (long) stat.getBlockSize();
-
-                    invokePackageManagersMethod("freeStorageAndNotify", 2 * cacheSize + freeSpace, new IPackageDataObserver.Stub() {
+                    invokePackageManagersMethod("freeStorageAndNotify",
+                            (2 * cacheSize) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
+                            new IPackageDataObserver.Stub() {
                         @Override
                         public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
                             activity.runOnUiThread(new Runnable() {
