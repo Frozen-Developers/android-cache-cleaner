@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class AppsListAdapter extends BaseAdapter {
 
@@ -123,8 +124,10 @@ public class AppsListAdapter extends BaseAdapter {
     public void filterAppsByName(String filter) {
         List<AppsListItem> filteredItems = new ArrayList<AppsListItem>();
 
+        Locale current = context.getResources().getConfiguration().locale;
+
         for(AppsListItem item : items)
-            if(item.getApplicationName().toLowerCase().contains(filter.toLowerCase()))
+            if(item.getApplicationName().toLowerCase(current).contains(filter.toLowerCase(current)))
                 filteredItems.add(item);
 
         this.filteredItems = filteredItems;
