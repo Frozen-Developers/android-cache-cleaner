@@ -4,7 +4,6 @@
     <!-- Globals -->
     <string name="app_name">Cache Cleaner</string>
     <string name="author_name">Frozen Developers</string>
-    <string name="version_name">1.0</string>
 
     <!-- Menu items -->
     <string name="action_clean">Clean</string>

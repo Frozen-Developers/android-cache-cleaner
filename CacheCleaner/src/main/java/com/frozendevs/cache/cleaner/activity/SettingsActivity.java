@@ -2,6 +2,8 @@ package com.frozendevs.cache.cleaner.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -16,6 +18,18 @@ public class SettingsActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
+
+        String versionName = null;
+        PackageManager packageManager = getPackageManager();
+        if (packageManager != null) {
+            try {
+                PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+                versionName = packageInfo.versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                versionName = "N/A";
+            }
+        }
+        findPreference("version").setSummary(versionName);
 
         findPreference("licences").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
