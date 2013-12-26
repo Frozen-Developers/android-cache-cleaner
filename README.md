@@ -10,3 +10,9 @@ Cache Cleaner for Android:
   - Does not require root
 
 That says it all.
+
+Download
+--------
+
+You can download this application from Play store:  
+[https://play.google.com/store/apps/details?id=com.frozendevs.cache.cleaner](https://play.google.com/store/apps/details?id=com.frozendevs.cache.cleaner)
