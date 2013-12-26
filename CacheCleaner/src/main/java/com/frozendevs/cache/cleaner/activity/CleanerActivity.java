@@ -215,14 +215,18 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     protected void onStart() {
         super.onStart();
 
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        cacheManager.onStart();
+        if(sharedPreferences != null)
+            sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        if(cacheManager != null)
+            cacheManager.onStart();
     }
 
     @Override
     protected void onStop() {
-        cacheManager.onStop();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        if(cacheManager != null)
+            cacheManager.onStop();
+        if(sharedPreferences != null)
+            sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onStop();
     }
