@@ -25,7 +25,7 @@ import com.frozendevs.cache.cleaner.helper.CacheManager;
 
 import java.util.ArrayList;
 
-public class CleanerActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class CleanerActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener, CacheManager.OnActionListener {
 
     private LinearColorBar colorBar;
     private TextView usedStorageText;
@@ -82,45 +82,7 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
 
         if(cacheManager == null)
             cacheManager = new CacheManager(this);
-        cacheManager.setOnScanCompletedListener(new CacheManager.OnScanCompletedListener() {
-            @Override
-            public void onScanCompleted() {
-                if(appsListAdapter != null) {
-                    appsListAdapter.setItems(cacheManager.getAppsList());
-                    if(searchView != null) {
-                        if(searchView.isShown()) {
-                            appsListAdapter.filterAppsByName(searchView.getQuery().toString());
-                            updateChart = false;
-                        }
-                    }
-                    appsListAdapter.notifyDataSetChanged();
-
-                    if(!alreadyScanned) {
-                        alreadyScanned = true;
-
-                        if(sharedPreferences.getBoolean(getString(R.string.clean_on_startup_key), false)) {
-                            alreadyCleaned = true;
-                            cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
-                        }
-                    }
-                }
-            }
-        });
-        cacheManager.setOnCleanCompletedListener(new CacheManager.OnCleanCompletedListener() {
-            @Override
-            public void OnCleanCompleted() {
-                if(appsListAdapter != null) {
-                    appsListAdapter.setItems(new ArrayList<AppsListItem>());
-                    appsListAdapter.notifyDataSetChanged();
-                }
-
-                if(!alreadyCleaned) {
-                    if(sharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
-                        finish();
-                    }
-                }
-            }
-        });
+        cacheManager.setOnActionListener(this);
 
         if(!alreadyScanned) {
             cacheManager.scanCache();
@@ -284,6 +246,53 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
                         appsListAdapter.filterAppsByName(searchView.getQuery().toString());
                 }
                 appsListAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void onScanStarted() {
+
+    }
+
+    @Override
+    public void onScanCompleted() {
+        if(appsListAdapter != null) {
+            appsListAdapter.setItems(cacheManager.getAppsList());
+            if(searchView != null) {
+                if(searchView.isShown()) {
+                    appsListAdapter.filterAppsByName(searchView.getQuery().toString());
+                    updateChart = false;
+                }
+            }
+            appsListAdapter.notifyDataSetChanged();
+
+            if(!alreadyScanned) {
+                alreadyScanned = true;
+
+                if(sharedPreferences.getBoolean(getString(R.string.clean_on_startup_key), false)) {
+                    alreadyCleaned = true;
+                    cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onCleanStarted() {
+
+    }
+
+    @Override
+    public void onCleanCompleted() {
+        if(appsListAdapter != null) {
+            appsListAdapter.setItems(new ArrayList<AppsListItem>());
+            appsListAdapter.notifyDataSetChanged();
+        }
+
+        if(!alreadyCleaned) {
+            if(sharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
+                finish();
             }
         }
     }

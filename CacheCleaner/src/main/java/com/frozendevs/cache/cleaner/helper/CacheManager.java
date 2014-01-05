@@ -9,6 +9,8 @@ import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
 import android.text.format.Formatter;
@@ -31,18 +33,17 @@ public class CacheManager {
     private PackageManager packageManager;
     private Activity activity;
     private static List<AppsListItem> apps;
-    private OnScanCompletedListener onScanCompletedListener = null;
-    private OnCleanCompletedListener onCleanCompletedListener = null;
+    private OnActionListener onActionListener = null;
     private ProgressDialog progressDialog;
     private static boolean isScanning = false;
     private static boolean isCleaning = false;
 
-    public static abstract class OnScanCompletedListener {
-        public abstract void onScanCompleted();
-    }
+    public static interface OnActionListener {
+        public void onScanStarted();
+        public void onScanCompleted();
 
-    public static abstract class OnCleanCompletedListener {
-        public abstract void OnCleanCompleted();
+        public void onCleanStarted();
+        public void onCleanCompleted();
     }
 
     public CacheManager(Activity activity) {
@@ -108,6 +109,9 @@ public class CacheManager {
         if(!isScanning) {
             isScanning = true;
 
+            if(onActionListener != null)
+                onActionListener.onScanStarted();
+
             showProgressBar(true);
 
             apps = new ArrayList<AppsListItem>();
@@ -137,8 +141,8 @@ public class CacheManager {
                                     activity.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if (onScanCompletedListener != null)
-                                                onScanCompletedListener.onScanCompleted();
+                                            if (onActionListener != null)
+                                                onActionListener.onScanCompleted();
 
                                             isScanning = false;
 
@@ -158,17 +162,16 @@ public class CacheManager {
         return new ArrayList<AppsListItem>(apps);
     }
 
-    public void setOnScanCompletedListener(OnScanCompletedListener listener) {
-        onScanCompletedListener = listener;
-    }
-
-    public void setOnCleanCompletedListener(OnCleanCompletedListener listener) {
-        onCleanCompletedListener = listener;
+    public void setOnActionListener(OnActionListener listener) {
+        onActionListener = listener;
     }
 
     public void cleanCache(final long cacheSize) {
         if(cacheSize > 0 && !isCleaning) {
             isCleaning = true;
+
+            if(onActionListener != null)
+                onActionListener.onCleanStarted();
 
             progressDialog.show();
 
@@ -187,8 +190,8 @@ public class CacheManager {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (onCleanCompletedListener != null)
-                                        onCleanCompletedListener.OnCleanCompleted();
+                                    if (onActionListener != null)
+                                        onActionListener.onCleanCompleted();
 
                                     isCleaning = false;
 
@@ -219,5 +222,13 @@ public class CacheManager {
     public void onStop() {
         if(progressDialog.isShowing())
             progressDialog.dismiss();
+    }
+
+    public boolean isScanning() {
+        return isScanning;
+    }
+
+    public boolean isCleaning() {
+        return isCleaning;
     }
 }
