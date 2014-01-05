@@ -1,8 +1,5 @@
 package com.frozendevs.cache.cleaner.helper;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
@@ -13,14 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
-import android.text.format.Formatter;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
-import com.frozendevs.cache.cleaner.R;
-import com.frozendevs.cache.cleaner.activity.CleanerActivity;
 import com.frozendevs.cache.cleaner.model.AppsListItem;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,10 +21,8 @@ import java.util.List;
 public class CacheManager {
 
     private PackageManager packageManager;
-    private Activity activity;
     private static List<AppsListItem> apps;
     private OnActionListener onActionListener = null;
-    private ProgressDialog progressDialog;
     private static boolean isScanning = false;
     private static boolean isCleaning = false;
 
@@ -43,24 +31,11 @@ public class CacheManager {
         public void onScanCompleted();
 
         public void onCleanStarted();
-        public void onCleanCompleted();
+        public void onCleanCompleted(long cacheSize);
     }
 
-    public CacheManager(Activity activity) {
-        this.activity = activity;
-        packageManager = activity.getPackageManager();
-
-        progressDialog = new ProgressDialog(activity);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setTitle(R.string.cleaning_cache);
-        progressDialog.setMessage(activity.getString(R.string.cleaning_in_progress));
-        progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                return true;
-            }
-        });
+    public CacheManager(PackageManager packageManager) {
+        this.packageManager = packageManager;
     }
 
     private Method getPackageManagersMethod(String methodName) {
@@ -82,37 +57,12 @@ public class CacheManager {
         }
     }
 
-    private boolean isProgressBarShowing() {
-        View progressBar = CleanerActivity.activity.findViewById(R.id.progressBar);
-
-        if(progressBar != null)
-            return progressBar.getVisibility() == View.VISIBLE;
-
-        return false;
-    }
-
-    private void showProgressBar(boolean show) {
-        View progressBar = CleanerActivity.activity.findViewById(R.id.progressBar);
-
-        if(progressBar != null) {
-            if(show) {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-            else {
-                progressBar.startAnimation(AnimationUtils.loadAnimation(activity, android.R.anim.fade_out));
-                progressBar.setVisibility(View.GONE);
-            }
-        }
-    }
-
     public void scanCache() {
         if(!isScanning) {
             isScanning = true;
 
             if(onActionListener != null)
                 onActionListener.onScanStarted();
-
-            showProgressBar(true);
 
             apps = new ArrayList<AppsListItem>();
 
@@ -138,15 +88,13 @@ public class CacheManager {
                                 }
 
                                 if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
-                                    activity.runOnUiThread(new Runnable() {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                                         @Override
                                         public void run() {
                                             if (onActionListener != null)
                                                 onActionListener.onScanCompleted();
 
                                             isScanning = false;
-
-                                            showProgressBar(false);
                                         }
                                     });
                                 }
@@ -173,8 +121,6 @@ public class CacheManager {
             if(onActionListener != null)
                 onActionListener.onCleanStarted();
 
-            progressDialog.show();
-
             apps = new ArrayList<AppsListItem>();
 
             new Thread(new Runnable() {
@@ -187,19 +133,13 @@ public class CacheManager {
                             new IPackageDataObserver.Stub() {
                         @Override
                         public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
-                            activity.runOnUiThread(new Runnable() {
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (onActionListener != null)
-                                        onActionListener.onCleanCompleted();
+                                        onActionListener.onCleanCompleted(cacheSize);
 
                                     isCleaning = false;
-
-                                    progressDialog.dismiss();
-
-                                    Toast.makeText(activity, activity.getString(R.string.cleaned) + " (" +
-                                            Formatter.formatShortFileSize(activity, cacheSize) + ")",
-                                            Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
@@ -207,21 +147,6 @@ public class CacheManager {
                 }
             }).start();
         }
-    }
-
-    public void onStart() {
-        if(isScanning && !isProgressBarShowing())
-            showProgressBar(true);
-        else if(!isScanning && isProgressBarShowing())
-            showProgressBar(false);
-
-        if(isCleaning && !progressDialog.isShowing())
-            progressDialog.show();
-    }
-
-    public void onStop() {
-        if(progressDialog.isShowing())
-            progressDialog.dismiss();
     }
 
     public boolean isScanning() {
