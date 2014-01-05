@@ -47,6 +47,11 @@
     <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is completed</string>
     <string name="exit_after_clean_key">exit_after_clean</string>
 
+        <!-- Clean on boot up preference -->
+    <string name="clean_on_boot_up">Clean cache on boot up</string>
+    <string name="clean_on_boot_up_summary">Automatically clean cache on device boot up</string>
+    <string name="clean_on_boot_up_key">clean_on_boot_up</string>
+
         <!-- About -->
     <string name="about_app">About Cache Cleaner</string>
     <string name="author">Author</string>

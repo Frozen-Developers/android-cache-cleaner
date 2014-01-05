@@ -44,6 +44,10 @@
     <string name="exit_after_clean">Odchod po vyčistení medzipamäte</string>
     <string name="exit_after_clean_summary">Odchod po slačení tlačidla Vyčistiť a ukončení čistenia</string>
 
+        <!-- Clean on boot up preference -->
+    <string name="clean_on_boot_up">Vyčistiť medzipamäť pri boote</string>
+    <string name="clean_on_boot_up_summary">Automaticky vyčistiť medzipamäť pri štarte zariadenia</string>
+
         <!-- About -->
     <string name="about_app">O Čističi medzipamäte</string>
     <string name="author">Autor</string>

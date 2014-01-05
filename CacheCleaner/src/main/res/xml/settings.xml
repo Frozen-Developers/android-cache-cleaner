@@ -15,6 +15,11 @@
             android:summary="@string/exit_after_clean_summary"
             android:key="@string/exit_after_clean_key" />
 
+        <CheckBoxPreference
+            android:title="@string/clean_on_boot_up"
+            android:summary="@string/clean_on_boot_up_summary"
+            android:key="@string/clean_on_boot_up_key" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
