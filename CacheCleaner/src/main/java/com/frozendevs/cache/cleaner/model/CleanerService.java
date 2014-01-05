@@ -9,6 +9,8 @@ import android.widget.Toast;
 import com.frozendevs.cache.cleaner.R;
 import com.frozendevs.cache.cleaner.helper.CacheManager;
 
+import java.util.List;
+
 public class CleanerService extends Service implements CacheManager.OnActionListener {
 
     private CacheManager cacheManager = null;
@@ -35,10 +37,10 @@ public class CleanerService extends Service implements CacheManager.OnActionList
     }
 
     @Override
-    public void onScanCompleted() {
+    public void onScanCompleted(List<AppsListItem> apps) {
         long size = 0;
 
-        for(AppsListItem app : cacheManager.getAppsList())
+        for(AppsListItem app : apps)
             size += app.getCacheSize();
 
         cacheManager.cleanCache(size);

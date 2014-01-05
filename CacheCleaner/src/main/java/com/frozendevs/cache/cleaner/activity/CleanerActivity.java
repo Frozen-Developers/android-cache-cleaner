@@ -29,6 +29,7 @@ import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.helper.CacheManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CleanerActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener, CacheManager.OnActionListener {
 
@@ -146,12 +147,16 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_clean:
-                alreadyCleaned = false;
-                cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
+                if(!cacheManager.isScanning() && !cacheManager.isCleaning() &&
+                        appsListAdapter.getTotalCacheSize() > 0) {
+                    alreadyCleaned = false;
+                    cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
+                }
                 return true;
 
             case R.id.action_refresh:
-                cacheManager.scanCache();
+                if(!cacheManager.isScanning() && !cacheManager.isCleaning())
+                    cacheManager.scanCache();
                 return true;
 
             case R.id.action_settings:
@@ -302,9 +307,9 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     }
 
     @Override
-    public void onScanCompleted() {
+    public void onScanCompleted(List<AppsListItem> apps) {
         if(appsListAdapter != null) {
-            appsListAdapter.setItems(cacheManager.getAppsList());
+            appsListAdapter.setItems(apps);
             if(searchView != null) {
                 if(searchView.isShown()) {
                     appsListAdapter.filterAppsByName(searchView.getQuery().toString());

@@ -21,14 +21,13 @@ import java.util.List;
 public class CacheManager {
 
     private PackageManager packageManager;
-    private static List<AppsListItem> apps;
     private OnActionListener onActionListener = null;
     private static boolean isScanning = false;
     private static boolean isCleaning = false;
 
     public static interface OnActionListener {
         public void onScanStarted();
-        public void onScanCompleted();
+        public void onScanCompleted(List<AppsListItem> apps);
 
         public void onCleanStarted();
         public void onCleanCompleted(long cacheSize);
@@ -38,7 +37,7 @@ public class CacheManager {
         this.packageManager = packageManager;
     }
 
-    private Method getPackageManagersMethod(String methodName) {
+    private Method getMethod(String methodName) {
         for(Method method : packageManager.getClass().getMethods()) {
             if(method.getName().equals(methodName))
                 return method;
@@ -47,9 +46,9 @@ public class CacheManager {
         return null;
     }
 
-    private void invokePackageManagersMethod(String method, Object... args) {
+    private void invokeMethod(String method, Object... args) {
         try {
-            getPackageManagersMethod(method).invoke(packageManager, args);
+            getMethod(method).invoke(packageManager, args);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -58,56 +57,49 @@ public class CacheManager {
     }
 
     public void scanCache() {
-        if(!isScanning) {
-            isScanning = true;
+        isScanning = true;
 
-            if(onActionListener != null)
-                onActionListener.onScanStarted();
+        if(onActionListener != null)
+            onActionListener.onScanStarted();
 
-            apps = new ArrayList<AppsListItem>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final List<AppsListItem> apps = new ArrayList<AppsListItem>();
+                final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+                for (final ApplicationInfo pkg : packages) {
+                    invokeMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
 
-                    for (final ApplicationInfo pkg : packages) {
-                        invokePackageManagersMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
-
-                            @Override
-                            public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
-                                if (succeeded) {
-                                    try {
-                                        if (pStats.cacheSize > 0)
-                                            apps.add(new AppsListItem(pStats.packageName, packageManager.getApplicationLabel(
-                                                    packageManager.getApplicationInfo(pStats.packageName, PackageManager.GET_META_DATA)).toString(),
-                                                    packageManager.getApplicationIcon(pStats.packageName), pStats.cacheSize));
-                                    } catch (PackageManager.NameNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                                if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (onActionListener != null)
-                                                onActionListener.onScanCompleted();
-
-                                            isScanning = false;
-                                        }
-                                    });
+                        @Override
+                        public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
+                            if (succeeded) {
+                                try {
+                                    if (pStats.cacheSize > 0)
+                                        apps.add(new AppsListItem(pStats.packageName, packageManager.getApplicationLabel(
+                                                packageManager.getApplicationInfo(pStats.packageName, PackageManager.GET_META_DATA)).toString(),
+                                                packageManager.getApplicationIcon(pStats.packageName), pStats.cacheSize));
+                                } catch (PackageManager.NameNotFoundException e) {
+                                    e.printStackTrace();
                                 }
                             }
-                        });
-                    }
-                }
-            }).start();
-        }
-    }
 
-    public List<AppsListItem> getAppsList() {
-        return new ArrayList<AppsListItem>(apps);
+                            if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (onActionListener != null)
+                                            onActionListener.onScanCompleted(apps);
+
+                                        isScanning = false;
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     public void setOnActionListener(OnActionListener listener) {
@@ -115,38 +107,33 @@ public class CacheManager {
     }
 
     public void cleanCache(final long cacheSize) {
-        if(cacheSize > 0 && !isCleaning) {
-            isCleaning = true;
+        isCleaning = true;
 
-            if(onActionListener != null)
-                onActionListener.onCleanStarted();
+        if(onActionListener != null)
+            onActionListener.onCleanStarted();
 
-            apps = new ArrayList<AppsListItem>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+                invokeMethod("freeStorageAndNotify", (2 * cacheSize) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
+                        new IPackageDataObserver.Stub() {
+                            @Override
+                            public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (onActionListener != null)
+                                            onActionListener.onCleanCompleted(cacheSize);
 
-                    invokePackageManagersMethod("freeStorageAndNotify",
-                            (2 * cacheSize) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
-                            new IPackageDataObserver.Stub() {
-                        @Override
-                        public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (onActionListener != null)
-                                        onActionListener.onCleanCompleted(cacheSize);
-
-                                    isCleaning = false;
-                                }
-                            });
-                        }
-                    });
-                }
-            }).start();
-        }
+                                        isCleaning = false;
+                                    }
+                                });
+                            }
+                        });
+            }
+        }).start();
     }
 
     public boolean isScanning() {
