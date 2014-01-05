@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.android.settings.applications.LinearColorBar;
 import com.frozendevs.cache.cleaner.R;
 import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
-import com.frozendevs.cache.cleaner.helper.AppsListItem;
+import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.helper.CacheManager;
 
 import java.util.ArrayList;

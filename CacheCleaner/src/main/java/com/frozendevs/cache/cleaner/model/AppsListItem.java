@@ -1,4 +1,4 @@
-package com.frozendevs.cache.cleaner.helper;
+package com.frozendevs.cache.cleaner.model;
 
 import android.graphics.drawable.Drawable;
 

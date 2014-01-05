@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.frozendevs.cache.cleaner.helper.AppsListItem;
+import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.R;
 
 import java.util.ArrayList;

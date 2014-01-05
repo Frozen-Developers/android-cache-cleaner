@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.frozendevs.cache.cleaner.R;
 import com.frozendevs.cache.cleaner.activity.CleanerActivity;
+import com.frozendevs.cache.cleaner.model.AppsListItem;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
