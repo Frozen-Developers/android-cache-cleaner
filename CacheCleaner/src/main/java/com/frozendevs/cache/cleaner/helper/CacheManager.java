@@ -59,12 +59,12 @@ public class CacheManager {
     public void scanCache() {
         isScanning = true;
 
-        if(onActionListener != null)
-            onActionListener.onScanStarted();
-
-        new Thread(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                if(onActionListener != null)
+                    onActionListener.onScanStarted();
+
                 final List<AppsListItem> apps = new ArrayList<AppsListItem>();
                 final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
@@ -99,25 +99,22 @@ public class CacheManager {
                     });
                 }
             }
-        }).start();
-    }
-
-    public void setOnActionListener(OnActionListener listener) {
-        onActionListener = listener;
+        });
     }
 
     public void cleanCache(final long cacheSize) {
         isCleaning = true;
 
-        if(onActionListener != null)
-            onActionListener.onCleanStarted();
-
-        new Thread(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
+                if (onActionListener != null)
+                    onActionListener.onCleanStarted();
+
                 StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-                invokeMethod("freeStorageAndNotify", (2 * cacheSize) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
+                invokeMethod("freeStorageAndNotify",
+                        (2 * cacheSize) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
                         new IPackageDataObserver.Stub() {
                             @Override
                             public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
@@ -133,7 +130,11 @@ public class CacheManager {
                             }
                         });
             }
-        }).start();
+        });
+    }
+
+    public void setOnActionListener(OnActionListener listener) {
+        onActionListener = listener;
     }
 
     public boolean isScanning() {
