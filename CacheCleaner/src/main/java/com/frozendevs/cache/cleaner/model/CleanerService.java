@@ -2,8 +2,10 @@ package com.frozendevs.cache.cleaner.model;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.frozendevs.cache.cleaner.R;
@@ -12,6 +14,8 @@ import com.frozendevs.cache.cleaner.helper.CacheManager;
 import java.util.List;
 
 public class CleanerService extends Service implements CacheManager.OnActionListener {
+
+    private static final String TAG = "CleanerService";
 
     private CacheManager cacheManager = null;
 
@@ -29,6 +33,7 @@ public class CleanerService extends Service implements CacheManager.OnActionList
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         cacheManager.scanCache();
+        
         return START_STICKY;
     }
 
@@ -53,9 +58,18 @@ public class CleanerService extends Service implements CacheManager.OnActionList
 
     @Override
     public void onCleanCompleted(long cacheSize) {
-        Toast.makeText(this, getString(R.string.cleaned) + " (" +
-                Formatter.formatShortFileSize(this, cacheSize) + ")", Toast.LENGTH_LONG).show();
+        String msg = getString(R.string.cleaned) + " (" +
+                Formatter.formatShortFileSize(this, cacheSize) + ")";
 
-        stopSelf();
+        Log.d(TAG, msg);
+
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopSelf();
+            }
+        }, 5000);
     }
 }
