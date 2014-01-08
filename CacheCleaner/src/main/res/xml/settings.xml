@@ -6,9 +6,9 @@
         android:title="@string/main_preferences">
 
         <CheckBoxPreference
-            android:title="@string/clean_on_startup"
-            android:summary="@string/clean_on_startup_summary"
-            android:key="@string/clean_on_startup_key" />
+            android:title="@string/clean_on_app_startup"
+            android:summary="@string/clean_on_app_startup_summary"
+            android:key="@string/clean_on_app_startup_key" />
 
         <CheckBoxPreference
             android:title="@string/exit_after_clean"
@@ -16,9 +16,9 @@
             android:key="@string/exit_after_clean_key" />
 
         <CheckBoxPreference
-            android:title="@string/clean_on_boot_up"
-            android:summary="@string/clean_on_boot_up_summary"
-            android:key="@string/clean_on_boot_up_key" />
+            android:title="@string/clean_on_device_startup"
+            android:summary="@string/clean_on_device_startup_summary"
+            android:key="@string/clean_on_device_startup_key" />
 
     </PreferenceCategory>
 

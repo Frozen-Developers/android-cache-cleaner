@@ -326,7 +326,7 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
             if(!alreadyScanned) {
                 alreadyScanned = true;
 
-                if(sharedPreferences.getBoolean(getString(R.string.clean_on_startup_key), false)) {
+                if(sharedPreferences.getBoolean(getString(R.string.clean_on_app_startup_key), false)) {
                     alreadyCleaned = true;
                     cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
                 }

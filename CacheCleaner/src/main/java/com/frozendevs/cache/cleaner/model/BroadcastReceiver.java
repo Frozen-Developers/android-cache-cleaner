@@ -14,7 +14,7 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED) &&
-                sharedPreferences.getBoolean(context.getString(R.string.clean_on_boot_up_key), false)) {
+                sharedPreferences.getBoolean(context.getString(R.string.clean_on_device_startup_key), false)) {
             context.startService(new Intent(context, CleanerService.class));
         }
     }

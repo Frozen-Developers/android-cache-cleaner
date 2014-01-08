@@ -37,20 +37,20 @@
     <string name="main_preferences">Main preferences</string>
     <string name="about">About</string>
 
-        <!-- Clean on startup preference -->
-    <string name="clean_on_startup">Clean cache on startup</string>
-    <string name="clean_on_startup_summary">Automatically clean cache on application startup</string>
-    <string name="clean_on_startup_key">clean_on_startup</string>
+        <!-- Clean on app startup preference -->
+    <string name="clean_on_app_startup">Clean on app startup</string>
+    <string name="clean_on_app_startup_summary">Automatically clean cache on application startup</string>
+    <string name="clean_on_app_startup_key">clean_on_app_startup</string>
 
         <!-- Exit after clean up -->
-    <string name="exit_after_clean">Exit after cache clean up</string>
+    <string name="exit_after_clean">Exit after clean up</string>
     <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is completed</string>
     <string name="exit_after_clean_key">exit_after_clean</string>
 
-        <!-- Clean on boot up preference -->
-    <string name="clean_on_boot_up">Clean cache on boot up</string>
-    <string name="clean_on_boot_up_summary">Automatically clean cache on device boot up</string>
-    <string name="clean_on_boot_up_key">clean_on_boot_up</string>
+        <!-- Clean on device startup preference -->
+    <string name="clean_on_device_startup">Clean on device startup</string>
+    <string name="clean_on_device_startup_summary">Automatically clean cache on device startup</string>
+    <string name="clean_on_device_startup_key">clean_on_device_startup</string>
 
         <!-- About -->
     <string name="about_app">About Cache Cleaner</string>
