@@ -304,7 +304,8 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     @Override
     public void onScanStarted() {
         if(progressDialog != null)
-            progressDialog.dismiss();
+            if(progressDialog.isShowing())
+                progressDialog.dismiss();
         
         showProgressBar(true);
     }
@@ -336,7 +337,8 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
 
     @Override
     public void onCleanStarted() {
-        showProgressBar(false);
+        if(isProgressBarShowing())
+            showProgressBar(false);
 
         if(progressDialog != null)
             progressDialog.show();
