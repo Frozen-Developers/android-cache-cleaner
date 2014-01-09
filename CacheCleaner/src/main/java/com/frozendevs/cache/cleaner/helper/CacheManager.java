@@ -62,7 +62,7 @@ public class CacheManager {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                if(onActionListener != null)
+                if (onActionListener != null)
                     onActionListener.onScanStarted();
 
                 final List<AppsListItem> apps = new ArrayList<AppsListItem>();
@@ -85,13 +85,13 @@ public class CacheManager {
                             }
 
                             if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
+                                isScanning = false;
+
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
                                     public void run() {
                                         if (onActionListener != null)
                                             onActionListener.onScanCompleted(apps);
-
-                                        isScanning = false;
                                     }
                                 });
                             }
@@ -118,13 +118,13 @@ public class CacheManager {
                         new IPackageDataObserver.Stub() {
                             @Override
                             public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
+                                isCleaning = false;
+                                
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
                                     public void run() {
                                         if (onActionListener != null)
                                             onActionListener.onCleanCompleted(cacheSize);
-
-                                        isCleaning = false;
                                     }
                                 });
                             }
