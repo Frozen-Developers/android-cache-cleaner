@@ -47,6 +47,7 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     private SearchView searchView;
     private ProgressDialog progressDialog;
     private View progressBar;
+    private TextView progressBarText;
 
     private static boolean alreadyScanned = false;
     private static boolean alreadyCleaned = false;
@@ -84,6 +85,7 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
         });
 
         progressBar = findViewById(R.id.progressBar);
+        progressBarText = (TextView)findViewById(R.id.progressBarText);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -286,6 +288,11 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
         }
     }
 
+    private void setProgressBarProgress(int current, int max) {
+        if(progressBarText != null)
+            progressBarText.setText(getString(R.string.scanning) + " " + current + "/" + max);
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(getString(R.string.sort_by_key))) {
@@ -301,12 +308,18 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     }
 
     @Override
-    public void onScanStarted() {
+    public void onScanStarted(int appsCount) {
         if(progressDialog != null)
             if(progressDialog.isShowing())
                 progressDialog.dismiss();
-        
+
+        setProgressBarProgress(0, appsCount);
         showProgressBar(true);
+    }
+
+    @Override
+    public void onScanProgressUpdated(int current, int max) {
+        setProgressBarProgress(current, max);
     }
 
     @Override

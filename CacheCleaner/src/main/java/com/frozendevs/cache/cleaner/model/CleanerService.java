@@ -38,7 +38,13 @@ public class CleanerService extends Service implements CacheManager.OnActionList
     }
 
     @Override
-    public void onScanStarted() {
+    public void onScanStarted(int appsCount) {
+
+    }
+
+    @Override
+    public void onScanProgressUpdated(int current, int max) {
+
     }
 
     @Override

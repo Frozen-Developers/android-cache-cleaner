@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
 
@@ -18,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class CacheManager {
 
@@ -29,31 +28,38 @@ public class CacheManager {
     private TaskClean taskClean;
 
     public static interface OnActionListener {
-        public void onScanStarted();
+        public void onScanStarted(int appsCount);
+        public void onScanProgressUpdated(int current, int max);
         public void onScanCompleted(List<AppsListItem> apps);
 
         public void onCleanStarted();
         public void onCleanCompleted(long cacheSize);
     }
 
-    private class TaskScan extends AsyncTask<Void, Void, Void> {
+    private class TaskScan extends AsyncTask<Void, Integer, Void> {
+
+        private CountDownLatch countDownLatch = new CountDownLatch(1);
+        private List<AppsListItem> apps = new ArrayList<AppsListItem>();
+        private List<ApplicationInfo> packages;
+        private int appCount = 0;
 
         @Override
         protected void onPreExecute () {
+            packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+
             if (onActionListener != null)
-                onActionListener.onScanStarted();
+                onActionListener.onScanStarted(packages.size());
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            final List<AppsListItem> apps = new ArrayList<AppsListItem>();
-            final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-
             for (ApplicationInfo pkg : packages) {
                 invokeMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
 
                     @Override
                     public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
+                        publishProgress(appCount++);
+
                         if (succeeded) {
                             try {
                                 if (pStats.cacheSize > 0)
@@ -66,27 +72,40 @@ public class CacheManager {
                         }
 
                         if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
-                            taskScan = new TaskScan();
-
                             isScanning = false;
 
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (onActionListener != null)
-                                        onActionListener.onScanCompleted(apps);
-                                }
-                            });
+                            countDownLatch.countDown();
                         }
                     }
                 });
             }
 
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+            }
+
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate (Integer... values) {
+            if(onActionListener != null)
+                onActionListener.onScanProgressUpdated(values[0], packages.size());
+        }
+
+        @Override
+        protected void onPostExecute (Void result) {
+            if (onActionListener != null)
+                onActionListener.onScanCompleted(apps);
+
+            taskScan = new TaskScan();
         }
     }
 
-    private class TaskClean extends AsyncTask<Long, Void, Void> {
+    private class TaskClean extends AsyncTask<Long, Void, Long> {
+
+        private CountDownLatch countDownLatch = new CountDownLatch(1);
 
         @Override
         protected void onPreExecute () {
@@ -95,7 +114,7 @@ public class CacheManager {
         }
 
         @Override
-        protected Void doInBackground(final Long... params) {
+        protected Long doInBackground(Long... params) {
             StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
             invokeMethod("freeStorageAndNotify",
@@ -103,21 +122,26 @@ public class CacheManager {
                     new IPackageDataObserver.Stub() {
                         @Override
                         public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
-                            taskClean = new TaskClean();
-
                             isCleaning = false;
 
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (onActionListener != null)
-                                        onActionListener.onCleanCompleted(params[0]);
-                                }
-                            });
+                            countDownLatch.countDown();
                         }
                     });
 
-            return null;
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+            }
+
+            return params[0];
+        }
+
+        @Override
+        protected void onPostExecute (Long result) {
+            if (onActionListener != null)
+                onActionListener.onCleanCompleted(result);
+
+            taskClean = new TaskClean();
         }
     }
 

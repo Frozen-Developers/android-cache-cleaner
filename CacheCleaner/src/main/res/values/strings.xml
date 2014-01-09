@@ -23,7 +23,7 @@
     <string name="no_such_app">No such application.</string>
 
     <!-- Progress bar -->
-    <string name="scanning">Scanning…</string>
+    <string name="scanning">Scanning</string>
 
     <!-- Progress dialog -->
     <string name="cleaning_cache">Cleaning cache</string>

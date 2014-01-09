@@ -22,7 +22,7 @@
     <string name="no_such_app">Žiadna podobná aplikácia.</string>
 
     <!-- Progress bar -->
-    <string name="scanning">Skenovanie…</string>
+    <string name="scanning">Skenovanie</string>
 
     <!-- Progress dialog -->
     <string name="cleaning_cache">Čistenie medzipamäte</string>

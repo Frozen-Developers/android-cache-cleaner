@@ -100,9 +100,9 @@
             style="?android:attr/progressBarStyleLarge" />
 
         <TextView
+            android:id="@+id/progressBarText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/scanning"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:paddingTop="4dip"
             android:singleLine="true" />
