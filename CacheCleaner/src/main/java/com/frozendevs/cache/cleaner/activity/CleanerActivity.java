@@ -82,8 +82,6 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
             }
         });
 
-        updateStorageUsage();
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -197,9 +195,6 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     protected void onStart() {
         super.onStart();
 
-        if(sharedPreferences != null)
-            sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
         if(cacheManager != null) {
             if(cacheManager.isScanning() && !isProgressBarShowing())
                 showProgressBar(true);
@@ -209,6 +204,11 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
             if(cacheManager.isCleaning() && !progressDialog.isShowing())
                 progressDialog.show();
         }
+
+        if(sharedPreferences != null)
+            sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        updateStorageUsage();
     }
 
     @Override
@@ -350,6 +350,8 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
             appsListAdapter.setItems(new ArrayList<AppsListItem>());
             appsListAdapter.notifyDataSetChanged();
         }
+
+        updateStorageUsage();
 
         if(progressDialog != null)
             progressDialog.dismiss();
