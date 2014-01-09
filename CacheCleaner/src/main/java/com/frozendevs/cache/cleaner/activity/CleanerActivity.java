@@ -46,6 +46,7 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     private boolean updateChart = true;
     private SearchView searchView;
     private ProgressDialog progressDialog;
+    private View progressBar;
 
     private static boolean alreadyScanned = false;
     private static boolean alreadyCleaned = false;
@@ -81,6 +82,8 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
                 emptyView.invalidate();
             }
         });
+
+        progressBar = findViewById(R.id.progressBar);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -265,8 +268,6 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     }
 
     private boolean isProgressBarShowing() {
-        View progressBar = findViewById(R.id.progressBar);
-
         if(progressBar != null)
             return progressBar.getVisibility() == View.VISIBLE;
 
@@ -274,8 +275,6 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     }
 
     private void showProgressBar(boolean show) {
-        View progressBar = findViewById(R.id.progressBar);
-
         if(progressBar != null) {
             if(show) {
                 progressBar.setVisibility(View.VISIBLE);
