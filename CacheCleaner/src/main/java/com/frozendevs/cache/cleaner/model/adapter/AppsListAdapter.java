@@ -116,7 +116,7 @@ public class AppsListAdapter extends BaseAdapter {
     }
 
     public void setItems(List<AppsListItem> items) {
-        this.items = items;
+        this.items = new ArrayList<AppsListItem>(items);
 
         sort();
     }
@@ -151,7 +151,7 @@ public class AppsListAdapter extends BaseAdapter {
     }
 
     public void sort() {
-        Collections.sort(this.items, new Comparator<AppsListItem>() {
+        Collections.sort(items, new Comparator<AppsListItem>() {
             @Override
             public int compare(AppsListItem lhs, AppsListItem rhs) {
                 switch (sharedPreferences.getInt(context.getString(R.string.sort_by_key), SORT_BY_CACHE_SIZE)) {
