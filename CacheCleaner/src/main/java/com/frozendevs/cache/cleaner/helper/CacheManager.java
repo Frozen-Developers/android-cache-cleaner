@@ -5,6 +5,7 @@ import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,6 +25,8 @@ public class CacheManager {
     private OnActionListener onActionListener = null;
     private static boolean isScanning = false;
     private static boolean isCleaning = false;
+    private TaskScan taskScan;
+    private TaskClean taskClean;
 
     public static interface OnActionListener {
         public void onScanStarted();
@@ -33,8 +36,96 @@ public class CacheManager {
         public void onCleanCompleted(long cacheSize);
     }
 
+    private class TaskScan extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute () {
+            if (onActionListener != null)
+                onActionListener.onScanStarted();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            final List<AppsListItem> apps = new ArrayList<AppsListItem>();
+            final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+
+            for (ApplicationInfo pkg : packages) {
+                invokeMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
+
+                    @Override
+                    public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
+                        if (succeeded) {
+                            try {
+                                if (pStats.cacheSize > 0)
+                                    apps.add(new AppsListItem(pStats.packageName, packageManager.getApplicationLabel(
+                                            packageManager.getApplicationInfo(pStats.packageName, PackageManager.GET_META_DATA)).toString(),
+                                            packageManager.getApplicationIcon(pStats.packageName), pStats.cacheSize));
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
+                            taskScan = new TaskScan();
+
+                            isScanning = false;
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (onActionListener != null)
+                                        onActionListener.onScanCompleted(apps);
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+            return null;
+        }
+    }
+
+    private class TaskClean extends AsyncTask<Long, Void, Void> {
+
+        @Override
+        protected void onPreExecute () {
+            if (onActionListener != null)
+                onActionListener.onCleanStarted();
+        }
+
+        @Override
+        protected Void doInBackground(final Long... params) {
+            StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+
+            invokeMethod("freeStorageAndNotify",
+                    (2 * params[0]) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
+                    new IPackageDataObserver.Stub() {
+                        @Override
+                        public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
+                            taskClean = new TaskClean();
+
+                            isCleaning = false;
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (onActionListener != null)
+                                        onActionListener.onCleanCompleted(params[0]);
+                                }
+                            });
+                        }
+                    });
+
+            return null;
+        }
+    }
+
     public CacheManager(PackageManager packageManager) {
         this.packageManager = packageManager;
+
+        taskScan = new TaskScan();
+        taskClean = new TaskClean();
     }
 
     private Method getMethod(String methodName) {
@@ -59,78 +150,13 @@ public class CacheManager {
     public void scanCache() {
         isScanning = true;
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (onActionListener != null)
-                    onActionListener.onScanStarted();
-
-                final List<AppsListItem> apps = new ArrayList<AppsListItem>();
-                final List<ApplicationInfo> packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-
-                for (final ApplicationInfo pkg : packages) {
-                    invokeMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
-
-                        @Override
-                        public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
-                            if (succeeded) {
-                                try {
-                                    if (pStats.cacheSize > 0)
-                                        apps.add(new AppsListItem(pStats.packageName, packageManager.getApplicationLabel(
-                                                packageManager.getApplicationInfo(pStats.packageName, PackageManager.GET_META_DATA)).toString(),
-                                                packageManager.getApplicationIcon(pStats.packageName), pStats.cacheSize));
-                                } catch (PackageManager.NameNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
-                                isScanning = false;
-
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (onActionListener != null)
-                                            onActionListener.onScanCompleted(apps);
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            }
-        });
+        taskScan.execute();
     }
 
-    public void cleanCache(final long cacheSize) {
+    public void cleanCache(long cacheSize) {
         isCleaning = true;
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (onActionListener != null)
-                    onActionListener.onCleanStarted();
-
-                StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
-
-                invokeMethod("freeStorageAndNotify",
-                        (2 * cacheSize) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
-                        new IPackageDataObserver.Stub() {
-                            @Override
-                            public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
-                                isCleaning = false;
-                                
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (onActionListener != null)
-                                            onActionListener.onCleanCompleted(cacheSize);
-                                    }
-                                });
-                            }
-                        });
-            }
-        });
+        taskClean.execute(cacheSize);
     }
 
     public void setOnActionListener(OnActionListener listener) {
