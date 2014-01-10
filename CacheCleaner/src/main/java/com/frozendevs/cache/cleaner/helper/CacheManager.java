@@ -24,8 +24,6 @@ public class CacheManager {
     private OnActionListener onActionListener = null;
     private static boolean isScanning = false;
     private static boolean isCleaning = false;
-    private TaskScan taskScan;
-    private TaskClean taskClean;
 
     public static interface OnActionListener {
         public void onScanStarted(int appsCount);
@@ -98,8 +96,6 @@ public class CacheManager {
         protected void onPostExecute (Void result) {
             if (onActionListener != null)
                 onActionListener.onScanCompleted(apps);
-
-            taskScan = new TaskScan();
         }
     }
 
@@ -140,16 +136,11 @@ public class CacheManager {
         protected void onPostExecute (Long result) {
             if (onActionListener != null)
                 onActionListener.onCleanCompleted(result);
-
-            taskClean = new TaskClean();
         }
     }
 
     public CacheManager(PackageManager packageManager) {
         this.packageManager = packageManager;
-
-        taskScan = new TaskScan();
-        taskClean = new TaskClean();
     }
 
     private Method getMethod(String methodName) {
@@ -174,13 +165,13 @@ public class CacheManager {
     public void scanCache() {
         isScanning = true;
 
-        taskScan.execute();
+        new TaskScan().execute();
     }
 
     public void cleanCache(long cacheSize) {
         isCleaning = true;
 
-        taskClean.execute(cacheSize);
+        new TaskClean().execute(cacheSize);
     }
 
     public void setOnActionListener(OnActionListener listener) {
