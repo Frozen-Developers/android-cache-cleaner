@@ -69,6 +69,7 @@ public class AppsListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
                     intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
