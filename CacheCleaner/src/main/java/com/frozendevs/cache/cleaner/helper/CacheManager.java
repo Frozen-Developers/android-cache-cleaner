@@ -34,10 +34,9 @@ public class CacheManager {
         public void onCleanCompleted(long cacheSize);
     }
 
-    private class TaskScan extends AsyncTask<Void, Integer, Void> {
+    private class TaskScan extends AsyncTask<Void, Integer, List<AppsListItem>> {
 
         private CountDownLatch countDownLatch = new CountDownLatch(1);
-        private List<AppsListItem> apps = new ArrayList<AppsListItem>();
         private List<ApplicationInfo> packages;
         private int appCount = 0;
 
@@ -50,7 +49,9 @@ public class CacheManager {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected List<AppsListItem> doInBackground(Void... params) {
+            final List<AppsListItem> apps = new ArrayList<AppsListItem>();
+
             for (ApplicationInfo pkg : packages) {
                 invokeMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
 
@@ -83,7 +84,7 @@ public class CacheManager {
             } catch (InterruptedException e) {
             }
 
-            return null;
+            return apps;
         }
 
         @Override
@@ -93,9 +94,9 @@ public class CacheManager {
         }
 
         @Override
-        protected void onPostExecute (Void result) {
+        protected void onPostExecute (List<AppsListItem> result) {
             if (onActionListener != null)
-                onActionListener.onScanCompleted(apps);
+                onActionListener.onScanCompleted(result);
         }
     }
 
