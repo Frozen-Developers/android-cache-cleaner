@@ -224,8 +224,6 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
 
         if(sharedPreferences != null)
             sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-        updateStorageUsage();
     }
 
     @Override
@@ -379,8 +377,6 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
             appsListAdapter.setItems(new ArrayList<AppsListItem>());
             appsListAdapter.notifyDataSetChanged();
         }
-
-        updateStorageUsage();
 
         if(progressDialog != null)
             progressDialog.dismiss();
