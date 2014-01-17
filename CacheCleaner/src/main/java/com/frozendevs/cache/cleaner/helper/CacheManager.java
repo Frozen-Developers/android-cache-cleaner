@@ -38,7 +38,7 @@ public class CacheManager {
 
         private CountDownLatch countDownLatch = new CountDownLatch(1);
         private List<ApplicationInfo> packages;
-        private int appCount = 0;
+        private int appCount = 1;
 
         @Override
         protected void onPreExecute () {
