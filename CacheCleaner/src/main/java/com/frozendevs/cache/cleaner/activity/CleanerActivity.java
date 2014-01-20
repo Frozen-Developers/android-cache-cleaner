@@ -88,6 +88,8 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
             }
         });
 
+        updateStorageUsage();
+
         final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         getWindow().getDecorView().getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
