@@ -22,8 +22,8 @@ public class CacheManager {
 
     private PackageManager packageManager;
     private OnActionListener onActionListener = null;
-    private static boolean isScanning = false;
-    private static boolean isCleaning = false;
+    private boolean isScanning = false;
+    private boolean isCleaning = false;
 
     public static interface OnActionListener {
         public void onScanStarted(int appsCount);
@@ -56,15 +56,20 @@ public class CacheManager {
                 invokeMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
 
                     @Override
-                    public void onGetStatsCompleted(PackageStats pStats, boolean succeeded) throws RemoteException {
+                    public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
+                            throws RemoteException {
                         publishProgress(appCount++);
 
                         if (succeeded) {
                             try {
                                 if (pStats.cacheSize > 0)
-                                    apps.add(new AppsListItem(pStats.packageName, packageManager.getApplicationLabel(
-                                            packageManager.getApplicationInfo(pStats.packageName, PackageManager.GET_META_DATA)).toString(),
-                                            packageManager.getApplicationIcon(pStats.packageName), pStats.cacheSize));
+                                    apps.add(new AppsListItem(pStats.packageName,
+                                            packageManager.getApplicationLabel(
+                                                    packageManager.getApplicationInfo(
+                                                            pStats.packageName,
+                                                            PackageManager.GET_META_DATA)).toString(),
+                                            packageManager.getApplicationIcon(pStats.packageName),
+                                                    pStats.cacheSize));
                             } catch (PackageManager.NameNotFoundException e) {
                                 e.printStackTrace();
                             }
@@ -118,7 +123,8 @@ public class CacheManager {
                     (2 * params[0]) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
                     new IPackageDataObserver.Stub() {
                         @Override
-                        public void onRemoveCompleted(String packageName, boolean succeeded) throws RemoteException {
+                        public void onRemoveCompleted(String packageName, boolean succeeded)
+                                throws RemoteException {
                             isCleaning = false;
 
                             countDownLatch.countDown();

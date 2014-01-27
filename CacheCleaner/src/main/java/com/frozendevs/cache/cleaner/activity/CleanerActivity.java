@@ -35,14 +35,15 @@ import com.frozendevs.cache.cleaner.helper.CacheManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CleanerActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener, CacheManager.OnActionListener {
+public class CleanerActivity extends ActionBarActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener, CacheManager.OnActionListener {
 
     private LinearColorBar colorBar;
     private TextView usedStorageText;
     private TextView freeStorageText;
     private long lastUsedStorage, lastFreeStorage;
-    private static AppsListAdapter appsListAdapter = null;
-    private static CacheManager cacheManager = null;
+    private AppsListAdapter appsListAdapter = null;
+    private CacheManager cacheManager = null;
     private ListView listView;
     private TextView emptyView;
     private SharedPreferences sharedPreferences;
@@ -53,8 +54,8 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     private View progressBar;
     private TextView progressBarText;
 
-    private static boolean alreadyScanned = false;
-    private static boolean alreadyCleaned = false;
+    private boolean alreadyScanned = false;
+    private boolean alreadyCleaned = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,7 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
 
         listView = (ListView)findViewById(android.R.id.list);
         listView.setEmptyView(emptyView);
-        if(appsListAdapter == null)
-            appsListAdapter = new AppsListAdapter(this, sharedPreferences);
+        appsListAdapter = new AppsListAdapter(this, sharedPreferences);
         listView.setAdapter(appsListAdapter);
         appsListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -91,7 +91,8 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
         updateStorageUsage();
 
         final InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        getWindow().getDecorView().getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        getWindow().getDecorView().getRootView().getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 colorBar.setVisibility(imm.isAcceptingText() ? View.GONE : View.VISIBLE);
@@ -113,13 +114,9 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
             }
         });
 
-        if(cacheManager == null)
-            cacheManager = new CacheManager(getPackageManager());
+        cacheManager = new CacheManager(getPackageManager());
         cacheManager.setOnActionListener(this);
-
-        if(!alreadyScanned) {
-            cacheManager.scanCache();
-        }
+        cacheManager.scanCache();
     }
 
     @Override
@@ -193,47 +190,26 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     }
 
     @Override
-    protected void onDestroy() {
-        cacheManager = null;
-        if(appsListAdapter != null)
-            appsListAdapter.clearFilter();
-
-        super.onDestroy();
-    }
-
-    @Override
-    public void finish() {
-        appsListAdapter = null;
-        alreadyScanned = false;
-        alreadyCleaned = false;
-
-        super.finish();
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
 
-        if(cacheManager != null) {
-            if(cacheManager.isScanning() && !isProgressBarShowing())
-                showProgressBar(true);
-            else if(!cacheManager.isScanning() && isProgressBarShowing())
-                showProgressBar(false);
+        if(cacheManager.isScanning() && !isProgressBarShowing())
+            showProgressBar(true);
+        else if(!cacheManager.isScanning() && isProgressBarShowing())
+            showProgressBar(false);
 
-            if(cacheManager.isCleaning() && !progressDialog.isShowing())
-                progressDialog.show();
-        }
+        if(cacheManager.isCleaning() && !progressDialog.isShowing())
+            progressDialog.show();
 
-        if(sharedPreferences != null)
-            sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onStop() {
         if(progressDialog.isShowing())
             progressDialog.dismiss();
-        if(sharedPreferences != null)
-            sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onStop();
     }
@@ -287,48 +263,37 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
     }
 
     private boolean isProgressBarShowing() {
-        if(progressBar != null)
-            return progressBar.getVisibility() == View.VISIBLE;
-
-        return false;
+        return progressBar.getVisibility() == View.VISIBLE;
     }
 
     private void showProgressBar(boolean show) {
-        if(progressBar != null) {
-            if(show) {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-            else {
-                progressBar.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
-                progressBar.setVisibility(View.GONE);
-            }
+        if(show) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        else {
+            progressBar.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     private void setProgressBarProgress(int current, int max) {
-        if(progressBarText != null)
-            progressBarText.setText(getString(R.string.scanning) + " " + current + "/" + max);
+        progressBarText.setText(getString(R.string.scanning) + " " + current + "/" + max);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals(getString(R.string.sort_by_key))) {
-            if(appsListAdapter != null) {
-                appsListAdapter.sort();
-                if(searchView != null) {
-                    if(searchView.isShown())
-                        appsListAdapter.filterAppsByName(searchView.getQuery().toString());
-                }
-                appsListAdapter.notifyDataSetChanged();
-            }
+            appsListAdapter.sort();
+            if(searchView.isShown())
+                appsListAdapter.filterAppsByName(searchView.getQuery().toString());
+            appsListAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
     public void onScanStarted(int appsCount) {
-        if(progressDialog != null)
-            if(progressDialog.isShowing())
-                progressDialog.dismiss();
+        if(progressDialog.isShowing())
+            progressDialog.dismiss();
 
         setProgressBarProgress(0, appsCount);
         showProgressBar(true);
@@ -341,25 +306,23 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
 
     @Override
     public void onScanCompleted(List<AppsListItem> apps) {
-        if(appsListAdapter != null) {
-            appsListAdapter.setItems(apps);
-            if(searchView != null) {
-                if(searchView.isShown()) {
-                    appsListAdapter.filterAppsByName(searchView.getQuery().toString());
-                    updateChart = false;
-                }
+        appsListAdapter.setItems(apps);
+        if(searchView != null) {
+            if(searchView.isShown()) {
+                appsListAdapter.filterAppsByName(searchView.getQuery().toString());
+                updateChart = false;
             }
-            appsListAdapter.notifyDataSetChanged();
+        }
+        appsListAdapter.notifyDataSetChanged();
 
-            showProgressBar(false);
+        showProgressBar(false);
 
-            if(!alreadyScanned) {
-                alreadyScanned = true;
+        if(!alreadyScanned) {
+            alreadyScanned = true;
 
-                if(sharedPreferences.getBoolean(getString(R.string.clean_on_app_startup_key), false)) {
-                    alreadyCleaned = true;
-                    cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
-                }
+            if(sharedPreferences.getBoolean(getString(R.string.clean_on_app_startup_key), false)) {
+                alreadyCleaned = true;
+                cacheManager.cleanCache(appsListAdapter.getTotalCacheSize());
             }
         }
     }
@@ -369,19 +332,15 @@ public class CleanerActivity extends ActionBarActivity implements SharedPreferen
         if(isProgressBarShowing())
             showProgressBar(false);
 
-        if(progressDialog != null)
-            progressDialog.show();
+        progressDialog.show();
     }
 
     @Override
     public void onCleanCompleted(long cacheSize) {
-        if(appsListAdapter != null) {
-            appsListAdapter.setItems(new ArrayList<AppsListItem>());
-            appsListAdapter.notifyDataSetChanged();
-        }
+        appsListAdapter.setItems(new ArrayList<AppsListItem>());
+        appsListAdapter.notifyDataSetChanged();
 
-        if(progressDialog != null)
-            progressDialog.dismiss();
+        progressDialog.dismiss();
 
         Toast.makeText(this, getString(R.string.cleaned) + " (" +
                 Formatter.formatShortFileSize(this, cacheSize) + ")", Toast.LENGTH_LONG).show();
