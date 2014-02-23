@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="authors_url">http://frozendevs.com</string>
+    <string name="authors_url" translatable="false">http://frozendevs.com</string>
 
 </resources>

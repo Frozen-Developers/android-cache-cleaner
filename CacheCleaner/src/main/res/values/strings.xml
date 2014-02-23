@@ -3,7 +3,7 @@
 
     <!-- Globals -->
     <string name="app_name">Cache Cleaner</string>
-    <string name="author_name">Frozen Developers</string>
+    <string name="author_name" translatable="false">Frozen Developers</string>
 
     <!-- Menu items -->
     <string name="action_clean">Clean</string>
@@ -40,17 +40,17 @@
         <!-- Clean on app startup preference -->
     <string name="clean_on_app_startup">Clean on app startup</string>
     <string name="clean_on_app_startup_summary">Automatically clean cache on application startup</string>
-    <string name="clean_on_app_startup_key">clean_on_app_startup</string>
+    <string name="clean_on_app_startup_key" translatable="false">clean_on_app_startup</string>
 
         <!-- Exit after clean up -->
     <string name="exit_after_clean">Exit after clean up</string>
     <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is completed</string>
-    <string name="exit_after_clean_key">exit_after_clean</string>
+    <string name="exit_after_clean_key" translatable="false">exit_after_clean</string>
 
         <!-- Clean on device startup preference -->
     <string name="clean_on_device_startup">Clean on device startup</string>
     <string name="clean_on_device_startup_summary">Automatically clean cache on device startup</string>
-    <string name="clean_on_device_startup_key">clean_on_device_startup</string>
+    <string name="clean_on_device_startup_key" translatable="false">clean_on_device_startup</string>
 
         <!-- About -->
     <string name="about_app">About Cache Cleaner</string>
@@ -61,6 +61,6 @@
     <!-- 'Sort by' dialog -->
     <string name="sort_by_app_name">Application name</string>
     <string name="sort_by_cache_size">Cache size</string>
-    <string name="sort_by_key">sort_by</string>
+    <string name="sort_by_key" translatable="false">sort_by</string>
 
 </resources>
