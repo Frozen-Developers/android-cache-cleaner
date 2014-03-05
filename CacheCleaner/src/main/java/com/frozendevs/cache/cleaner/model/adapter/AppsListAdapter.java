@@ -1,5 +1,6 @@
 package com.frozendevs.cache.cleaner.model.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -60,6 +61,7 @@ public class AppsListAdapter extends BaseAdapter {
         return false;
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         final AppsListItem item = filteredItems.get(i);
