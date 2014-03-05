@@ -16,11 +16,6 @@ android {
     compileSdkVersion 19
     buildToolsVersion "19.0.2"
 
-    defaultConfig {
-        minSdkVersion 7
-        targetSdkVersion 19
-    }
-
     sourceSets {
         main {
             manifest.srcFile 'src/main/AndroidManifest.xml'
