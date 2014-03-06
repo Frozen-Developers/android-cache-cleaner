@@ -1,7 +1,6 @@
 package com.frozendevs.cache.cleaner.activity;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -41,13 +40,6 @@ public class SettingsActivity extends PreferenceActivity {
                 AlertDialog dialog = new AlertDialog.Builder(SettingsActivity.this).create();
                 dialog.setTitle(R.string.open_source_licences);
                 dialog.setView(webView);
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
                 dialog.show();
 
                 return true;
