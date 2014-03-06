@@ -52,7 +52,7 @@
     <string name="about_app">O Čističi medzipamäte</string>
     <string name="author">Autor</string>
     <string name="version_number">Verzia</string>
-    <string name="open_source_licences">Open-source licencie</string>
+    <string name="open_source_licences">Open source licencie</string>
 
     <!-- 'Sort by' dialog -->
     <string name="sort_by_app_name">Názvu aplikácie</string>

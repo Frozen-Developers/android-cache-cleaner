@@ -56,7 +56,7 @@
     <string name="about_app">About Cache Cleaner</string>
     <string name="author">Author</string>
     <string name="version_number">Version number</string>
-    <string name="open_source_licences">Open-source licences</string>
+    <string name="open_source_licences">Open source licences</string>
 
     <!-- 'Sort by' dialog -->
     <string name="sort_by_app_name">Application name</string>
