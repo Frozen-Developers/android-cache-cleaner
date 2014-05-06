@@ -36,13 +36,15 @@ public class CacheManager {
 
     private class TaskScan extends AsyncTask<Void, Integer, List<AppsListItem>> {
 
-        private CountDownLatch countDownLatch = new CountDownLatch(1);
+        private CountDownLatch countDownLatch;
         private List<ApplicationInfo> packages;
-        private int appCount = 1;
+        private int appCount = 0;
 
         @Override
         protected void onPreExecute () {
             packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+
+            countDownLatch = new CountDownLatch(packages.size());
 
             if (onActionListener != null)
                 onActionListener.onScanStarted(packages.size());
@@ -58,7 +60,7 @@ public class CacheManager {
                     @Override
                     public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
                             throws RemoteException {
-                        publishProgress(appCount++);
+                        publishProgress(++appCount);
 
                         if (succeeded) {
                             try {
@@ -75,11 +77,7 @@ public class CacheManager {
                             }
                         }
 
-                        if (pStats.packageName.equals(packages.get(packages.size() - 1).packageName)) {
-                            isScanning = false;
-
-                            countDownLatch.countDown();
-                        }
+                        countDownLatch.countDown();
                     }
                 });
             }
@@ -102,6 +100,8 @@ public class CacheManager {
         protected void onPostExecute (List<AppsListItem> result) {
             if (onActionListener != null)
                 onActionListener.onScanCompleted(result);
+
+            isScanning = false;
         }
     }
 
@@ -125,8 +125,6 @@ public class CacheManager {
                         @Override
                         public void onRemoveCompleted(String packageName, boolean succeeded)
                                 throws RemoteException {
-                            isCleaning = false;
-
                             countDownLatch.countDown();
                         }
                     });
@@ -143,6 +141,8 @@ public class CacheManager {
         protected void onPostExecute (Long result) {
             if (onActionListener != null)
                 onActionListener.onCleanCompleted(result);
+
+            isCleaning = false;
         }
     }
 
