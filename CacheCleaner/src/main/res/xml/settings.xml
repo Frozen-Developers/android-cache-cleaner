@@ -54,6 +54,22 @@
 
             </PreferenceCategory>
 
+            <PreferenceCategory
+                android:title="@string/special_thanks">
+
+                <Preference
+                    android:title="@string/samuels_graphics"
+                    android:summary="@string/samuels_graphics_desc"
+                    android:key="author">
+
+                    <intent
+                        android:action="android.intent.action.VIEW"
+                        android:data="@string/samuels_graphics_url" />
+
+                </Preference>
+
+            </PreferenceCategory>
+
         </PreferenceScreen>
 
     </PreferenceCategory>

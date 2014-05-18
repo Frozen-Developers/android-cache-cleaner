@@ -2,5 +2,6 @@
 <resources>
 
     <string name="authors_url" translatable="false">http://frozendevs.com</string>
+    <string name="samuels_graphics_url" translatable="false">https://www.facebook.com/samuelsgraphics</string>
 
 </resources>
