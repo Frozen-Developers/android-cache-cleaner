@@ -20,17 +20,21 @@ import java.util.concurrent.CountDownLatch;
 
 public class CacheManager {
 
-    private PackageManager packageManager;
-    private OnActionListener onActionListener = null;
-    private boolean isScanning = false;
-    private boolean isCleaning = false;
+    private PackageManager mPackageManager;
+    private Method mGetPackageSizeInfoMethod, mFreeStorageAndNotifyMethod;
+    private OnActionListener mOnActionListener = null;
+    private boolean mIsScanning = false;
+    private boolean mIsCleaning = false;
 
     public static interface OnActionListener {
         public void onScanStarted(int appsCount);
+
         public void onScanProgressUpdated(int current, int max);
+
         public void onScanCompleted(List<AppsListItem> apps);
 
         public void onCleanStarted();
+
         public void onCleanCompleted(long cacheSize);
     }
 
@@ -41,67 +45,74 @@ public class CacheManager {
         private int appCount = 0;
 
         @Override
-        protected void onPreExecute () {
-            packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        protected void onPreExecute() {
+            packages = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
             countDownLatch = new CountDownLatch(packages.size());
 
-            if (onActionListener != null)
-                onActionListener.onScanStarted(packages.size());
+            if (mOnActionListener != null)
+                mOnActionListener.onScanStarted(packages.size());
         }
 
         @Override
         protected List<AppsListItem> doInBackground(Void... params) {
             final List<AppsListItem> apps = new ArrayList<AppsListItem>();
 
-            for (ApplicationInfo pkg : packages) {
-                invokeMethod("getPackageSizeInfo", pkg.packageName, new IPackageStatsObserver.Stub() {
-
-                    @Override
-                    public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
-                            throws RemoteException {
-                        publishProgress(++appCount);
-
-                        if (succeeded) {
-                            try {
-                                if (pStats.cacheSize > 0)
-                                    apps.add(new AppsListItem(pStats.packageName,
-                                            packageManager.getApplicationLabel(
-                                                    packageManager.getApplicationInfo(
-                                                            pStats.packageName,
-                                                            PackageManager.GET_META_DATA)).toString(),
-                                            packageManager.getApplicationIcon(pStats.packageName),
-                                                    pStats.cacheSize));
-                            } catch (PackageManager.NameNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        countDownLatch.countDown();
-                    }
-                });
-            }
-
             try {
+                for (ApplicationInfo pkg : packages) {
+                    mGetPackageSizeInfoMethod.invoke(mPackageManager, pkg.packageName,
+                            new IPackageStatsObserver.Stub() {
+
+                                @Override
+                                public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
+                                        throws RemoteException {
+                                    publishProgress(++appCount);
+
+                                    if (succeeded && pStats.cacheSize > 0) {
+                                        try {
+                                            apps.add(new AppsListItem(pStats.packageName,
+                                                    mPackageManager.getApplicationLabel(
+                                                            mPackageManager.getApplicationInfo(pStats.packageName,
+                                                                    PackageManager.GET_META_DATA)
+                                                    ).toString(),
+                                                    mPackageManager.getApplicationIcon(pStats.packageName),
+                                                    pStats.cacheSize
+                                            ));
+                                        } catch (PackageManager.NameNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    countDownLatch.countDown();
+                                }
+                            }
+                    );
+                }
+
                 countDownLatch.await();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
             } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
 
             return apps;
         }
 
         @Override
-        protected void onProgressUpdate (Integer... values) {
-            if(onActionListener != null)
-                onActionListener.onScanProgressUpdated(values[0], packages.size());
+        protected void onProgressUpdate(Integer... values) {
+            if (mOnActionListener != null)
+                mOnActionListener.onScanProgressUpdated(values[0], packages.size());
         }
 
         @Override
-        protected void onPostExecute (List<AppsListItem> result) {
-            if (onActionListener != null)
-                onActionListener.onScanCompleted(result);
+        protected void onPostExecute(List<AppsListItem> result) {
+            if (mOnActionListener != null)
+                mOnActionListener.onScanCompleted(result);
 
-            isScanning = false;
+            mIsScanning = false;
         }
     }
 
@@ -110,86 +121,83 @@ public class CacheManager {
         private CountDownLatch countDownLatch = new CountDownLatch(1);
 
         @Override
-        protected void onPreExecute () {
-            if (onActionListener != null)
-                onActionListener.onCleanStarted();
+        protected void onPreExecute() {
+            if (mOnActionListener != null)
+                mOnActionListener.onCleanStarted();
         }
 
         @Override
         protected Long doInBackground(Long... params) {
             StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-            invokeMethod("freeStorageAndNotify",
-                    (2 * params[0]) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
-                    new IPackageDataObserver.Stub() {
-                        @Override
-                        public void onRemoveCompleted(String packageName, boolean succeeded)
-                                throws RemoteException {
-                            countDownLatch.countDown();
-                        }
-                    });
-
             try {
+                mFreeStorageAndNotifyMethod.invoke(mPackageManager,
+                        (2 * params[0]) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
+                        new IPackageDataObserver.Stub() {
+                            @Override
+                            public void onRemoveCompleted(String packageName, boolean succeeded)
+                                    throws RemoteException {
+                                countDownLatch.countDown();
+                            }
+                        }
+                );
+
                 countDownLatch.await();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
             } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
 
             return params[0];
         }
 
         @Override
-        protected void onPostExecute (Long result) {
-            if (onActionListener != null)
-                onActionListener.onCleanCompleted(result);
+        protected void onPostExecute(Long result) {
+            if (mOnActionListener != null)
+                mOnActionListener.onCleanCompleted(result);
 
-            isCleaning = false;
+            mIsCleaning = false;
         }
     }
 
     public CacheManager(PackageManager packageManager) {
-        this.packageManager = packageManager;
-    }
+        mPackageManager = packageManager;
 
-    private Method getMethod(String methodName) {
-        for(Method method : packageManager.getClass().getMethods()) {
-            if(method.getName().equals(methodName))
-                return method;
-        }
-
-        return null;
-    }
-
-    private void invokeMethod(String method, Object... args) {
         try {
-            getMethod(method).invoke(packageManager, args);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+            mGetPackageSizeInfoMethod = mPackageManager.getClass().getMethod("getPackageSizeInfo",
+                    String.class, IPackageStatsObserver.class);
+
+            mFreeStorageAndNotifyMethod = mPackageManager.getClass().getMethod("freeStorageAndNotify",
+                    long.class, IPackageDataObserver.class);
+        } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
     }
 
     public void scanCache() {
-        isScanning = true;
+        mIsScanning = true;
 
         new TaskScan().execute();
     }
 
     public void cleanCache(long cacheSize) {
-        isCleaning = true;
+        mIsCleaning = true;
 
         new TaskClean().execute(cacheSize);
     }
 
     public void setOnActionListener(OnActionListener listener) {
-        onActionListener = listener;
+        mOnActionListener = listener;
     }
 
     public boolean isScanning() {
-        return isScanning;
+        return mIsScanning;
     }
 
     public boolean isCleaning() {
-        return isCleaning;
+        return mIsCleaning;
     }
 }
