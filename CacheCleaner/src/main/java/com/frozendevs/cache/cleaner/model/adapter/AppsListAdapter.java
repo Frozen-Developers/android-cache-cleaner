@@ -29,26 +29,26 @@ public class AppsListAdapter extends BaseAdapter {
     public static final int SORT_BY_APP_NAME = 0;
     public static final int SORT_BY_CACHE_SIZE = 1;
 
-    private List<AppsListItem> items, filteredItems;
-    private Context context;
-    private SharedPreferences sharedPreferences;
+    private List<AppsListItem> mItems, mFilteredItems;
+    private Context mContext;
+    private SharedPreferences mSharedPreferences;
 
     public AppsListAdapter(Context context, SharedPreferences sharedPreferences) {
-        this.context = context;
-        this.sharedPreferences = sharedPreferences;
+        mContext = context;
+        mSharedPreferences = sharedPreferences;
 
-        items = new ArrayList<AppsListItem>();
-        filteredItems = new ArrayList<AppsListItem>(items);
+        mItems = new ArrayList<AppsListItem>();
+        mFilteredItems = new ArrayList<AppsListItem>(mItems);
     }
 
     @Override
     public int getCount() {
-        return filteredItems.size();
+        return mFilteredItems.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return filteredItems.get(i);
+        return mFilteredItems.get(i);
     }
 
     @Override
@@ -64,9 +64,9 @@ public class AppsListAdapter extends BaseAdapter {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        final AppsListItem item = filteredItems.get(i);
+        final AppsListItem item = mFilteredItems.get(i);
 
-        LinearLayout layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.list_item, null);
+        LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.list_item, null);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +87,7 @@ public class AppsListAdapter extends BaseAdapter {
                         intent.putExtra("com.android.settings.ApplicationPkgName", item.getPackageName());
                 }
 
-                context.startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
 
@@ -98,7 +98,7 @@ public class AppsListAdapter extends BaseAdapter {
         nameView.setText(item.getApplicationName());
 
         TextView sizeView = (TextView)layout.findViewById(R.id.app_size);
-        sizeView.setText(Formatter.formatShortFileSize(context, item.getCacheSize()));
+        sizeView.setText(Formatter.formatShortFileSize(mContext, item.getCacheSize()));
 
         return layout;
     }
@@ -115,11 +115,11 @@ public class AppsListAdapter extends BaseAdapter {
 
     @Override
     public boolean isEmpty() {
-        return filteredItems.size() == 0;
+        return mFilteredItems.size() == 0;
     }
 
     public void setItems(List<AppsListItem> items) {
-        this.items = new ArrayList<AppsListItem>(items);
+        mItems = new ArrayList<AppsListItem>(items);
 
         sort();
     }
@@ -127,19 +127,20 @@ public class AppsListAdapter extends BaseAdapter {
     public void filterAppsByName(String filter) {
         List<AppsListItem> filteredItems = new ArrayList<AppsListItem>();
 
-        Locale current = context.getResources().getConfiguration().locale;
+        Locale current = mContext.getResources().getConfiguration().locale;
 
-        for(AppsListItem item : items)
-            if(item.getApplicationName().toLowerCase(current).contains(filter.toLowerCase(current)))
+        for(AppsListItem item : mItems) {
+            if (item.getApplicationName().toLowerCase(current).contains(filter.toLowerCase(current)))
                 filteredItems.add(item);
+        }
 
-        this.filteredItems = filteredItems;
+        mFilteredItems = filteredItems;
 
         notifyDataSetChanged();
     }
 
     public void clearFilter() {
-        filteredItems = new ArrayList<AppsListItem>(items);
+        mFilteredItems = new ArrayList<AppsListItem>(mItems);
 
         notifyDataSetChanged();
     }
@@ -147,17 +148,17 @@ public class AppsListAdapter extends BaseAdapter {
     public long getTotalCacheSize() {
         long size = 0;
 
-        for(AppsListItem app : items)
+        for(AppsListItem app : mItems)
             size += app.getCacheSize();
 
         return size;
     }
 
     public void sort() {
-        Collections.sort(items, new Comparator<AppsListItem>() {
+        Collections.sort(mItems, new Comparator<AppsListItem>() {
             @Override
             public int compare(AppsListItem lhs, AppsListItem rhs) {
-                switch (sharedPreferences.getInt(context.getString(R.string.sort_by_key), SORT_BY_CACHE_SIZE)) {
+                switch (mSharedPreferences.getInt(mContext.getString(R.string.sort_by_key), SORT_BY_CACHE_SIZE)) {
                     case SORT_BY_APP_NAME:
                         return lhs.getApplicationName().compareToIgnoreCase(rhs.getApplicationName());
 
@@ -169,6 +170,6 @@ public class AppsListAdapter extends BaseAdapter {
             }
         });
 
-        filteredItems = new ArrayList<AppsListItem>(items);
+        mFilteredItems = new ArrayList<AppsListItem>(mItems);
     }
 }

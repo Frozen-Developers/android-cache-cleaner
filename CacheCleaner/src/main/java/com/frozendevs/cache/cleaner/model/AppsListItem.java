@@ -4,30 +4,30 @@ import android.graphics.drawable.Drawable;
 
 public class AppsListItem {
 
-    private long cacheSize;
-    private String packageName, applicationName;
-    private Drawable icon;
+    private long mCacheSize;
+    private String mPackageName, mApplicationName;
+    private Drawable mIcon;
 
     public AppsListItem(String packageName, String applicationName, Drawable icon, long cacheSize) {
-        this.cacheSize = cacheSize;
-        this.packageName = packageName;
-        this.applicationName = applicationName;
-        this.icon = icon;
+        mCacheSize = cacheSize;
+        mPackageName = packageName;
+        mApplicationName = applicationName;
+        mIcon = icon;
     }
 
     public Drawable getApplicationIcon() {
-        return icon;
+        return mIcon;
     }
 
     public String getApplicationName() {
-        return applicationName;
+        return mApplicationName;
     }
 
     public long getCacheSize() {
-        return cacheSize;
+        return mCacheSize;
     }
 
     public String getPackageName() {
-        return packageName;
+        return mPackageName;
     }
 }

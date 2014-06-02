@@ -17,7 +17,7 @@ public class CleanerService extends Service implements CacheManager.OnActionList
 
     private static final String TAG = "CleanerService";
 
-    private CacheManager cacheManager = null;
+    private CacheManager mCacheManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -26,13 +26,13 @@ public class CleanerService extends Service implements CacheManager.OnActionList
 
     @Override
     public void onCreate() {
-        cacheManager = new CacheManager(getPackageManager());
-        cacheManager.setOnActionListener(this);
+        mCacheManager = new CacheManager(getPackageManager());
+        mCacheManager.setOnActionListener(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        cacheManager.scanCache();
+        mCacheManager.scanCache();
         
         return START_STICKY;
     }
@@ -54,7 +54,7 @@ public class CleanerService extends Service implements CacheManager.OnActionList
         for(AppsListItem app : apps)
             size += app.getCacheSize();
 
-        cacheManager.cleanCache(size);
+        mCacheManager.cleanCache(size);
     }
 
     @Override
