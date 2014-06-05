@@ -40,50 +40,55 @@ public class CacheManager {
 
     private class TaskScan extends AsyncTask<Void, Integer, List<AppsListItem>> {
 
-        private CountDownLatch countDownLatch;
-        private List<ApplicationInfo> packages;
-        private int appCount = 0;
+        private List<ApplicationInfo> mPackages;
+        private int mAppCount = 0;
 
         @Override
         protected void onPreExecute() {
-            packages = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+            mPackages = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
-            countDownLatch = new CountDownLatch(packages.size());
-
-            if (mOnActionListener != null)
-                mOnActionListener.onScanStarted(packages.size());
+            if (mOnActionListener != null) {
+                mOnActionListener.onScanStarted(mPackages.size());
+            }
         }
 
         @Override
         protected List<AppsListItem> doInBackground(Void... params) {
+            final CountDownLatch countDownLatch = new CountDownLatch(mPackages.size());
+
             final List<AppsListItem> apps = new ArrayList<AppsListItem>();
 
             try {
-                for (ApplicationInfo pkg : packages) {
+                for (ApplicationInfo pkg : mPackages) {
                     mGetPackageSizeInfoMethod.invoke(mPackageManager, pkg.packageName,
                             new IPackageStatsObserver.Stub() {
 
                                 @Override
                                 public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
                                         throws RemoteException {
-                                    publishProgress(++appCount);
+                                    synchronized (apps) {
+                                        publishProgress(++mAppCount);
 
-                                    if (succeeded && pStats.cacheSize > 0) {
-                                        try {
-                                            apps.add(new AppsListItem(pStats.packageName,
-                                                    mPackageManager.getApplicationLabel(
-                                                            mPackageManager.getApplicationInfo(pStats.packageName,
-                                                                    PackageManager.GET_META_DATA)
-                                                    ).toString(),
-                                                    mPackageManager.getApplicationIcon(pStats.packageName),
-                                                    pStats.cacheSize
-                                            ));
-                                        } catch (PackageManager.NameNotFoundException e) {
-                                            e.printStackTrace();
+                                        if (succeeded && pStats.cacheSize > 0) {
+                                            try {
+
+                                                apps.add(new AppsListItem(pStats.packageName,
+                                                        mPackageManager.getApplicationLabel(
+                                                                mPackageManager.getApplicationInfo(pStats.packageName,
+                                                                        PackageManager.GET_META_DATA)
+                                                        ).toString(),
+                                                        mPackageManager.getApplicationIcon(pStats.packageName),
+                                                        pStats.cacheSize
+                                                ));
+                                            } catch (PackageManager.NameNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
                                     }
 
-                                    countDownLatch.countDown();
+                                    synchronized (countDownLatch) {
+                                        countDownLatch.countDown();
+                                    }
                                 }
                             }
                     );
@@ -103,14 +108,16 @@ public class CacheManager {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            if (mOnActionListener != null)
-                mOnActionListener.onScanProgressUpdated(values[0], packages.size());
+            if (mOnActionListener != null) {
+                mOnActionListener.onScanProgressUpdated(values[0], mPackages.size());
+            }
         }
 
         @Override
         protected void onPostExecute(List<AppsListItem> result) {
-            if (mOnActionListener != null)
+            if (mOnActionListener != null) {
                 mOnActionListener.onScanCompleted(result);
+            }
 
             mIsScanning = false;
         }
@@ -118,16 +125,17 @@ public class CacheManager {
 
     private class TaskClean extends AsyncTask<Long, Void, Long> {
 
-        private CountDownLatch countDownLatch = new CountDownLatch(1);
-
         @Override
         protected void onPreExecute() {
-            if (mOnActionListener != null)
+            if (mOnActionListener != null) {
                 mOnActionListener.onCleanStarted();
+            }
         }
 
         @Override
         protected Long doInBackground(Long... params) {
+            final CountDownLatch countDownLatch = new CountDownLatch(1);
+
             StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
             try {
@@ -156,8 +164,9 @@ public class CacheManager {
 
         @Override
         protected void onPostExecute(Long result) {
-            if (mOnActionListener != null)
+            if (mOnActionListener != null) {
                 mOnActionListener.onCleanCompleted(result);
+            }
 
             mIsCleaning = false;
         }
