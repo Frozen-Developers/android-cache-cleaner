@@ -320,7 +320,9 @@ public class CleanerActivity extends ActionBarActivity implements
         if(isProgressBarVisible())
             showProgressBar(false);
 
-        mProgressDialog.show();
+        if(!isFinishing()) {
+            mProgressDialog.show();
+        }
     }
 
     @Override
@@ -328,7 +330,9 @@ public class CleanerActivity extends ActionBarActivity implements
         mAppsListAdapter.setItems(new ArrayList<AppsListItem>());
         mAppsListAdapter.notifyDataSetChanged();
 
-        mProgressDialog.dismiss();
+        if(mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
 
         Toast.makeText(this, getString(R.string.cleaned) + " (" +
                 Formatter.formatShortFileSize(this, cacheSize) + ")", Toast.LENGTH_LONG).show();
