@@ -6,7 +6,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:+'
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
@@ -14,7 +14,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1"
+    buildToolsVersion "20"
 
     sourceSets {
         main {
@@ -30,6 +30,6 @@ android {
 }
 
 dependencies {
-    compile ('com.android.support:support-v4:+')
-    compile ('com.android.support:appcompat-v7:+@aar')
+    compile ('com.android.support:support-v4:20.+')
+    compile ('com.android.support:appcompat-v7:20.+@aar')
 }
