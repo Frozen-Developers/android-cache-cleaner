@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Globals -->
+    <string name="app_name">Чистач Кеша</string>
+    <string name="author_name" translatable="false">Frozen Developers</string>
+
+    <!-- Menu items -->
+    <string name="action_clean">Очисти</string>
+    <string name="action_rescan">Поново скенирај</string>
+    <string name="action_search">Тражи</string>
+    <string name="action_sort_by">Поређај по</string>
+    <string name="action_settings">Поставке</string>
+
+    <!-- LinearColorBar -->
+    <string name="internal_storage">Интерна меморија</string>
+
+    <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> слободно</string>
+    <string name="service_foreground_processes"><xliff:g id="memory">%1$s</xliff:g> искоришћено</string>
+
+    <!-- Empty list view -->
+    <string name="empty_cache">Кеш је празан.</string>
+    <string name="no_such_app">Нема такве апликације.</string>
+
+    <!-- Progress bar -->
+    <string name="scanning">Скенирам</string>
+
+    <!-- Progress dialog -->
+    <string name="cleaning_cache">Чишћење кеша</string>
+    <string name="cleaning_in_progress">Чишћење је у току…</string>
+
+    <!-- Toasts -->
+    <string name="cleaned">Кеш је очишћен</string>
+
+    <!-- Settings -->
+    <string name="settings">Поставке</string>
+    <string name="main_preferences">Главно</string>
+    <string name="about">О програму</string>
+
+        <!-- Clean on app startup preference -->
+    <string name="clean_on_app_startup">Очисти по покретању</string>
+    <string name="clean_on_app_startup_summary">Аутоматски очисти кеш по покретању апликације</string>
+    <string name="clean_on_app_startup_key" translatable="false">clean_on_app_startup</string>
+
+        <!-- Exit after clean up -->
+    <string name="exit_after_clean">Изађи након чишћења</string>
+    <string name="exit_after_clean_summary">Изађи након што се чишћење заврши</string>
+    <string name="exit_after_clean_key" translatable="false">exit_after_clean</string>
+
+        <!-- Clean on device startup preference -->
+    <string name="clean_on_device_startup">Очисти по покретању уређаја</string>
+    <string name="clean_on_device_startup_summary">Аутоматски очисти кеш по покретању уређаја</string>
+    <string name="clean_on_device_startup_key" translatable="false">clean_on_device_startup</string>
+
+        <!-- About -->
+    <string name="about_app">О Чистачу Кеша</string>
+    <string name="author">Програмер</string>
+    <string name="version_number">Издање</string>
+    <string name="open_source_licences">Лиценца отворена кôда</string>
+    <string name="special_thanks">Посебна захвала</string>
+    <string name="samuels_graphics">Семјуелова Графика</string>
+    <string name="samuels_graphics_desc">Дизајн иконе</string>
+
+    <!-- 'Sort by' dialog -->
+    <string name="sort_by_app_name">имену апликације</string>
+    <string name="sort_by_cache_size">величини кеша</string>
+    <string name="sort_by_key" translatable="false">sort_by</string>
+
+</resources>
