@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.frozendevs.cache.cleaner.model.AppsListItem;
@@ -66,8 +65,9 @@ public class AppsListAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         final AppsListItem item = mFilteredItems.get(i);
 
-        LinearLayout layout = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.list_item, null);
-        layout.setOnClickListener(new View.OnClickListener() {
+        if(view == null) view = LayoutInflater.from(mContext).inflate(R.layout.list_item, null);
+
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -91,16 +91,16 @@ public class AppsListAdapter extends BaseAdapter {
             }
         });
 
-        ImageView imageView = (ImageView)layout.findViewById(R.id.app_icon);
+        ImageView imageView = (ImageView)view.findViewById(R.id.app_icon);
         imageView.setImageDrawable(item.getApplicationIcon());
 
-        TextView nameView = (TextView)layout.findViewById(R.id.app_name);
+        TextView nameView = (TextView)view.findViewById(R.id.app_name);
         nameView.setText(item.getApplicationName());
 
-        TextView sizeView = (TextView)layout.findViewById(R.id.app_size);
+        TextView sizeView = (TextView)view.findViewById(R.id.app_size);
         sizeView.setText(Formatter.formatShortFileSize(mContext, item.getCacheSize()));
 
-        return layout;
+        return view;
     }
 
     @Override
