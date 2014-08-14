@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="authors_url" translatable="false">http://frozendevs.com</string>
+    <string name="authors_url" translatable="false">https://github.com/Frozen-Developers</string>
     <string name="samuels_graphics_url" translatable="false">https://www.facebook.com/samuelsgraphics</string>
 
 </resources>
