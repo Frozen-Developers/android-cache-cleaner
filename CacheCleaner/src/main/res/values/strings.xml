@@ -58,7 +58,7 @@
     <string name="version_number">Version number</string>
     <string name="open_source_licences">Open source licences</string>
     <string name="special_thanks">Special thanks</string>
-    <string name="samuels_graphics">Samuel\'s Graphics</string>
+    <string name="samuels_graphics" translatable="false">Samuel\'s Graphics</string>
     <string name="samuels_graphics_desc">Icon design</string>
 
     <!-- 'Sort by' dialog -->
