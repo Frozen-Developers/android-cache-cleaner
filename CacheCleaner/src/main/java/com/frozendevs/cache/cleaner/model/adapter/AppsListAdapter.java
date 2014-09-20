@@ -1,11 +1,9 @@
 package com.frozendevs.cache.cleaner.model.adapter;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,62 +58,36 @@ public class AppsListAdapter extends BaseAdapter {
         return false;
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View convertView, ViewGroup viewParent) {
         final AppsListItem item = mFilteredItems.get(i);
 
-        if(view == null) view = LayoutInflater.from(mContext).inflate(R.layout.list_item, null);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item, viewParent, false);
+        }
 
-        view.setOnClickListener(new View.OnClickListener() {
+        convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-                    intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.setData(Uri.parse("package:" + item.getPackageName()));
-                }
-                else {
-                    intent.setAction(Intent.ACTION_VIEW);
-                    intent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
-
-                    if(Build.VERSION.SDK_INT == Build.VERSION_CODES.FROYO)
-                        intent.putExtra("pkg", item.getPackageName());
-                    else
-                        intent.putExtra("com.android.settings.ApplicationPkgName", item.getPackageName());
-                }
+                intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.parse("package:" + item.getPackageName()));
 
                 mContext.startActivity(intent);
             }
         });
 
-        ImageView imageView = (ImageView)view.findViewById(R.id.app_icon);
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.app_icon);
         imageView.setImageDrawable(item.getApplicationIcon());
 
-        TextView nameView = (TextView)view.findViewById(R.id.app_name);
+        TextView nameView = (TextView) convertView.findViewById(R.id.app_name);
         nameView.setText(item.getApplicationName());
 
-        TextView sizeView = (TextView)view.findViewById(R.id.app_size);
+        TextView sizeView = (TextView) convertView.findViewById(R.id.app_size);
         sizeView.setText(Formatter.formatShortFileSize(mContext, item.getCacheSize()));
 
-        return view;
-    }
-
-    @Override
-    public int getItemViewType(int i) {
-        return 0;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 1;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return mFilteredItems.size() == 0;
+        return convertView;
     }
 
     public void setItems(List<AppsListItem> items) {
@@ -129,7 +101,7 @@ public class AppsListAdapter extends BaseAdapter {
 
         Locale current = mContext.getResources().getConfiguration().locale;
 
-        for(AppsListItem item : mItems) {
+        for (AppsListItem item : mItems) {
             if (item.getApplicationName().toLowerCase(current).contains(filter.toLowerCase(current)))
                 filteredItems.add(item);
         }
@@ -148,7 +120,7 @@ public class AppsListAdapter extends BaseAdapter {
     public long getTotalCacheSize() {
         long size = 0;
 
-        for(AppsListItem app : mItems)
+        for (AppsListItem app : mItems)
             size += app.getCacheSize();
 
         return size;
@@ -158,12 +130,13 @@ public class AppsListAdapter extends BaseAdapter {
         Collections.sort(mItems, new Comparator<AppsListItem>() {
             @Override
             public int compare(AppsListItem lhs, AppsListItem rhs) {
-                switch (mSharedPreferences.getInt(mContext.getString(R.string.sort_by_key), SORT_BY_CACHE_SIZE)) {
+                switch (mSharedPreferences.getInt(mContext.getString(R.string.sort_by_key),
+                        SORT_BY_CACHE_SIZE)) {
                     case SORT_BY_APP_NAME:
                         return lhs.getApplicationName().compareToIgnoreCase(rhs.getApplicationName());
 
                     case SORT_BY_CACHE_SIZE:
-                        return (int)(rhs.getCacheSize() - lhs.getCacheSize());
+                        return (int) (rhs.getCacheSize() - lhs.getCacheSize());
                 }
 
                 return 0;
