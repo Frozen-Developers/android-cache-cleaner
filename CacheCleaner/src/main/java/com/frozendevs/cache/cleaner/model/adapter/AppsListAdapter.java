@@ -30,6 +30,12 @@ public class AppsListAdapter extends BaseAdapter {
     private Context mContext;
     private SharedPreferences mSharedPreferences;
 
+    private class ViewHolder {
+        ImageView image;
+        TextView name, size;
+        String packageName;
+    }
+
     public AppsListAdapter(Context context, SharedPreferences sharedPreferences) {
         mContext = context;
         mSharedPreferences = sharedPreferences;
@@ -55,7 +61,7 @@ public class AppsListAdapter extends BaseAdapter {
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
@@ -64,28 +70,34 @@ public class AppsListAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item, viewParent, false);
+
+            ViewHolder viewHolder = new ViewHolder();
+
+            viewHolder.image = (ImageView) convertView.findViewById(R.id.app_icon);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.app_name);
+            viewHolder.size = (TextView) convertView.findViewById(R.id.app_size);
+
+            convertView.setTag(viewHolder);
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    intent.setData(Uri.parse("package:" + ((ViewHolder) v.getTag()).packageName));
+
+                    mContext.startActivity(intent);
+                }
+            });
         }
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.setData(Uri.parse("package:" + item.getPackageName()));
+        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
-                mContext.startActivity(intent);
-            }
-        });
-
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.app_icon);
-        imageView.setImageDrawable(item.getApplicationIcon());
-
-        TextView nameView = (TextView) convertView.findViewById(R.id.app_name);
-        nameView.setText(item.getApplicationName());
-
-        TextView sizeView = (TextView) convertView.findViewById(R.id.app_size);
-        sizeView.setText(Formatter.formatShortFileSize(mContext, item.getCacheSize()));
+        viewHolder.image.setImageDrawable(item.getApplicationIcon());
+        viewHolder.name.setText(item.getApplicationName());
+        viewHolder.size.setText(Formatter.formatShortFileSize(mContext, item.getCacheSize()));
+        viewHolder.packageName = item.getPackageName();
 
         return convertView;
     }
