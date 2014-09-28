@@ -59,7 +59,7 @@
     <string name="open_source_licences">Open source licences</string>
     <string name="special_thanks">Special thanks</string>
     <string name="samuels_graphics" translatable="false">Samuel\'s Graphics</string>
-    <string name="samuels_graphics_desc">Icon design</string>
+    <string name="samuels_graphics_desc">Icon and Play Store banner design</string>
 
     <!-- 'Sort by' dialog -->
     <string name="sort_by_app_name">Application name</string>
