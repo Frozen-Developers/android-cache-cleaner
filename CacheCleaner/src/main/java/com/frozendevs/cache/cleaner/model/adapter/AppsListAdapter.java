@@ -50,7 +50,7 @@ public class AppsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
+    public AppsListItem getItem(int i) {
         return mFilteredItems.get(i);
     }
 
@@ -66,33 +66,39 @@ public class AppsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View convertView, ViewGroup viewParent) {
-        final AppsListItem item = mFilteredItems.get(i);
-
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item, viewParent, false);
 
-            ViewHolder viewHolder = new ViewHolder();
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ViewHolder viewHolder = (ViewHolder) view.getTag();
+
+                    if (viewHolder != null && viewHolder.packageName != null) {
+                        Intent intent = new Intent();
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + viewHolder.packageName));
+
+                        mContext.startActivity(intent);
+                    }
+                }
+            });
+        }
+
+        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+
+        if (viewHolder == null) {
+            viewHolder = new ViewHolder();
 
             viewHolder.image = (ImageView) convertView.findViewById(R.id.app_icon);
             viewHolder.name = (TextView) convertView.findViewById(R.id.app_name);
             viewHolder.size = (TextView) convertView.findViewById(R.id.app_size);
 
             convertView.setTag(viewHolder);
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    intent.setData(Uri.parse("package:" + ((ViewHolder) v.getTag()).packageName));
-
-                    mContext.startActivity(intent);
-                }
-            });
         }
 
-        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+        AppsListItem item = getItem(i);
 
         viewHolder.image.setImageDrawable(item.getApplicationIcon());
         viewHolder.name.setText(item.getApplicationName());
