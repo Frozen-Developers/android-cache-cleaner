@@ -44,7 +44,6 @@ public class CleanerActivity extends ActionBarActivity implements
     private ListView mListView;
     private TextView mEmptyView;
     private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mSharedPreferencesEditor;
     private boolean mUpdateChart = true;
     private SearchView mSearchView;
     private ProgressDialog mProgressDialog;
@@ -61,34 +60,35 @@ public class CleanerActivity extends ActionBarActivity implements
         setContentView(R.layout.cleaner_activity);
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mSharedPreferencesEditor = mSharedPreferences.edit();
 
-        mColorBar = (LinearColorBar)findViewById(R.id.storage_color_bar);
-        mUsedStorageText = (TextView)findViewById(R.id.usedStorageText);
-        mFreeStorageText = (TextView)findViewById(R.id.freeStorageText);
+        mColorBar = (LinearColorBar) findViewById(R.id.storage_color_bar);
+        mUsedStorageText = (TextView) findViewById(R.id.usedStorageText);
+        mFreeStorageText = (TextView) findViewById(R.id.freeStorageText);
 
-        mEmptyView = (TextView)findViewById(android.R.id.empty);
+        mEmptyView = (TextView) findViewById(android.R.id.empty);
 
-        mListView = (ListView)findViewById(android.R.id.list);
+        mListView = (ListView) findViewById(android.R.id.list);
         mListView.setEmptyView(mEmptyView);
-        mAppsListAdapter = new AppsListAdapter(this, mSharedPreferences);
-        mListView.setAdapter(mAppsListAdapter);
+
+        mAppsListAdapter = new AppsListAdapter(this);
         mAppsListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                if(mUpdateChart)
+                if (mUpdateChart) {
                     updateStorageUsage();
+                }
                 mUpdateChart = true;
 
                 mListView.invalidateViews();
                 mEmptyView.invalidate();
             }
         });
+        mListView.setAdapter(mAppsListAdapter);
 
         updateStorageUsage();
 
         mProgressBar = findViewById(R.id.progressBar);
-        mProgressBarText = (TextView)findViewById(R.id.progressBarText);
+        mProgressBarText = (TextView) findViewById(R.id.progressBarText);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -104,7 +104,6 @@ public class CleanerActivity extends ActionBarActivity implements
 
         mCacheManager = new CacheManager(getPackageManager());
         mCacheManager.setOnActionListener(this);
-        mCacheManager.scanCache();
     }
 
     @Override
@@ -112,35 +111,44 @@ public class CleanerActivity extends ActionBarActivity implements
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        mSearchView = ((SearchView)MenuItemCompat.getActionView(searchItem));
+
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mSearchView.clearFocus();
+
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 mUpdateChart = false;
-                mAppsListAdapter.filterAppsByName(newText);
-                return true;
-            }
-        });
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                mEmptyView.setText(R.string.no_such_app);
-                return true;
-            }
 
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                mAppsListAdapter.clearFilter();
-                mEmptyView.setText(R.string.empty_cache);
+                mAppsListAdapter.filterAppsByName(newText);
+
                 return true;
             }
         });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        mEmptyView.setText(R.string.no_such_app);
+
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        mAppsListAdapter.clearFilter();
+
+                        mEmptyView.setText(R.string.empty_cache);
+
+                        return true;
+                    }
+                });
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -149,7 +157,7 @@ public class CleanerActivity extends ActionBarActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_clean:
-                if(!mCacheManager.isScanning() && !mCacheManager.isCleaning() &&
+                if (!mCacheManager.isScanning() && !mCacheManager.isCleaning() &&
                         mAppsListAdapter.getTotalCacheSize() > 0) {
                     mAlreadyCleaned = false;
                     mCacheManager.cleanCache(mAppsListAdapter.getTotalCacheSize());
@@ -157,8 +165,9 @@ public class CleanerActivity extends ActionBarActivity implements
                 return true;
 
             case R.id.action_refresh:
-                if(!mCacheManager.isScanning() && !mCacheManager.isCleaning())
+                if (!mCacheManager.isScanning() && !mCacheManager.isCleaning()) {
                     mCacheManager.scanCache();
+                }
                 return true;
 
             case R.id.action_settings:
@@ -166,11 +175,11 @@ public class CleanerActivity extends ActionBarActivity implements
                 return true;
 
             case R.id.action_sort_by_app_name:
-                setSortBy(AppsListAdapter.SORT_BY_APP_NAME);
+                setSortBy(AppsListAdapter.SortBy.APP_NAME);
                 return true;
 
             case R.id.action_sort_by_cache_size:
-                setSortBy(AppsListAdapter.SORT_BY_CACHE_SIZE);
+                setSortBy(AppsListAdapter.SortBy.CACHE_SIZE);
                 return true;
         }
 
@@ -179,31 +188,48 @@ public class CleanerActivity extends ActionBarActivity implements
 
     @Override
     protected void onStart() {
-        super.onStart();
-
-        if(mCacheManager.isScanning() && !isProgressBarVisible())
-            showProgressBar(true);
-        else if(!mCacheManager.isScanning() && isProgressBarVisible())
-            showProgressBar(false);
-
-        if(mCacheManager.isCleaning() && !mProgressDialog.isShowing())
-            mProgressDialog.show();
-
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        super.onStart();
     }
 
     @Override
     protected void onStop() {
-        if(mProgressDialog.isShowing())
-            mProgressDialog.dismiss();
-
         mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onStop();
     }
 
     @Override
-    public void onConfigurationChanged (Configuration newConfig) {
+    protected void onResume() {
+        if (mCacheManager.isScanning() && !isProgressBarVisible()) {
+            showProgressBar(true);
+        } else if (!mCacheManager.isScanning() && isProgressBarVisible()) {
+            showProgressBar(false);
+        }
+
+        if (mCacheManager.isCleaning() && !mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+
+        if (!mCacheManager.isScanning() && !mAlreadyScanned) {
+            mCacheManager.scanCache();
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
@@ -212,14 +238,14 @@ public class CleanerActivity extends ActionBarActivity implements
 
         StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-        totalStorage = (long)stat.getBlockCount() * (long)stat.getBlockSize();
-        freeStorage = (long)stat.getAvailableBlocks() * (long)stat.getBlockSize();
+        totalStorage = (long) stat.getBlockCount() * (long) stat.getBlockSize();
+        freeStorage = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
 
         appStorage = mAppsListAdapter.getTotalCacheSize();
 
         if (totalStorage > 0) {
-            mColorBar.setRatios((totalStorage - freeStorage - appStorage) / (float)totalStorage,
-                    appStorage / (float)totalStorage, freeStorage / (float) totalStorage);
+            mColorBar.setRatios((totalStorage - freeStorage - appStorage) / (float) totalStorage,
+                    appStorage / (float) totalStorage, freeStorage / (float) totalStorage);
             long usedStorage = totalStorage - freeStorage;
             if (mLastUsedStorage != usedStorage) {
                 mLastUsedStorage = usedStorage;
@@ -244,9 +270,14 @@ public class CleanerActivity extends ActionBarActivity implements
         }
     }
 
-    private void setSortBy(int sortBy) {
-        mSharedPreferencesEditor.putInt(getString(R.string.sort_by_key), sortBy);
-        mSharedPreferencesEditor.commit();
+    private AppsListAdapter.SortBy getSortBy() {
+        return AppsListAdapter.SortBy.valueOf(mSharedPreferences.getString(
+                getString(R.string.sort_by_key), AppsListAdapter.SortBy.CACHE_SIZE.toString()));
+    }
+
+    private void setSortBy(AppsListAdapter.SortBy sortBy) {
+        mSharedPreferences.edit().putString(getString(R.string.sort_by_key), sortBy.toString()).apply();
+
         mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
     }
 
@@ -255,10 +286,9 @@ public class CleanerActivity extends ActionBarActivity implements
     }
 
     private void showProgressBar(boolean show) {
-        if(show) {
+        if (show) {
             mProgressBar.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             mProgressBar.startAnimation(AnimationUtils.loadAnimation(this, android.R.anim.fade_out));
             mProgressBar.setVisibility(View.GONE);
         }
@@ -270,18 +300,20 @@ public class CleanerActivity extends ActionBarActivity implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.sort_by_key))) {
-            mAppsListAdapter.sort();
-            if(mSearchView.isShown())
+        if (key.equals(getString(R.string.sort_by_key))) {
+            mAppsListAdapter.sort(getSortBy());
+
+            if (mSearchView.isShown()) {
                 mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
-            mAppsListAdapter.notifyDataSetChanged();
+            }
         }
     }
 
     @Override
     public void onScanStarted(int appsCount) {
-        if(mProgressDialog.isShowing())
+        if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
+        }
 
         setProgressBarProgress(0, appsCount);
         showProgressBar(true);
@@ -294,22 +326,22 @@ public class CleanerActivity extends ActionBarActivity implements
 
     @Override
     public void onScanCompleted(List<AppsListItem> apps) {
-        mAppsListAdapter.setItems(apps);
-        if(mSearchView != null) {
-            if(mSearchView.isShown()) {
-                mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
-                mUpdateChart = false;
-            }
+        mAppsListAdapter.setItems(apps, getSortBy());
+
+        if (mSearchView != null && mSearchView.isShown()) {
+            mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
+
+            mUpdateChart = false;
         }
-        mAppsListAdapter.notifyDataSetChanged();
 
         showProgressBar(false);
 
-        if(!mAlreadyScanned) {
+        if (!mAlreadyScanned) {
             mAlreadyScanned = true;
 
-            if(mSharedPreferences.getBoolean(getString(R.string.clean_on_app_startup_key), false)) {
+            if (mSharedPreferences.getBoolean(getString(R.string.clean_on_app_startup_key), false)) {
                 mAlreadyCleaned = true;
+
                 mCacheManager.cleanCache(mAppsListAdapter.getTotalCacheSize());
             }
         }
@@ -317,28 +349,28 @@ public class CleanerActivity extends ActionBarActivity implements
 
     @Override
     public void onCleanStarted() {
-        if(isProgressBarVisible())
+        if (isProgressBarVisible()) {
             showProgressBar(false);
+        }
 
-        if(!isFinishing()) {
+        if (!isFinishing()) {
             mProgressDialog.show();
         }
     }
 
     @Override
     public void onCleanCompleted(long cacheSize) {
-        mAppsListAdapter.setItems(new ArrayList<AppsListItem>());
-        mAppsListAdapter.notifyDataSetChanged();
+        mAppsListAdapter.setItems(new ArrayList<AppsListItem>(), getSortBy());
 
-        if(mProgressDialog.isShowing()) {
+        if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
 
         Toast.makeText(this, getString(R.string.cleaned) + " (" +
                 Formatter.formatShortFileSize(this, cacheSize) + ")", Toast.LENGTH_LONG).show();
 
-        if(!mAlreadyCleaned) {
-            if(mSharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
+        if (!mAlreadyCleaned) {
+            if (mSharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
                 finish();
             }
         }

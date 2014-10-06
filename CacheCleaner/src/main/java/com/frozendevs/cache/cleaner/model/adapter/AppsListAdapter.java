@@ -2,7 +2,6 @@ package com.frozendevs.cache.cleaner.model.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -23,12 +22,13 @@ import java.util.Locale;
 
 public class AppsListAdapter extends BaseAdapter {
 
-    public static final int SORT_BY_APP_NAME = 0;
-    public static final int SORT_BY_CACHE_SIZE = 1;
+    public static enum SortBy {
+        APP_NAME,
+        CACHE_SIZE
+    }
 
     private List<AppsListItem> mItems, mFilteredItems;
     private Context mContext;
-    private SharedPreferences mSharedPreferences;
 
     private class ViewHolder {
         ImageView image;
@@ -36,9 +36,8 @@ public class AppsListAdapter extends BaseAdapter {
         String packageName;
     }
 
-    public AppsListAdapter(Context context, SharedPreferences sharedPreferences) {
+    public AppsListAdapter(Context context) {
         mContext = context;
-        mSharedPreferences = sharedPreferences;
 
         mItems = new ArrayList<AppsListItem>();
         mFilteredItems = new ArrayList<AppsListItem>(mItems);
@@ -108,10 +107,10 @@ public class AppsListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void setItems(List<AppsListItem> items) {
+    public void setItems(List<AppsListItem> items, SortBy sortBy) {
         mItems = new ArrayList<AppsListItem>(items);
 
-        sort();
+        sort(sortBy);
     }
 
     public void filterAppsByName(String filter) {
@@ -120,8 +119,10 @@ public class AppsListAdapter extends BaseAdapter {
         Locale current = mContext.getResources().getConfiguration().locale;
 
         for (AppsListItem item : mItems) {
-            if (item.getApplicationName().toLowerCase(current).contains(filter.toLowerCase(current)))
+            if (item.getApplicationName().toLowerCase(current).contains(
+                    filter.toLowerCase(current))) {
                 filteredItems.add(item);
+            }
         }
 
         mFilteredItems = filteredItems;
@@ -138,22 +139,22 @@ public class AppsListAdapter extends BaseAdapter {
     public long getTotalCacheSize() {
         long size = 0;
 
-        for (AppsListItem app : mItems)
+        for (AppsListItem app : mItems) {
             size += app.getCacheSize();
+        }
 
         return size;
     }
 
-    public void sort() {
+    public void sort(final SortBy sortBy) {
         Collections.sort(mItems, new Comparator<AppsListItem>() {
             @Override
             public int compare(AppsListItem lhs, AppsListItem rhs) {
-                switch (mSharedPreferences.getInt(mContext.getString(R.string.sort_by_key),
-                        SORT_BY_CACHE_SIZE)) {
-                    case SORT_BY_APP_NAME:
+                switch (sortBy) {
+                    case APP_NAME:
                         return lhs.getApplicationName().compareToIgnoreCase(rhs.getApplicationName());
 
-                    case SORT_BY_CACHE_SIZE:
+                    case CACHE_SIZE:
                         return (int) (rhs.getCacheSize() - lhs.getCacheSize());
                 }
 
@@ -162,5 +163,7 @@ public class AppsListAdapter extends BaseAdapter {
         });
 
         mFilteredItems = new ArrayList<AppsListItem>(mItems);
+
+        notifyDataSetChanged();
     }
 }
