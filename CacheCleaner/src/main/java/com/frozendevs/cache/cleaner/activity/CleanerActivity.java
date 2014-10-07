@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -32,19 +31,18 @@ import com.frozendevs.cache.cleaner.helper.CacheManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CleanerActivity extends ActionBarActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener, CacheManager.OnActionListener {
+public class CleanerActivity extends ActionBarActivity implements CacheManager.OnActionListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private LinearColorBar mColorBar;
     private TextView mUsedStorageText;
     private TextView mFreeStorageText;
     private long mLastUsedStorage, mLastFreeStorage;
+
     private AppsListAdapter mAppsListAdapter = null;
     private CacheManager mCacheManager = null;
-    private ListView mListView;
     private TextView mEmptyView;
     private SharedPreferences mSharedPreferences;
-    private boolean mUpdateChart = true;
     private SearchView mSearchView;
     private ProgressDialog mProgressDialog;
     private View mProgressBar;
@@ -67,25 +65,11 @@ public class CleanerActivity extends ActionBarActivity implements
 
         mEmptyView = (TextView) findViewById(android.R.id.empty);
 
-        mListView = (ListView) findViewById(android.R.id.list);
-        mListView.setEmptyView(mEmptyView);
-
         mAppsListAdapter = new AppsListAdapter(this);
-        mAppsListAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                if (mUpdateChart) {
-                    updateStorageUsage();
-                }
-                mUpdateChart = true;
 
-                mListView.invalidateViews();
-                mEmptyView.invalidate();
-            }
-        });
-        mListView.setAdapter(mAppsListAdapter);
-
-        updateStorageUsage();
+        ListView listView = (ListView) findViewById(android.R.id.list);
+        listView.setAdapter(mAppsListAdapter);
+        listView.setEmptyView(mEmptyView);
 
         mProgressBar = findViewById(R.id.progressBar);
         mProgressBarText = (TextView) findViewById(R.id.progressBarText);
@@ -123,8 +107,6 @@ public class CleanerActivity extends ActionBarActivity implements
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mUpdateChart = false;
-
                 mAppsListAdapter.filterAppsByName(newText);
 
                 return true;
@@ -160,6 +142,7 @@ public class CleanerActivity extends ActionBarActivity implements
                 if (!mCacheManager.isScanning() && !mCacheManager.isCleaning() &&
                         mAppsListAdapter.getTotalCacheSize() > 0) {
                     mAlreadyCleaned = false;
+
                     mCacheManager.cleanCache(mAppsListAdapter.getTotalCacheSize());
                 }
                 return true;
@@ -202,6 +185,8 @@ public class CleanerActivity extends ActionBarActivity implements
 
     @Override
     protected void onResume() {
+        updateStorageUsage();
+
         if (mCacheManager.isScanning() && !isProgressBarVisible()) {
             showProgressBar(true);
         } else if (!mCacheManager.isScanning() && isProgressBarVisible()) {
@@ -328,10 +313,10 @@ public class CleanerActivity extends ActionBarActivity implements
     public void onScanCompleted(List<AppsListItem> apps) {
         mAppsListAdapter.setItems(apps, getSortBy());
 
+        updateStorageUsage();
+
         if (mSearchView != null && mSearchView.isShown()) {
             mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
-
-            mUpdateChart = false;
         }
 
         showProgressBar(false);
@@ -361,6 +346,8 @@ public class CleanerActivity extends ActionBarActivity implements
     @Override
     public void onCleanCompleted(long cacheSize) {
         mAppsListAdapter.setItems(new ArrayList<AppsListItem>(), getSortBy());
+
+        updateStorageUsage();
 
         if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
