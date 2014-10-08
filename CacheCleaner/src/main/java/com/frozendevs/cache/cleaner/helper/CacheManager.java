@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
 
@@ -41,28 +43,40 @@ public class CacheManager {
 
     private class TaskScan extends AsyncTask<Void, Integer, List<AppsListItem>> {
 
-        private List<ApplicationInfo> mPackages;
         private int mAppCount = 0;
-
-        @Override
-        protected void onPreExecute() {
-            mPackages = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-
-            if (mOnActionListener != null) {
-                mOnActionListener.onScanStarted(mPackages.size());
-            }
-        }
 
         @Override
         protected List<AppsListItem> doInBackground(Void... params) {
             mCacheSize = 0;
 
-            final CountDownLatch countDownLatch = new CountDownLatch(mPackages.size());
+            final List<ApplicationInfo> packages = mPackageManager.getInstalledApplications(
+                    PackageManager.GET_META_DATA);
+
+            if (mOnActionListener != null) {
+                final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mOnActionListener.onScanStarted(packages.size());
+
+                        countDownLatch.countDown();
+                    }
+                });
+
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            final CountDownLatch countDownLatch = new CountDownLatch(packages.size());
 
             final List<AppsListItem> apps = new ArrayList<AppsListItem>();
 
             try {
-                for (ApplicationInfo pkg : mPackages) {
+                for (ApplicationInfo pkg : packages) {
                     mGetPackageSizeInfoMethod.invoke(mPackageManager, pkg.packageName,
                             new IPackageStatsObserver.Stub() {
 
@@ -70,15 +84,12 @@ public class CacheManager {
                                 public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
                                         throws RemoteException {
                                     synchronized (apps) {
-                                        publishProgress(++mAppCount);
+                                        publishProgress(++mAppCount, packages.size());
 
                                         if (succeeded && pStats.cacheSize > 0) {
                                             try {
                                                 apps.add(new AppsListItem(pStats.packageName,
-                                                        mPackageManager.getApplicationLabel(
-                                                                mPackageManager.getApplicationInfo(pStats.packageName,
-                                                                        PackageManager.GET_META_DATA)
-                                                        ).toString(),
+                                                        mPackageManager.getApplicationLabel(mPackageManager.getApplicationInfo(pStats.packageName, PackageManager.GET_META_DATA)).toString(),
                                                         mPackageManager.getApplicationIcon(pStats.packageName),
                                                         pStats.cacheSize
                                                 ));
@@ -113,7 +124,7 @@ public class CacheManager {
         @Override
         protected void onProgressUpdate(Integer... values) {
             if (mOnActionListener != null) {
-                mOnActionListener.onScanProgressUpdated(values[0], mPackages.size());
+                mOnActionListener.onScanProgressUpdated(values[0], values[1]);
             }
         }
 
