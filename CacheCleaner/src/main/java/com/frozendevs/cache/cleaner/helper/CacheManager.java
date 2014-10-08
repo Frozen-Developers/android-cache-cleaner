@@ -25,6 +25,7 @@ public class CacheManager {
     private OnActionListener mOnActionListener = null;
     private boolean mIsScanning = false;
     private boolean mIsCleaning = false;
+    private long mCacheSize = 0;
 
     public static interface OnActionListener {
         public void onScanStarted(int appsCount);
@@ -54,6 +55,8 @@ public class CacheManager {
 
         @Override
         protected List<AppsListItem> doInBackground(Void... params) {
+            mCacheSize = 0;
+
             final CountDownLatch countDownLatch = new CountDownLatch(mPackages.size());
 
             final List<AppsListItem> apps = new ArrayList<AppsListItem>();
@@ -71,7 +74,6 @@ public class CacheManager {
 
                                         if (succeeded && pStats.cacheSize > 0) {
                                             try {
-
                                                 apps.add(new AppsListItem(pStats.packageName,
                                                         mPackageManager.getApplicationLabel(
                                                                 mPackageManager.getApplicationInfo(pStats.packageName,
@@ -80,6 +82,8 @@ public class CacheManager {
                                                         mPackageManager.getApplicationIcon(pStats.packageName),
                                                         pStats.cacheSize
                                                 ));
+
+                                                mCacheSize += pStats.cacheSize;
                                             } catch (PackageManager.NameNotFoundException e) {
                                                 e.printStackTrace();
                                             }
@@ -123,7 +127,7 @@ public class CacheManager {
         }
     }
 
-    private class TaskClean extends AsyncTask<Long, Void, Long> {
+    private class TaskClean extends AsyncTask<Void, Void, Long> {
 
         @Override
         protected void onPreExecute() {
@@ -133,14 +137,14 @@ public class CacheManager {
         }
 
         @Override
-        protected Long doInBackground(Long... params) {
+        protected Long doInBackground(Void... params) {
             final CountDownLatch countDownLatch = new CountDownLatch(1);
 
             StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
             try {
                 mFreeStorageAndNotifyMethod.invoke(mPackageManager,
-                        (2 * params[0]) + ((long) stat.getFreeBlocks() * (long) stat.getBlockSize()),
+                        (long) stat.getBlockCount() * (long) stat.getBlockSize(),
                         new IPackageDataObserver.Stub() {
                             @Override
                             public void onRemoveCompleted(String packageName, boolean succeeded)
@@ -159,11 +163,13 @@ public class CacheManager {
                 e.printStackTrace();
             }
 
-            return params[0];
+            return mCacheSize;
         }
 
         @Override
         protected void onPostExecute(Long result) {
+            mCacheSize = 0;
+
             if (mOnActionListener != null) {
                 mOnActionListener.onCleanCompleted(result);
             }
@@ -192,10 +198,10 @@ public class CacheManager {
         new TaskScan().execute();
     }
 
-    public void cleanCache(long cacheSize) {
+    public void cleanCache() {
         mIsCleaning = true;
 
-        new TaskClean().execute(cacheSize);
+        new TaskClean().execute();
     }
 
     public void setOnActionListener(OnActionListener listener) {
@@ -208,5 +214,9 @@ public class CacheManager {
 
     public boolean isCleaning() {
         return mIsCleaning;
+    }
+
+    public long getCacheSize() {
+        return mCacheSize;
     }
 }

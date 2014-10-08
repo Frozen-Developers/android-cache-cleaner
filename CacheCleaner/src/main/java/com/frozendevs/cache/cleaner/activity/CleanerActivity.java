@@ -140,10 +140,10 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
         switch (item.getItemId()) {
             case R.id.action_clean:
                 if (!mCacheManager.isScanning() && !mCacheManager.isCleaning() &&
-                        mAppsListAdapter.getTotalCacheSize() > 0) {
+                        mCacheManager.getCacheSize() > 0) {
                     mAlreadyCleaned = false;
 
-                    mCacheManager.cleanCache(mAppsListAdapter.getTotalCacheSize());
+                    mCacheManager.cleanCache();
                 }
                 return true;
 
@@ -226,7 +226,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
         totalStorage = (long) stat.getBlockCount() * (long) stat.getBlockSize();
         freeStorage = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
 
-        appStorage = mAppsListAdapter.getTotalCacheSize();
+        appStorage = mCacheManager.getCacheSize();
 
         if (totalStorage > 0) {
             mColorBar.setRatios((totalStorage - freeStorage - appStorage) / (float) totalStorage,
@@ -327,7 +327,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
             if (mSharedPreferences.getBoolean(getString(R.string.clean_on_app_startup_key), false)) {
                 mAlreadyCleaned = true;
 
-                mCacheManager.cleanCache(mAppsListAdapter.getTotalCacheSize());
+                mCacheManager.cleanCache();
             }
         }
     }

@@ -149,16 +149,6 @@ public class AppsListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public long getTotalCacheSize() {
-        long size = 0;
-
-        for (AppsListItem app : mItems) {
-            size += app.getCacheSize();
-        }
-
-        return size;
-    }
-
     public void sort(SortBy sortBy) {
         new AsyncTask<SortBy, Void, Void>() {
 

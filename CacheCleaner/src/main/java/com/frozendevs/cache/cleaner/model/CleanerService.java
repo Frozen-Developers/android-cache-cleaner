@@ -49,12 +49,9 @@ public class CleanerService extends Service implements CacheManager.OnActionList
 
     @Override
     public void onScanCompleted(List<AppsListItem> apps) {
-        long size = 0;
-
-        for(AppsListItem app : apps)
-            size += app.getCacheSize();
-
-        mCacheManager.cleanCache(size);
+        if (mCacheManager.getCacheSize() > 0) {
+            mCacheManager.cleanCache();
+        }
     }
 
     @Override
