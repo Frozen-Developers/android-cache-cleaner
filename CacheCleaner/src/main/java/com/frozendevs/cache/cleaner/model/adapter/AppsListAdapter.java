@@ -3,6 +3,7 @@ package com.frozendevs.cache.cleaner.model.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,7 @@ public class AppsListAdapter extends BaseAdapter {
         mContext = context;
 
         mItems = new ArrayList<AppsListItem>();
-        mFilteredItems = new ArrayList<AppsListItem>(mItems);
+        mFilteredItems = new ArrayList<AppsListItem>();
     }
 
     @Override
@@ -108,30 +109,42 @@ public class AppsListAdapter extends BaseAdapter {
     }
 
     public void setItems(List<AppsListItem> items, SortBy sortBy) {
-        mItems = new ArrayList<AppsListItem>(items);
+        mItems = items;
 
         sort(sortBy);
     }
 
     public void filterAppsByName(String filter) {
-        List<AppsListItem> filteredItems = new ArrayList<AppsListItem>();
+        new AsyncTask<String, Void, Void>() {
 
-        Locale current = mContext.getResources().getConfiguration().locale;
+            @Override
+            protected Void doInBackground(String... params) {
+                List<AppsListItem> filteredItems = new ArrayList<AppsListItem>();
 
-        for (AppsListItem item : mItems) {
-            if (item.getApplicationName().toLowerCase(current).contains(
-                    filter.toLowerCase(current))) {
-                filteredItems.add(item);
+                Locale current = mContext.getResources().getConfiguration().locale;
+
+                for (AppsListItem item : mItems) {
+                    if (item.getApplicationName().toLowerCase(current).contains(
+                            params[0].toLowerCase(current))) {
+                        filteredItems.add(item);
+                    }
+                }
+
+                mFilteredItems = filteredItems;
+
+                return null;
             }
-        }
 
-        mFilteredItems = filteredItems;
+            @Override
+            protected void onPostExecute(Void result) {
+                notifyDataSetChanged();
+            }
 
-        notifyDataSetChanged();
+        }.execute(filter);
     }
 
     public void clearFilter() {
-        mFilteredItems = new ArrayList<AppsListItem>(mItems);
+        mFilteredItems = mItems;
 
         notifyDataSetChanged();
     }
@@ -146,24 +159,37 @@ public class AppsListAdapter extends BaseAdapter {
         return size;
     }
 
-    public void sort(final SortBy sortBy) {
-        Collections.sort(mItems, new Comparator<AppsListItem>() {
+    public void sort(SortBy sortBy) {
+        new AsyncTask<SortBy, Void, Void>() {
+
             @Override
-            public int compare(AppsListItem lhs, AppsListItem rhs) {
-                switch (sortBy) {
-                    case APP_NAME:
-                        return lhs.getApplicationName().compareToIgnoreCase(rhs.getApplicationName());
+            protected Void doInBackground(final SortBy... params) {
+                Collections.sort(mItems, new Comparator<AppsListItem>() {
+                    @Override
+                    public int compare(AppsListItem lhs, AppsListItem rhs) {
+                        switch (params[0]) {
+                            case APP_NAME:
+                                return lhs.getApplicationName().compareToIgnoreCase(
+                                        rhs.getApplicationName());
 
-                    case CACHE_SIZE:
-                        return (int) (rhs.getCacheSize() - lhs.getCacheSize());
-                }
+                            case CACHE_SIZE:
+                                return (int) (rhs.getCacheSize() - lhs.getCacheSize());
+                        }
 
-                return 0;
+                        return 0;
+                    }
+                });
+
+                mFilteredItems = new ArrayList<AppsListItem>(mItems);
+
+                return null;
             }
-        });
 
-        mFilteredItems = new ArrayList<AppsListItem>(mItems);
+            @Override
+            protected void onPostExecute(Void result) {
+                notifyDataSetChanged();
+            }
 
-        notifyDataSetChanged();
+        }.execute(sortBy);
     }
 }
