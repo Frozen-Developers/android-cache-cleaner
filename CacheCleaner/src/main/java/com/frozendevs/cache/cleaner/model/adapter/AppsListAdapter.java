@@ -8,6 +8,7 @@ import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,13 +16,14 @@ import android.widget.TextView;
 import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.R;
 
+import java.lang.Override;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class AppsListAdapter extends BaseAdapter {
+public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
     public static enum SortBy {
         APP_NAME,
@@ -68,22 +70,6 @@ public class AppsListAdapter extends BaseAdapter {
     public View getView(int i, View convertView, ViewGroup viewParent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item, viewParent, false);
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ViewHolder viewHolder = (ViewHolder) view.getTag();
-
-                    if (viewHolder != null && viewHolder.packageName != null) {
-                        Intent intent = new Intent();
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:" + viewHolder.packageName));
-
-                        mContext.startActivity(intent);
-                    }
-                }
-            });
         }
 
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
@@ -181,5 +167,19 @@ public class AppsListAdapter extends BaseAdapter {
             }
 
         }.execute(sortBy);
+    }
+
+    @Override
+    public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
+        ViewHolder viewHolder = (ViewHolder) view.getTag();
+
+        if (viewHolder != null && viewHolder.packageName != null) {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + viewHolder.packageName));
+
+            mContext.startActivity(intent);
+        }
     }
 }

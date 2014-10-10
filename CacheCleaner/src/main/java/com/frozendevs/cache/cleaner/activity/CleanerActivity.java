@@ -69,6 +69,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
 
         ListView listView = (ListView) findViewById(android.R.id.list);
         listView.setAdapter(mAppsListAdapter);
+        listView.setOnItemClickListener(mAppsListAdapter);
         listView.setEmptyView(mEmptyView);
 
         mProgressBar = findViewById(R.id.progressBar);
