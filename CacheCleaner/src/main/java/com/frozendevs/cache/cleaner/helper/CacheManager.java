@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.os.StatFs;
 
@@ -46,30 +44,20 @@ public class CacheManager {
         private int mAppCount = 0;
 
         @Override
+        protected void onPreExecute() {
+            if (mOnActionListener != null) {
+                mOnActionListener.onScanStarted(0);
+            }
+        }
+
+        @Override
         protected List<AppsListItem> doInBackground(Void... params) {
             mCacheSize = 0;
 
             final List<ApplicationInfo> packages = mPackageManager.getInstalledApplications(
                     PackageManager.GET_META_DATA);
 
-            if (mOnActionListener != null) {
-                final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mOnActionListener.onScanStarted(packages.size());
-
-                        countDownLatch.countDown();
-                    }
-                });
-
-                try {
-                    countDownLatch.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            publishProgress(0, packages.size());
 
             final CountDownLatch countDownLatch = new CountDownLatch(packages.size());
 
