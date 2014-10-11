@@ -33,9 +33,11 @@
 
         </activity>
 
-        <activity android:name=".activity.SettingsActivity"
+        <activity
+            android:name=".activity.SettingsActivity"
             android:label="@string/settings"
-            android:parentActivityName=".activity.CleanerActivity">
+            android:parentActivityName=".activity.CleanerActivity"
+            android:exported="false">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
