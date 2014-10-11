@@ -1,8 +1,6 @@
 package com.frozendevs.cache.cleaner.activity;
 
 import android.app.AlertDialog;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -19,32 +17,29 @@ public class SettingsActivity extends PreferenceActivity {
 
         addPreferencesFromResource(R.xml.settings);
 
-        String versionName = null;
-        PackageManager packageManager = getPackageManager();
-        if (packageManager != null) {
-            try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
-                versionName = packageInfo.versionName;
-            } catch (PackageManager.NameNotFoundException e) {
-                versionName = "N/A";
-            }
+        String versionName;
+        try {
+            versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (Exception e) {
+            versionName = getString(R.string.version_number_unknown);
         }
         findPreference("version").setSummary(versionName);
 
-        findPreference("licences").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                WebView webView = new WebView(getApplicationContext());
-                webView.loadUrl("file:///android_asset/html/licenses.html");
+        findPreference("licences").setOnPreferenceClickListener(
+                new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        WebView webView = new WebView(getApplicationContext());
+                        webView.loadUrl("file:///android_asset/html/licenses.html");
 
-                AlertDialog dialog = new AlertDialog.Builder(SettingsActivity.this).create();
-                dialog.setTitle(R.string.open_source_licences);
-                dialog.setView(webView);
-                dialog.show();
+                        AlertDialog dialog = new AlertDialog.Builder(SettingsActivity.this).create();
+                        dialog.setTitle(R.string.open_source_licences);
+                        dialog.setView(webView);
+                        dialog.show();
 
-                return true;
-            }
-        });
+                        return true;
+                    }
+                });
     }
 
     @Override
