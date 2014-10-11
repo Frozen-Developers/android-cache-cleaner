@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/action_clean"
-        android:icon="@drawable/ic_action_delete"
+        android:icon="@drawable/ic_action_discard"
         android:title="@string/action_clean"
         app:showAsAction="ifRoom" />
 
