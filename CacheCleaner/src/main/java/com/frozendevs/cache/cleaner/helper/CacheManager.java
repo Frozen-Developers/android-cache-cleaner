@@ -28,7 +28,7 @@ public class CacheManager {
     private long mCacheSize = 0;
 
     public static interface OnActionListener {
-        public void onScanStarted(int appsCount);
+        public void onScanStarted();
 
         public void onScanProgressUpdated(int current, int max);
 
@@ -46,7 +46,7 @@ public class CacheManager {
         @Override
         protected void onPreExecute() {
             if (mOnActionListener != null) {
-                mOnActionListener.onScanStarted(0);
+                mOnActionListener.onScanStarted();
             }
         }
 

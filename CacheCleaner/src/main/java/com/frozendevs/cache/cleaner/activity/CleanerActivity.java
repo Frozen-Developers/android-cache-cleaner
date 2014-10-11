@@ -296,12 +296,12 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     }
 
     @Override
-    public void onScanStarted(int appsCount) {
+    public void onScanStarted() {
         if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
 
-        setProgressBarProgress(0, appsCount);
+        setProgressBarProgress(0, 0);
         showProgressBar(true);
     }
 
