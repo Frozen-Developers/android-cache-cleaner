@@ -281,7 +281,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     }
 
     private void setProgressBarProgress(int current, int max) {
-        mProgressBarText.setText(getString(R.string.scanning) + " " + current + "/" + max);
+        mProgressBarText.setText(getString(R.string.scanning, current, max));
     }
 
     @Override
@@ -354,8 +354,8 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
             mProgressDialog.dismiss();
         }
 
-        Toast.makeText(this, getString(R.string.cleaned) + " (" +
-                Formatter.formatShortFileSize(this, cacheSize) + ")", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.cleaned,
+            Formatter.formatShortFileSize(this, cacheSize)), Toast.LENGTH_LONG).show();
 
         if (!mAlreadyCleaned) {
             if (mSharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {

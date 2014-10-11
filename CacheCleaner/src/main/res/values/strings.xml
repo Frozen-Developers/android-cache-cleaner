@@ -23,14 +23,14 @@
     <string name="no_such_app">No such application.</string>
 
     <!-- Progress bar -->
-    <string name="scanning">Scanning</string>
+    <string name="scanning">Scanning %1$d/%2$d</string>
 
     <!-- Progress dialog -->
     <string name="cleaning_cache">Cleaning cache</string>
     <string name="cleaning_in_progress">Cleaning in progress…</string>
 
     <!-- Toasts -->
-    <string name="cleaned">Cache cleaned</string>
+    <string name="cleaned">Cache cleaned (<xliff:g id="memory">%1$s</xliff:g>)</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>

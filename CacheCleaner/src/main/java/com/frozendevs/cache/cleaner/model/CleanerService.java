@@ -61,8 +61,7 @@ public class CleanerService extends Service implements CacheManager.OnActionList
 
     @Override
     public void onCleanCompleted(long cacheSize) {
-        String msg = getString(R.string.cleaned) + " (" +
-                Formatter.formatShortFileSize(this, cacheSize) + ")";
+        String msg = getString(R.string.cleaned, Formatter.formatShortFileSize(this, cacheSize));
 
         Log.d(TAG, msg);
 

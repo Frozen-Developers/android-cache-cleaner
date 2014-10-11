@@ -22,14 +22,14 @@
     <string name="no_such_app">Нема такве апликације.</string>
 
     <!-- Progress bar -->
-    <string name="scanning">Скенирам</string>
+    <string name="scanning">Скенирам %1$d/%2$d</string>
 
     <!-- Progress dialog -->
     <string name="cleaning_cache">Чишћење кеша</string>
     <string name="cleaning_in_progress">Чишћење је у току…</string>
 
     <!-- Toasts -->
-    <string name="cleaned">Кеш је очишћен</string>
+    <string name="cleaned">Кеш је очишћен (<xliff:g id="memory">%1$s</xliff:g>)</string>
 
     <!-- Settings -->
     <string name="settings">Поставке</string>
