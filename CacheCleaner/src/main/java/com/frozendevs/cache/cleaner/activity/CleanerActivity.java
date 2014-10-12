@@ -24,9 +24,9 @@ import android.widget.Toast;
 
 import com.android.settings.applications.LinearColorBar;
 import com.frozendevs.cache.cleaner.R;
-import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
-import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.helper.CacheManager;
+import com.frozendevs.cache.cleaner.model.AppsListItem;
+import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -257,8 +257,12 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     }
 
     private AppsListAdapter.SortBy getSortBy() {
-        return AppsListAdapter.SortBy.valueOf(mSharedPreferences.getString(
-                getString(R.string.sort_by_key), AppsListAdapter.SortBy.CACHE_SIZE.toString()));
+        try {
+            return AppsListAdapter.SortBy.valueOf(mSharedPreferences.getString(
+                    getString(R.string.sort_by_key), AppsListAdapter.SortBy.CACHE_SIZE.toString()));
+        } catch (ClassCastException e) {
+            return AppsListAdapter.SortBy.CACHE_SIZE;
+        }
     }
 
     private void setSortBy(AppsListAdapter.SortBy sortBy) {
@@ -355,7 +359,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
         }
 
         Toast.makeText(this, getString(R.string.cleaned,
-            Formatter.formatShortFileSize(this, cacheSize)), Toast.LENGTH_LONG).show();
+                Formatter.formatShortFileSize(this, cacheSize)), Toast.LENGTH_LONG).show();
 
         if (!mAlreadyCleaned) {
             if (mSharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
