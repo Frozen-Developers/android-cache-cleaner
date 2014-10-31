@@ -284,10 +284,6 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
         }
     }
 
-    private void setProgressBarProgress(int current, int max) {
-        mProgressBarText.setText(getString(R.string.scanning, current, max));
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.sort_by_key))) {
@@ -305,13 +301,13 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
             mProgressDialog.dismiss();
         }
 
-        setProgressBarProgress(0, 0);
+        mProgressBarText.setText(R.string.scanning);
         showProgressBar(true);
     }
 
     @Override
     public void onScanProgressUpdated(int current, int max) {
-        setProgressBarProgress(current, max);
+        mProgressBarText.setText(getString(R.string.scanning_m_of_n, current, max));
     }
 
     @Override
