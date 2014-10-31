@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/about_app"
+    android:persistent="false">
+
+    <PreferenceCategory android:title="@string/about">
+
+        <Preference
+            android:title="@string/author"
+            android:summary="@string/author_name"
+            android:key="author">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/authors_url" />
+
+        </Preference>
+
+        <Preference
+            android:title="@string/version_number"
+            android:key="version" />
+
+        <Preference
+            android:title="@string/open_source_licences"
+            android:key="licences" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/special_thanks">
+
+        <Preference
+            android:title="@string/samuels_graphics"
+            android:summary="@string/samuels_graphics_desc"
+            android:key="author">
+
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/samuels_graphics_url" />
+
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
