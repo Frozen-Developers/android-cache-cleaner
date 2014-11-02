@@ -1,7 +1,6 @@
 package com.frozendevs.cache.cleaner.activity;
 
 import android.app.AlertDialog;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -64,14 +63,7 @@ public class SettingsActivity extends PreferenceActivity {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(
                 R.layout.settings_activity, new LinearLayout(this), false);
 
-        TypedArray typedArray = getTheme().obtainStyledAttributes(R.style.Theme_Application,
-                new int[]{R.attr.colorPrimary, R.attr.homeAsUpIndicator});
-
         mActionBar = (Toolbar) contentView.findViewById(R.id.action_bar);
-        mActionBar.setBackgroundResource(typedArray.getResourceId(0,
-                R.color.primary_material_dark));
-        mActionBar.setNavigationIcon(typedArray.getResourceId(1,
-                R.drawable.abc_ic_ab_back_mtrl_am_alpha));
         mActionBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,10 +71,8 @@ public class SettingsActivity extends PreferenceActivity {
             }
         });
 
-        typedArray.recycle();
-
         ViewGroup contentWrapper = (ViewGroup) contentView.findViewById(R.id.content_wrapper);
-        contentWrapper.addView(LayoutInflater.from(this).inflate(layoutResID, contentView, false));
+        LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true);
 
         getWindow().setContentView(contentView);
     }
