@@ -61,13 +61,13 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-        ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(layoutResID,
-                new LinearLayout(this), false);
+        ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(
+                R.layout.settings_activity, new LinearLayout(this), false);
 
         TypedArray typedArray = getTheme().obtainStyledAttributes(R.style.Theme_Application,
                 new int[]{R.attr.colorPrimary, R.attr.homeAsUpIndicator});
 
-        mActionBar = new Toolbar(this);
+        mActionBar = (Toolbar) contentView.findViewById(R.id.action_bar);
         mActionBar.setBackgroundResource(typedArray.getResourceId(0,
                 R.color.primary_material_dark));
         mActionBar.setNavigationIcon(typedArray.getResourceId(1,
@@ -81,7 +81,8 @@ public class SettingsActivity extends PreferenceActivity {
 
         typedArray.recycle();
 
-        contentView.addView(mActionBar, 0);
+        ViewGroup contentWrapper = (ViewGroup) contentView.findViewById(R.id.content_wrapper);
+        contentWrapper.addView(LayoutInflater.from(this).inflate(layoutResID, contentView, false));
 
         getWindow().setContentView(contentView);
     }
