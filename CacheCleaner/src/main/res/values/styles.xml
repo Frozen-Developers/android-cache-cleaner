@@ -3,10 +3,4 @@
 
     <style name="Theme.Application" parent="@style/Theme.AppCompat" />
 
-    <style name="Theme.Settings" parent="@style/Theme.Application">
-        <item name="android:windowNoTitle">false</item>
-        <item name="android:windowActionBar">true</item>
-        <item name="windowActionBar">true</item>
-    </style>
-
 </resources>
