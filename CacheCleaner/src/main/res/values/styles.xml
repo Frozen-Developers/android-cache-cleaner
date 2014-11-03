@@ -4,9 +4,8 @@
     <style name="Theme.Application" parent="@style/Theme.AppCompat" />
 
     <style name="Theme.Settings" parent="@style/Theme.Application">
-        <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
-        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
 
         <item name="toolbarStyle">@style/Widget.Toolbar</item>
     </style>
