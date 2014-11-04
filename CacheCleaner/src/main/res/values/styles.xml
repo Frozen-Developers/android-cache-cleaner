@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Application" parent="@style/Theme.AppCompat" />
+    <style name="Theme.Application" parent="@style/Theme.AppCompat.Light.DarkActionBar" />
 
     <style name="Theme.Settings" parent="@style/Theme.Application">
         <item name="android:windowActionBar">false</item>
@@ -12,8 +12,9 @@
 
     <style name="Widget.Toolbar" parent="@style/Widget.AppCompat.Toolbar">
         <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:navigationIcon">?attr/homeAsUpIndicator</item>
         <item name="navigationIcon">?attr/homeAsUpIndicator</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
 </resources>
