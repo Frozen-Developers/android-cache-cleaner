@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Application" parent="@style/Theme.AppCompat.Light.DarkActionBar" />
+    <style name="Theme.Application" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="colorPrimary">@color/material_blue_grey_900</item>
+        <item name="colorPrimaryDark">@color/material_blue_grey_950</item>
+        <item name="colorAccent">@color/material_deep_teal_500</item>
+    </style>
 
     <style name="Theme.Settings" parent="@style/Theme.Application">
         <item name="android:windowActionBar">false</item>
