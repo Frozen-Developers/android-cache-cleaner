@@ -1,5 +1,1 @@
-<resources>
-    <!-- Customize dimensions originally defined in res/values/dimens.xml (such as
-         screen margins) for sw600dp devices here. -->
-    <dimen name="preference_fragment_padding_side">24dp</dimen>
-</resources>
+<resources></resources>

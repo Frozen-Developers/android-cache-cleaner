@@ -6,12 +6,12 @@
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:background="?attr/selectableItemBackground"
-    android:paddingLeft="6dip"
-    android:paddingStart="6dip"
-    android:paddingRight="6dip"
-    android:paddingEnd="6dip"
-    android:paddingTop="8dip"
-    android:paddingBottom="8dip" >
+    android:paddingLeft="18dp"
+    android:paddingStart="18dp"
+    android:paddingRight="18dp"
+    android:paddingEnd="18dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/app_icon"
@@ -19,13 +19,12 @@
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_gravity="center_vertical"
         android:contentDescription="@null"
-        android:layout_marginRight="8dip"
-        android:layout_marginEnd="8dip">
-    </ImageView>
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp" />
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="0dip"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" >
 
