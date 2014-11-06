@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.LinearLayout;
 
 import com.frozendevs.cache.cleaner.R;
 
@@ -61,7 +60,7 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public void setContentView(int layoutResID) {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(
-                R.layout.settings_activity, new LinearLayout(this), false);
+                R.layout.settings_activity, (ViewGroup) getWindow().getDecorView().getParent(), false);
 
         mActionBar = (Toolbar) contentView.findViewById(R.id.action_bar);
         mActionBar.setNavigationOnClickListener(new View.OnClickListener() {
