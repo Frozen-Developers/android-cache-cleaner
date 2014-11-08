@@ -11,11 +11,12 @@
     <string name="action_sort_by">Usporiadať podľa</string>
     <string name="action_settings">Nastavenia</string>
 
-    <!-- LinearColorBar -->
-    <string name="internal_storage">Interný ukl. priestor</string>
-
-    <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> voľných</string>
-    <string name="service_foreground_processes"><xliff:g id="memory">%1$s</xliff:g> využitých</string>
+    <!-- Apps list header -->
+    <string name="apps_list_header_title">Pamäť zariadenia</string>
+    <string name="apps_list_header_system_prefix">Systém</string>
+    <string name="apps_list_header_cache_prefix">Medzipamäť</string>
+    <string name="apps_list_header_free_prefix">Voľných</string>
+    <string name="apps_list_header_footer">Využitie medzipamäte</string>
 
     <!-- Empty list view -->
     <string name="empty_cache">Medzipamäť je prázdna.</string>
