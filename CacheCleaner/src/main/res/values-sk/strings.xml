@@ -17,6 +17,7 @@
     <string name="apps_list_header_cache_prefix">Medzipamäť</string>
     <string name="apps_list_header_free_prefix">Voľných</string>
     <string name="apps_list_header_footer">Využitie medzipamäte</string>
+    <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
 
     <!-- Empty list view -->
     <string name="empty_cache">Medzipamäť je prázdna.</string>
