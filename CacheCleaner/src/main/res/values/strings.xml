@@ -12,11 +12,13 @@
     <string name="action_sort_by">Sort by</string>
     <string name="action_settings">Settings</string>
 
-    <!-- LinearColorBar -->
-    <string name="internal_storage">Internal storage</string>
-
-    <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> free</string>
-    <string name="service_foreground_processes"><xliff:g id="memory">%1$s</xliff:g> used</string>
+    <!-- Apps list header -->
+    <string name="apps_list_header_title">Device memory</string>
+    <string name="apps_list_header_system_prefix">System</string>
+    <string name="apps_list_header_cache_prefix">Cache</string>
+    <string name="apps_list_header_free_prefix">Free</string>
+    <string name="apps_list_header_footer">App cache usage</string>
+    <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
 
     <!-- Empty list view -->
     <string name="empty_cache">Cache is empty.</string>

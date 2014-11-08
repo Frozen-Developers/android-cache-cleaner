@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
+import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.text.format.Formatter;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,9 +37,10 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private LinearColorBar mColorBar;
-    private TextView mUsedStorageText;
-    private TextView mFreeStorageText;
-    private long mLastUsedStorage, mLastFreeStorage;
+    private TextView mSystemSizeText;
+    private TextView mCacheSizeText;
+    private TextView mFreeSizeText;
+    private View mHeaderView;
 
     private AppsListAdapter mAppsListAdapter = null;
     private CacheManager mCacheManager = null;
@@ -47,6 +50,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     private ProgressDialog mProgressDialog;
     private View mProgressBar;
     private TextView mProgressBarText;
+    private ListView mListView;
 
     private boolean mAlreadyScanned = false;
     private boolean mAlreadyCleaned = false;
@@ -59,18 +63,26 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mColorBar = (LinearColorBar) findViewById(R.id.storage_color_bar);
-        mUsedStorageText = (TextView) findViewById(R.id.usedStorageText);
-        mFreeStorageText = (TextView) findViewById(R.id.freeStorageText);
-
         mEmptyView = (TextView) findViewById(android.R.id.empty);
 
         mAppsListAdapter = new AppsListAdapter(this);
 
-        ListView listView = (ListView) findViewById(android.R.id.list);
-        listView.setAdapter(mAppsListAdapter);
-        listView.setOnItemClickListener(mAppsListAdapter);
-        listView.setEmptyView(mEmptyView);
+        mHeaderView = LayoutInflater.from(this).inflate(
+                R.layout.apps_list_header, null);
+
+        mListView = (ListView) findViewById(android.R.id.list);
+        mListView.setAdapter(mAppsListAdapter);
+        mListView.setOnItemClickListener(mAppsListAdapter);
+        mListView.setEmptyView(mEmptyView);
+        mListView.addHeaderView(mHeaderView, null, false);
+
+        mColorBar = (LinearColorBar) findViewById(R.id.color_bar);
+        mColorBar.setColors(getResources().getColor(R.color.apps_list_system_memory),
+                getResources().getColor(R.color.apps_list_cache_memory),
+                getResources().getColor(R.color.apps_list_free_memory));
+        mSystemSizeText = (TextView) findViewById(R.id.systemSize);
+        mCacheSizeText = (TextView) findViewById(R.id.cacheSize);
+        mFreeSizeText = (TextView) findViewById(R.id.freeSize);
 
         mProgressBar = findViewById(R.id.progressBar);
         mProgressBarText = (TextView) findViewById(R.id.progressBarText);
@@ -118,6 +130,8 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
+                        mListView.removeHeaderView(mHeaderView);
+
                         mEmptyView.setText(R.string.no_such_app);
 
                         return true;
@@ -125,6 +139,8 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
+                        mListView.addHeaderView(mHeaderView, null, false);
+
                         mAppsListAdapter.clearFilter();
 
                         mEmptyView.setText(R.string.empty_cache);
@@ -220,40 +236,29 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     }
 
     private void updateStorageUsage() {
-        long freeStorage, appStorage, totalStorage;
-
         StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-        totalStorage = (long) stat.getBlockCount() * (long) stat.getBlockSize();
-        freeStorage = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+        long totalMemory = (long) stat.getBlockCount() * (long) stat.getBlockSize();
+        long medMemory = mCacheManager.getCacheSize();
+        long lowMemory = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+        long highMemory = totalMemory - medMemory - lowMemory;
 
-        appStorage = mCacheManager.getCacheSize();
-
-        if (totalStorage > 0) {
-            mColorBar.setRatios((totalStorage - freeStorage - appStorage) / (float) totalStorage,
-                    appStorage / (float) totalStorage, freeStorage / (float) totalStorage);
-            long usedStorage = totalStorage - freeStorage;
-            if (mLastUsedStorage != usedStorage) {
-                mLastUsedStorage = usedStorage;
-                String sizeStr = Formatter.formatShortFileSize(this, usedStorage);
-                mUsedStorageText.setText(getString(R.string.service_foreground_processes, sizeStr));
-            }
-            if (mLastFreeStorage != freeStorage) {
-                mLastFreeStorage = freeStorage;
-                String sizeStr = Formatter.formatShortFileSize(this, freeStorage);
-                mFreeStorageText.setText(getString(R.string.service_background_processes, sizeStr));
-            }
-        } else {
-            mColorBar.setRatios(0, 0, 0);
-            if (mLastUsedStorage != -1) {
-                mLastUsedStorage = -1;
-                mUsedStorageText.setText("");
-            }
-            if (mLastFreeStorage != -1) {
-                mLastFreeStorage = -1;
-                mFreeStorageText.setText("");
-            }
-        }
+        BidiFormatter bidiFormatter = BidiFormatter.getInstance();
+        String sizeStr = bidiFormatter.unicodeWrap(
+                Formatter.formatShortFileSize(this, lowMemory));
+        mFreeSizeText.setText(getResources().getString(
+                R.string.apps_list_header_memory, sizeStr));
+        sizeStr = bidiFormatter.unicodeWrap(
+                Formatter.formatShortFileSize(this, medMemory));
+        mCacheSizeText.setText(getResources().getString(
+                R.string.apps_list_header_memory, sizeStr));
+        sizeStr = bidiFormatter.unicodeWrap(
+                Formatter.formatShortFileSize(this, highMemory));
+        mSystemSizeText.setText(getResources().getString(
+                R.string.apps_list_header_memory, sizeStr));
+        mColorBar.setRatios((float) highMemory / (float) totalMemory,
+                (float) medMemory / (float) totalMemory,
+                (float) lowMemory / (float) totalMemory);
     }
 
     private AppsListAdapter.SortBy getSortBy() {
