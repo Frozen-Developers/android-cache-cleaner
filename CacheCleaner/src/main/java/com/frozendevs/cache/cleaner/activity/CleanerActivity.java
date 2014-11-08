@@ -50,7 +50,6 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     private ProgressDialog mProgressDialog;
     private View mProgressBar;
     private TextView mProgressBarText;
-    private ListView mListView;
 
     private boolean mAlreadyScanned = false;
     private boolean mAlreadyCleaned = false;
@@ -67,14 +66,14 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
 
         mAppsListAdapter = new AppsListAdapter(this);
 
-        mHeaderView = LayoutInflater.from(this).inflate(
-                R.layout.apps_list_header, null);
+        View headerLayout = LayoutInflater.from(this).inflate(R.layout.apps_list_header, null);
+        mHeaderView = headerLayout.findViewById(R.id.apps_list_header);
 
-        mListView = (ListView) findViewById(android.R.id.list);
-        mListView.setAdapter(mAppsListAdapter);
-        mListView.setOnItemClickListener(mAppsListAdapter);
-        mListView.setEmptyView(mEmptyView);
-        mListView.addHeaderView(mHeaderView, null, false);
+        ListView listView = (ListView) findViewById(android.R.id.list);
+        listView.addHeaderView(headerLayout, null, false);
+        listView.setEmptyView(mEmptyView);
+        listView.setAdapter(mAppsListAdapter);
+        listView.setOnItemClickListener(mAppsListAdapter);
 
         mColorBar = (LinearColorBar) findViewById(R.id.color_bar);
         mColorBar.setColors(getResources().getColor(R.color.apps_list_system_memory),
@@ -130,7 +129,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
-                        mListView.removeHeaderView(mHeaderView);
+                        mHeaderView.setVisibility(View.GONE);
 
                         mEmptyView.setText(R.string.no_such_app);
 
@@ -139,7 +138,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-                        mListView.addHeaderView(mHeaderView, null, false);
+                        mHeaderView.setVisibility(View.VISIBLE);
 
                         mAppsListAdapter.clearFilter();
 
