@@ -15,22 +15,24 @@
 
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_menu_search"
+        android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         android:title="@string/action_search"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/action_sort_by"
         android:title="@string/action_sort_by"
-        app:showAsAction="never" >
+        app:showAsAction="never">
 
         <menu>
 
-            <item android:id="@+id/action_sort_by_app_name"
+            <item
+                android:id="@+id/action_sort_by_app_name"
                 android:title="@string/sort_by_app_name" />
 
-            <item android:id="@+id/action_sort_by_cache_size"
+            <item
+                android:id="@+id/action_sort_by_cache_size"
                 android:title="@string/sort_by_cache_size" />
 
         </menu>
