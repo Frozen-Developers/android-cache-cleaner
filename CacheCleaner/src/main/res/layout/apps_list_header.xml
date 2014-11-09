@@ -57,6 +57,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginEnd="1dp"
                     android:maxLines="1"
                     android:text="@string/apps_list_header_system_prefix"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -65,21 +67,21 @@
                 <ImageView
                     android:layout_width="0dip"
                     android:layout_height="1px"
-                    android:layout_marginEnd="1dip"
-                    android:layout_marginStart="1dip"
                     android:layout_weight="1"
                     android:baselineAlignBottom="true"
                     android:contentDescription="@null"
-                    android:scaleType="center"
-                    android:src="@drawable/dotted_line_480px" />
+                    android:background="@drawable/dotted_line" />
 
                 <TextView
                     android:id="@+id/systemSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="?android:attr/textColorSecondary" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -108,6 +110,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginEnd="1dp"
                     android:maxLines="1"
                     android:text="@string/apps_list_header_cache_prefix"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -116,21 +120,21 @@
                 <ImageView
                     android:layout_width="0dip"
                     android:layout_height="1px"
-                    android:layout_marginEnd="1dip"
-                    android:layout_marginStart="1dip"
                     android:layout_weight="1"
                     android:baselineAlignBottom="true"
                     android:contentDescription="@null"
-                    android:scaleType="center"
-                    android:src="@drawable/dotted_line_480px" />
+                    android:background="@drawable/dotted_line" />
 
                 <TextView
                     android:id="@+id/cacheSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="?android:attr/textColorSecondary" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -159,6 +163,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginRight="1dp"
+                    android:layout_marginEnd="1dp"
                     android:maxLines="1"
                     android:text="@string/apps_list_header_free_prefix"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -167,21 +173,21 @@
                 <ImageView
                     android:layout_width="0dip"
                     android:layout_height="1px"
-                    android:layout_marginEnd="1dip"
-                    android:layout_marginStart="1dip"
                     android:layout_weight="1"
                     android:baselineAlignBottom="true"
                     android:contentDescription="@null"
-                    android:scaleType="center"
-                    android:src="@drawable/dotted_line_480px" />
+                    android:background="@drawable/dotted_line" />
 
                 <TextView
                     android:id="@+id/freeSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="?android:attr/textColorSecondary" />
+
             </LinearLayout>
 
         </LinearLayout>
