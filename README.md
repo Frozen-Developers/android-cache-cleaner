@@ -3,9 +3,8 @@ Android Cache Cleaner
 
 Cache Cleaner for Android:
 
-  - Keep it simple, stupid
+  - KISS philosophy
   - **No ads**
-  - Holo look and feel
   - Fast and clean
   - Does not require root
 
