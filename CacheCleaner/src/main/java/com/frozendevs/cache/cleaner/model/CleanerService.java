@@ -224,49 +224,51 @@ public class CleanerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
 
-        if (action.equals(ACTION_CLEAN_AND_EXIT)) {
-            setOnActionListener(new OnActionListener() {
-                @Override
-                public void onScanStarted() {
+        if (action != null) {
+            if (action.equals(ACTION_CLEAN_AND_EXIT)) {
+                setOnActionListener(new OnActionListener() {
+                    @Override
+                    public void onScanStarted() {
 
-                }
-
-                @Override
-                public void onScanProgressUpdated(int current, int max) {
-
-                }
-
-                @Override
-                public void onScanCompleted(List<AppsListItem> apps) {
-                    if (getCacheSize() > 0) {
-                        cleanCache();
                     }
-                }
 
-                @Override
-                public void onCleanStarted() {
+                    @Override
+                    public void onScanProgressUpdated(int current, int max) {
 
-                }
+                    }
 
-                @Override
-                public void onCleanCompleted(long cacheSize) {
-                    String msg = getString(R.string.cleaned, Formatter.formatShortFileSize(
-                            CleanerService.this, cacheSize));
-
-                    Log.d(TAG, msg);
-
-                    Toast.makeText(CleanerService.this, msg, Toast.LENGTH_LONG).show();
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            stopSelf();
+                    @Override
+                    public void onScanCompleted(List<AppsListItem> apps) {
+                        if (getCacheSize() > 0) {
+                            cleanCache();
                         }
-                    }, 5000);
-                }
-            });
+                    }
 
-            scanCache();
+                    @Override
+                    public void onCleanStarted() {
+
+                    }
+
+                    @Override
+                    public void onCleanCompleted(long cacheSize) {
+                        String msg = getString(R.string.cleaned, Formatter.formatShortFileSize(
+                                CleanerService.this, cacheSize));
+
+                        Log.d(TAG, msg);
+
+                        Toast.makeText(CleanerService.this, msg, Toast.LENGTH_LONG).show();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                stopSelf();
+                            }
+                        }, 5000);
+                    }
+                });
+
+                scanCache();
+            }
         }
 
         return START_NOT_STICKY;
