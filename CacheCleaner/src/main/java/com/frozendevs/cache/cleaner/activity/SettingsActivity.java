@@ -14,7 +14,7 @@ import com.frozendevs.cache.cleaner.R;
 
 public class SettingsActivity extends PreferenceActivity {
 
-    private final static String ACTION_SETTINGS_ABOUT = "com.frozendevs.cache.cleaner.activity.SETTINGS_ABOUT";
+    private final static String ACTION_SETTINGS_ABOUT = "com.frozendevs.cache.cleaner.SETTINGS_ABOUT";
 
     private Toolbar mActionBar;
 

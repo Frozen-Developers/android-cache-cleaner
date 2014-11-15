@@ -1,40 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/settings">
 
-    <PreferenceCategory
-        android:title="@string/main_preferences">
+    <PreferenceCategory android:title="@string/main_preferences">
 
         <CheckBoxPreference
-            android:title="@string/clean_on_app_startup"
+            android:key="@string/clean_on_app_startup_key"
             android:summary="@string/clean_on_app_startup_summary"
-            android:key="@string/clean_on_app_startup_key" />
+            android:title="@string/clean_on_app_startup" />
 
         <CheckBoxPreference
-            android:title="@string/exit_after_clean"
+            android:key="@string/exit_after_clean_key"
             android:summary="@string/exit_after_clean_summary"
-            android:key="@string/exit_after_clean_key" />
+            android:title="@string/exit_after_clean" />
 
         <CheckBoxPreference
-            android:title="@string/clean_on_device_startup"
+            android:key="@string/clean_on_device_startup_key"
             android:summary="@string/clean_on_device_startup_summary"
-            android:key="@string/clean_on_device_startup_key" />
+            android:title="@string/clean_on_device_startup" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/about">
+    <PreferenceCategory android:title="@string/about">
 
         <Preference android:title="@string/about_app">
 
             <intent
-                android:targetPackage="com.frozendevs.cache.cleaner"
+                android:action="com.frozendevs.cache.cleaner.SETTINGS_ABOUT"
                 android:targetClass="com.frozendevs.cache.cleaner.activity.SettingsActivity"
-                android:action="com.frozendevs.cache.cleaner.activity.SETTINGS_ABOUT" />
+                android:targetPackage="com.frozendevs.cache.cleaner" />
 
         </Preference>
 
     </PreferenceCategory>
 
 </PreferenceScreen>
+
