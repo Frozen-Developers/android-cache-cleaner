@@ -1,12 +1,16 @@
 package com.frozendevs.cache.cleaner.activity;
 
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.support.v4.text.BidiFormatter;
@@ -26,14 +30,14 @@ import android.widget.Toast;
 
 import com.android.settings.applications.LinearColorBar;
 import com.frozendevs.cache.cleaner.R;
-import com.frozendevs.cache.cleaner.helper.CacheManager;
 import com.frozendevs.cache.cleaner.model.AppsListItem;
+import com.frozendevs.cache.cleaner.model.CleanerService;
 import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CleanerActivity extends ActionBarActivity implements CacheManager.OnActionListener,
+public class CleanerActivity extends ActionBarActivity implements CleanerService.OnActionListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private LinearColorBar mColorBar;
@@ -42,8 +46,8 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     private TextView mFreeSizeText;
     private View mHeaderView;
 
-    private AppsListAdapter mAppsListAdapter = null;
-    private CacheManager mCacheManager = null;
+    private CleanerService mCleanerService;
+    private AppsListAdapter mAppsListAdapter;
     private TextView mEmptyView;
     private SharedPreferences mSharedPreferences;
     private SearchView mSearchView;
@@ -53,6 +57,26 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
 
     private boolean mAlreadyScanned = false;
     private boolean mAlreadyCleaned = false;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mCleanerService = ((CleanerService.CleanerServiceBinder) service).getService();
+            mCleanerService.setOnActionListener(CleanerActivity.this);
+
+            updateStorageUsage();
+
+            if (!mCleanerService.isScanning() && !mAlreadyScanned) {
+                mCleanerService.scanCache();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mCleanerService.setOnActionListener(null);
+            mCleanerService = null;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +122,8 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
             }
         });
 
-        mCacheManager = new CacheManager(getPackageManager());
-        mCacheManager.setOnActionListener(this);
+        bindService(new Intent(this, CleanerService.class), mServiceConnection,
+                Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -155,17 +179,18 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_clean:
-                if (!mCacheManager.isScanning() && !mCacheManager.isCleaning() &&
-                        mCacheManager.getCacheSize() > 0) {
+                if (mCleanerService != null && !mCleanerService.isScanning() &&
+                        !mCleanerService.isCleaning() && mCleanerService.getCacheSize() > 0) {
                     mAlreadyCleaned = false;
 
-                    mCacheManager.cleanCache();
+                    mCleanerService.cleanCache();
                 }
                 return true;
 
             case R.id.action_refresh:
-                if (!mCacheManager.isScanning() && !mCacheManager.isCleaning()) {
-                    mCacheManager.scanCache();
+                if (mCleanerService != null && !mCleanerService.isScanning() &&
+                        !mCleanerService.isCleaning()) {
+                    mCleanerService.scanCache();
                 }
                 return true;
 
@@ -203,18 +228,16 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     protected void onResume() {
         updateStorageUsage();
 
-        if (mCacheManager.isScanning() && !isProgressBarVisible()) {
-            showProgressBar(true);
-        } else if (!mCacheManager.isScanning() && isProgressBarVisible()) {
-            showProgressBar(false);
-        }
+        if (mCleanerService != null) {
+            if (mCleanerService.isScanning() && !isProgressBarVisible()) {
+                showProgressBar(true);
+            } else if (!mCleanerService.isScanning() && isProgressBarVisible()) {
+                showProgressBar(false);
+            }
 
-        if (mCacheManager.isCleaning() && !mProgressDialog.isShowing()) {
-            mProgressDialog.show();
-        }
-
-        if (!mCacheManager.isScanning() && !mAlreadyScanned) {
-            mCacheManager.scanCache();
+            if (mCleanerService.isCleaning() && !mProgressDialog.isShowing()) {
+                mProgressDialog.show();
+            }
         }
 
         super.onResume();
@@ -230,6 +253,13 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
     }
 
     @Override
+    protected void onDestroy() {
+        unbindService(mServiceConnection);
+
+        super.onDestroy();
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
@@ -238,7 +268,7 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
         StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
         long totalMemory = (long) stat.getBlockCount() * (long) stat.getBlockSize();
-        long medMemory = mCacheManager.getCacheSize();
+        long medMemory = mCleanerService != null ? mCleanerService.getCacheSize() : 0;
         long lowMemory = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
         long highMemory = totalMemory - medMemory - lowMemory;
 
@@ -329,10 +359,11 @@ public class CleanerActivity extends ActionBarActivity implements CacheManager.O
         if (!mAlreadyScanned) {
             mAlreadyScanned = true;
 
-            if (mSharedPreferences.getBoolean(getString(R.string.clean_on_app_startup_key), false)) {
+            if (mCleanerService != null && mSharedPreferences.getBoolean(
+                    getString(R.string.clean_on_app_startup_key), false)) {
                 mAlreadyCleaned = true;
 
-                mCacheManager.cleanCache();
+                mCleanerService.cleanCache();
             }
         }
     }
