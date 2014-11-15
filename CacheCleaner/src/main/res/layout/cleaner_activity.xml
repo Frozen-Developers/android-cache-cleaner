@@ -1,56 +1,15 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.CleanerActivity" >
+    tools:context=".activity.CleanerActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <fragment
+        android:id="@+id/cleaner_fragment"
+        class="com.frozendevs.cache.cleaner.fragment.CleanerFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent" />
 
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-
-        <TextView
-            android:id="@android:id/empty"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/empty_cache"
-            android:gravity="center" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="?android:attr/windowBackground"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleLarge" />
-
-        <TextView
-            android:id="@+id/progressBarText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:paddingTop="4dip"
-            android:singleLine="true" />
-
-    </LinearLayout>
-
-</merge>
+</LinearLayout>
