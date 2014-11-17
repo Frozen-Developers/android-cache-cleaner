@@ -5,3 +5,8 @@ build/
 *.iml
 gradle*
 
+# Temp files
+*~
+
+# Windows
+Thumbs.db
