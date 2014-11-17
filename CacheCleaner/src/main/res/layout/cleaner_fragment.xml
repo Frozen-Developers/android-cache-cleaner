@@ -5,14 +5,14 @@
     android:orientation="vertical"
     tools:context=".activity.CleanerActivity$CleanerFragment">
 
-<LinearLayout
-        android:orientation="vertical"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+        android:paddingTop="@dimen/activity_vertical_margin">
 
         <ListView
             android:id="@android:id/list"
@@ -23,9 +23,9 @@
             android:id="@android:id/empty"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
             android:text="@string/empty_cache"
-            android:gravity="center" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </LinearLayout>
 
@@ -33,23 +33,24 @@
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="?android:attr/windowBackground"
         android:gravity="center"
-        android:visibility="gone" >
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleLarge" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/progressBarText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:paddingTop="4dip"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:text="@string/scanning"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 
