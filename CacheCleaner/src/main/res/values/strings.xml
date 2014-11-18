@@ -51,8 +51,8 @@
     <string name="exit_after_clean_key" translatable="false">exit_after_clean</string>
 
         <!-- Clean on device startup preference -->
-    <string name="clean_on_device_startup">Clean on device startup</string>
-    <string name="clean_on_device_startup_summary">Automatically clean cache on device startup</string>
+    <string name="clean_on_device_startup">Clean on operating system startup</string>
+    <string name="clean_on_device_startup_summary">Automatically clean cache on operating system startup</string>
     <string name="clean_on_device_startup_key" translatable="false">clean_on_device_startup</string>
 
         <!-- About -->
