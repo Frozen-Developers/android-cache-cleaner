@@ -131,7 +131,7 @@ public class CleanerService extends Service {
                 e.printStackTrace();
             }
 
-            return apps;
+            return new ArrayList<AppsListItem>(apps);
         }
 
         @Override
