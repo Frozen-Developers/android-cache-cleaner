@@ -1,11 +1,14 @@
-.gradle/
-*.properties
-.idea/
+# IntelliJ
 build/
+.idea/
 *.iml
+*.properties
+
+# Gradle
+.gradle/
 gradle*
 
-# Temp files
+# Temp
 *~
 
 # Windows
