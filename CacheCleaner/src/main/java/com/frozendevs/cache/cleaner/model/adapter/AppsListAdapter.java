@@ -13,10 +13,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.R;
+import com.frozendevs.cache.cleaner.model.AppsListItem;
 
-import java.lang.Override;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -101,10 +100,10 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
     }
 
     public void filterAppsByName(String filter) {
-        new AsyncTask<String, Void, Void>() {
+        new AsyncTask<String, Void, List<AppsListItem>>() {
 
             @Override
-            protected Void doInBackground(String... params) {
+            protected List<AppsListItem> doInBackground(String... params) {
                 List<AppsListItem> filteredItems = new ArrayList<AppsListItem>();
 
                 Locale current = mContext.getResources().getConfiguration().locale;
@@ -116,13 +115,13 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
                     }
                 }
 
-                mFilteredItems = filteredItems;
-
-                return null;
+                return filteredItems;
             }
 
             @Override
-            protected void onPostExecute(Void result) {
+            protected void onPostExecute(List<AppsListItem> result) {
+                mFilteredItems = result;
+
                 notifyDataSetChanged();
             }
 
@@ -136,11 +135,13 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
     }
 
     public void sort(SortBy sortBy) {
-        new AsyncTask<SortBy, Void, Void>() {
+        new AsyncTask<SortBy, Void, ArrayList<AppsListItem>>() {
 
             @Override
-            protected Void doInBackground(final SortBy... params) {
-                Collections.sort(mItems, new Comparator<AppsListItem>() {
+            protected ArrayList<AppsListItem> doInBackground(final SortBy... params) {
+                ArrayList<AppsListItem> items = new ArrayList<AppsListItem>(mItems);
+
+                Collections.sort(items, new Comparator<AppsListItem>() {
                     @Override
                     public int compare(AppsListItem lhs, AppsListItem rhs) {
                         switch (params[0]) {
@@ -156,13 +157,13 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
                     }
                 });
 
-                mFilteredItems = new ArrayList<AppsListItem>(mItems);
-
-                return null;
+                return items;
             }
 
             @Override
-            protected void onPostExecute(Void result) {
+            protected void onPostExecute(ArrayList<AppsListItem> result) {
+                mFilteredItems = result;
+
                 notifyDataSetChanged();
             }
 
@@ -170,7 +171,7 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
     }
 
     @Override
-    public void onItemClick (AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         if (viewHolder != null && viewHolder.packageName != null) {
