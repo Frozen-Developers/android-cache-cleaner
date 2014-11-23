@@ -357,9 +357,9 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onScanCompleted(List<AppsListItem> apps) {
-        if (isAdded()) {
-            mAppsListAdapter.setItems(apps, getSortBy());
+        mAppsListAdapter.setItems(apps, getSortBy());
 
+        if (isAdded()) {
             updateStorageUsage();
 
             if (mSearchView != null && mSearchView.isShown()) {
@@ -367,16 +367,16 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             }
 
             showProgressBar(false);
+        }
 
-            if (!mAlreadyScanned) {
-                mAlreadyScanned = true;
+        if (!mAlreadyScanned) {
+            mAlreadyScanned = true;
 
-                if (mCleanerService != null && mSharedPreferences.getBoolean(
-                        getString(R.string.clean_on_app_startup_key), false)) {
-                    mAlreadyCleaned = true;
+            if (mCleanerService != null && mSharedPreferences.getBoolean(
+                    getString(R.string.clean_on_app_startup_key), false)) {
+                mAlreadyCleaned = true;
 
-                    mCleanerService.cleanCache();
-                }
+                mCleanerService.cleanCache();
             }
         }
     }
@@ -396,22 +396,22 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onCleanCompleted(long cacheSize) {
-        if (isAdded()) {
-            mAppsListAdapter.setItems(new ArrayList<AppsListItem>(), getSortBy());
+        mAppsListAdapter.setItems(new ArrayList<AppsListItem>(), getSortBy());
 
+        if (isAdded()) {
             updateStorageUsage();
 
             if (mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
+        }
 
-            Toast.makeText(getActivity(), getString(R.string.cleaned, Formatter.formatShortFileSize(
-                    getActivity(), cacheSize)), Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), getString(R.string.cleaned, Formatter.formatShortFileSize(
+                getActivity(), cacheSize)), Toast.LENGTH_LONG).show();
 
-            if (!mAlreadyCleaned) {
-                if (mSharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
-                    getActivity().finish();
-                }
+        if (!mAlreadyCleaned) {
+            if (mSharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
+                getActivity().finish();
             }
         }
     }
