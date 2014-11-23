@@ -40,22 +40,22 @@
     <string name="main_preferences">Main preferences</string>
     <string name="about">About</string>
 
-        <!-- Clean on app startup preference -->
+    <!-- Clean on app startup preference -->
     <string name="clean_on_app_startup">Clean on app startup</string>
     <string name="clean_on_app_startup_summary">Automatically clean cache on application startup</string>
     <string name="clean_on_app_startup_key" translatable="false">clean_on_app_startup</string>
 
-        <!-- Exit after clean up -->
+    <!-- Exit after clean up -->
     <string name="exit_after_clean">Exit after clean up</string>
     <string name="exit_after_clean_summary">Exit after Clean button is clicked and clean up is completed</string>
     <string name="exit_after_clean_key" translatable="false">exit_after_clean</string>
 
-        <!-- Clean on device startup preference -->
-    <string name="clean_on_device_startup">Clean on device startup</string>
-    <string name="clean_on_device_startup_summary">Automatically clean cache on device startup</string>
-    <string name="clean_on_device_startup_key" translatable="false">clean_on_device_startup</string>
+    <!-- Clean on system startup preference -->
+    <string name="clean_on_system_startup">Clean on system startup</string>
+    <string name="clean_on_system_startup_summary">Automatically clean cache on system startup</string>
+    <string name="clean_on_system_startup_key" translatable="false">clean_on_device_startup</string>
 
-        <!-- About -->
+    <!-- About -->
     <string name="about_app">About Cache Cleaner</string>
     <string name="author">Author</string>
     <string name="version_number">Version number</string>

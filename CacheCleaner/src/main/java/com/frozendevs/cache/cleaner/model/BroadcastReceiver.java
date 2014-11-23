@@ -18,7 +18,7 @@ public class BroadcastReceiver extends android.content.BroadcastReceiver {
         if (action != null) {
             if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
                 if (sharedPreferences.getBoolean(context.getString(
-                        R.string.clean_on_device_startup_key), false)) {
+                        R.string.clean_on_system_startup_key), false)) {
                     Intent serviceIntent = new Intent(context, CleanerService.class);
                     serviceIntent.setAction(CleanerService.ACTION_CLEAN_AND_EXIT);
                     context.startService(serviceIntent);

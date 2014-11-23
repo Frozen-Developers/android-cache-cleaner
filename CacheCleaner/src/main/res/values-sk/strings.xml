@@ -39,19 +39,19 @@
     <string name="main_preferences">Hlavné nastavenia</string>
     <string name="about">O aplikácii</string>
 
-        <!-- Clean on app startup preference -->
+    <!-- Clean on app startup preference -->
     <string name="clean_on_app_startup">Vyčistiť pri štarte aplikácie</string>
     <string name="clean_on_app_startup_summary">Automaticky vyčistiť medzipamäť pri štarte aplikácie</string>
 
-        <!-- Exit after clean up -->
+    <!-- Exit after clean up -->
     <string name="exit_after_clean">Odchod po vyčistení</string>
     <string name="exit_after_clean_summary">Odchod po slačení tlačidla Vyčistiť a ukončení čistenia</string>
 
-        <!-- Clean on device startup preference -->
-    <string name="clean_on_device_startup">Vyčistiť pri štarte zariadenia</string>
-    <string name="clean_on_device_startup_summary">Automaticky vyčistiť medzipamäť pri štarte zariadenia</string>
+    <!-- Clean on system startup preference -->
+    <string name="clean_on_system_startup">Vyčistiť pri štarte systému</string>
+    <string name="clean_on_system_startup_summary">Automaticky vyčistiť medzipamäť pri štarte systému</string>
 
-        <!-- About -->
+    <!-- About -->
     <string name="about_app">O Čističi medzipamäte</string>
     <string name="author">Autor</string>
     <string name="version_number">Verzia</string>

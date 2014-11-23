@@ -39,19 +39,19 @@
     <string name="main_preferences">Главно</string>
     <string name="about">О програму</string>
 
-        <!-- Clean on app startup preference -->
+    <!-- Clean on app startup preference -->
     <string name="clean_on_app_startup">Очисти по покретању</string>
     <string name="clean_on_app_startup_summary">Аутоматски очисти кеш по покретању апликације</string>
 
-        <!-- Exit after clean up -->
+    <!-- Exit after clean up -->
     <string name="exit_after_clean">Изађи након чишћења</string>
     <string name="exit_after_clean_summary">Изађи након што се чишћење заврши</string>
 
-        <!-- Clean on device startup preference -->
-    <string name="clean_on_device_startup">Очисти по покретању уређаја</string>
-    <string name="clean_on_device_startup_summary">Аутоматски очисти кеш по покретању уређаја</string>
+    <!-- Clean on device startup preference -->
+    <string name="clean_on_system_startup">Очисти по покретању уређаја</string>
+    <string name="clean_on_system_startup_summary">Аутоматски очисти кеш по покретању уређаја</string>
 
-        <!-- About -->
+    <!-- About -->
     <string name="about_app">О Чистачу Кеша</string>
     <string name="author">Програмер</string>
     <string name="version_number">Издање</string>
