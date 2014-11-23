@@ -102,14 +102,15 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
         mEmptyView = (TextView) rootView.findViewById(android.R.id.empty);
 
-        View headerLayout = inflater.inflate(R.layout.apps_list_header, null);
+        ListView listView = (ListView) rootView.findViewById(android.R.id.list);
+
+        View headerLayout = inflater.inflate(R.layout.apps_list_header, listView, false);
         mHeaderView = headerLayout.findViewById(R.id.apps_list_header);
 
-        ListView listView = (ListView) rootView.findViewById(android.R.id.list);
-        listView.addHeaderView(headerLayout, null, false);
         listView.setEmptyView(mEmptyView);
         listView.setAdapter(mAppsListAdapter);
         listView.setOnItemClickListener(mAppsListAdapter);
+        listView.addHeaderView(headerLayout, null, false);
 
         mColorBar = (LinearColorBar) rootView.findViewById(R.id.color_bar);
         mColorBar.setColors(getResources().getColor(R.color.apps_list_system_memory),
