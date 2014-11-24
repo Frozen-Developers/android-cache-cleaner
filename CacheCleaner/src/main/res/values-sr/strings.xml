@@ -48,8 +48,8 @@
     <string name="exit_after_clean_summary">Изађи након што се чишћење заврши</string>
 
     <!-- Clean on device startup preference -->
-    <string name="clean_on_system_startup">Очисти по покретању уређаја</string>
-    <string name="clean_on_system_startup_summary">Аутоматски очисти кеш по покретању уређаја</string>
+    <string name="clean_on_system_startup">Очисти по покретању система</string>
+    <string name="clean_on_system_startup_summary">Аутоматски очисти кеш по покретању система</string>
 
     <!-- About -->
     <string name="about_app">О Чистачу Кеша</string>
