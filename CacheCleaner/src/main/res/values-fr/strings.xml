@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Globals -->
+    <string name="app_name">Cache Cleaner</string>
+
+    <!-- Éléments du menu -->
+    <string name="action_clean">Vider</string>
+    <string name="action_rescan">Rescanner</string>
+    <string name="action_search">Chercher</string>
+    <string name="action_sort_by">Trier par</string>
+    <string name="action_settings">Paramètres</string>
+
+    <!-- Apps list header -->
+    <string name="apps_list_header_title">Mémoire de l\'appareil</string>
+    <string name="apps_list_header_system_prefix">Système</string>
+    <string name="apps_list_header_cache_prefix">Cache</string>
+    <string name="apps_list_header_free_prefix">Libérer</string>
+    <string name="apps_list_header_footer">Utilisation du cache par l\'app</string>
+    <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
+
+    <!-- Empty list view -->
+    <string name="empty_cache">Le cache est vide.</string>
+    <string name="no_such_app">Pas de telle application.</string>
+
+    <!-- Barre de progression -->
+    <string name="scanning">Scan…</string>
+    <string name="scanning_m_of_n">Scan %1$d/%2$d</string>
+
+    <!-- Progress dialog -->
+    <string name="cleaning_cache">Vidage du cache</string>
+    <string name="cleaning_in_progress">Vidage en cous…</string>
+
+    <!-- Toasts -->
+    <string name="cleaned">Cache vidé (<xliff:g id="memory">%1$s</xliff:g>)</string>
+
+    <!-- Paramètres -->
+    <string name="settings">Paramètres</string>
+    <string name="main_preferences">Préférences principales</string>
+    <string name="about">À propos</string>
+
+    <!-- Clean on app startup preference -->
+    <string name="clean_on_app_startup">Vider au démmarage de l\'app</string>
+    <string name="clean_on_app_startup_summary">Vider automatiquement le cache au démmarage de l\'app</string>
+
+    <!-- Exit after clean up -->
+    <string name="exit_after_clean">Quitter après le vidage</string>
+    <string name="exit_after_clean_summary">Quitter après que le boutton nettoyer soit cliqué et que le vidage soit fini</string>
+
+    <!-- Clean on device startup preference -->
+    <string name="clean_on_system_startup">Vider au démmarage du système d\'exploitation</string>
+    <string name="clean_on_system_startup_summary">Vider automatiquement le cache au démmarage du système d\'exploitation</string>
+
+    <!-- À propos -->
+    <string name="about_app">À propos de Cache Cleaner</string>
+    <string name="author">Auteur</string>
+    <string name="version_number">Numéro de version</string>
+    <string name="version_number_unknown">Inconnu</string>
+    <string name="open_source_licences">Licences open source</string>
+    <string name="special_thanks">Remerciements spéciales</string>
+    <string name="samuels_graphics_desc">Icône et design de la bannière pour le Play Store</string>
+
+    <!-- 'Trier par' dialogue -->
+    <string name="sort_by_app_name">Nom de l\'application</string>
+    <string name="sort_by_cache_size">Taille du cache</string>
+
+</resources>
