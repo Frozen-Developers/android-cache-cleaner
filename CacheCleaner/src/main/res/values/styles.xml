@@ -11,7 +11,7 @@
     </style>
 
     <style name="Theme.Settings" parent="@style/Theme.Application">
-        <item name="android:windowActionBar">false</item>
+        <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 
         <item name="toolbarStyle">@style/Widget.Toolbar</item>
