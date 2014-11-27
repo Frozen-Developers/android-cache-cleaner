@@ -5,9 +5,7 @@
     android:layout_height="wrap_content"
     android:minHeight="?attr/listPreferredItemHeight"
     android:background="?attr/selectableItemBackground"
-    android:paddingLeft="?attr/listPreferredItemPaddingLeft"
     android:paddingStart="?attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?attr/listPreferredItemPaddingRight"
     android:paddingEnd="?attr/listPreferredItemPaddingRight"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
@@ -18,14 +16,13 @@
         android:layout_width="@android:dimen/app_icon_size"
         android:layout_height="@android:dimen/app_icon_size"
         android:contentDescription="@null"
-        android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" >
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/app_name"
@@ -34,8 +31,8 @@
             android:singleLine="true"
             android:ellipsize="marquee"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_gravity="start">
-        </TextView>
+            android:textAlignment="viewStart"
+            android:layout_gravity="start" />
 
         <TextView
             android:id="@+id/app_size"
@@ -43,8 +40,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_gravity="start">
-        </TextView>
+            android:textAlignment="viewStart"
+            android:layout_gravity="start" />
 
     </LinearLayout>
 

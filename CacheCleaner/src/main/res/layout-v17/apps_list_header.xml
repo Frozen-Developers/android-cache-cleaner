@@ -10,8 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingEnd="?attr/listPreferredItemPaddingLeft"
-        android:paddingLeft="?attr/listPreferredItemPaddingLeft"
-        android:paddingRight="?attr/listPreferredItemPaddingRight"
         android:paddingStart="?attr/listPreferredItemPaddingLeft">
 
         <TextView
@@ -21,6 +19,7 @@
             android:gravity="start|center_vertical"
             android:singleLine="true"
             android:text="@string/apps_list_header_title"
+            android:textAlignment="viewStart"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="?attr/colorAccent" />
 
@@ -54,9 +53,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginRight="1dp"
                     android:layout_marginEnd="1dp"
                     android:maxLines="1"
                     android:text="@string/apps_list_header_system_prefix"
@@ -75,7 +72,6 @@
                     android:id="@+id/systemSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="1dp"
                     android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -107,9 +103,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginRight="1dp"
                     android:layout_marginEnd="1dp"
                     android:maxLines="1"
                     android:text="@string/apps_list_header_cache_prefix"
@@ -128,7 +122,6 @@
                     android:id="@+id/cacheSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="1dp"
                     android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -160,9 +153,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginRight="1dp"
                     android:layout_marginEnd="1dp"
                     android:maxLines="1"
                     android:text="@string/apps_list_header_free_prefix"
@@ -181,7 +172,6 @@
                     android:id="@+id/freeSize"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="1dp"
                     android:layout_marginStart="1dp"
                     android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -199,6 +189,7 @@
             android:gravity="start|center_vertical"
             android:singleLine="true"
             android:text="@string/apps_list_header_footer"
+            android:textAlignment="viewStart"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="?attr/colorAccent" />
 
