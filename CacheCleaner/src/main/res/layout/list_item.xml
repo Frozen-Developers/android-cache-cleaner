@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -34,6 +35,7 @@
             android:singleLine="true"
             android:ellipsize="marquee"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textAlignment="viewStart"
             android:layout_gravity="start">
         </TextView>
 
@@ -43,6 +45,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="?android:attr/textColorSecondary"
+            android:textAlignment="viewStart"
             android:layout_gravity="start">
         </TextView>
 
