@@ -16,7 +16,7 @@ public class SettingsActivity extends PreferenceActivity {
 
     private final static String ACTION_SETTINGS_ABOUT = "com.frozendevs.cache.cleaner.SETTINGS_ABOUT";
 
-    private Toolbar mActionBar;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class SettingsActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.settings);
         }
 
-        mActionBar.setTitle(getTitle());
+        mToolbar.setTitle(getTitle());
     }
 
     @Override
@@ -62,8 +62,8 @@ public class SettingsActivity extends PreferenceActivity {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(
                 R.layout.settings_activity, (ViewGroup) getWindow().getDecorView().getParent(), false);
 
-        mActionBar = (Toolbar) contentView.findViewById(R.id.action_bar);
-        mActionBar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar = (Toolbar) contentView.findViewById(R.id.toolbar);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
