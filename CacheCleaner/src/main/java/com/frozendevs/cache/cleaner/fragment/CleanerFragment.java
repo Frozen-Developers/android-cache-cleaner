@@ -60,6 +60,10 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     private boolean mAlreadyScanned = false;
     private boolean mAlreadyCleaned = false;
 
+    private String mSortByKey;
+    private String mCleanOnAppStartupKey;
+    private String mExitAfterCleanKey;
+
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -85,10 +89,27 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-
         setRetainInstance(true);
 
+        mSortByKey = getString(R.string.sort_by_key);
+        mCleanOnAppStartupKey = getString(R.string.clean_on_app_startup_key);
+        mExitAfterCleanKey = getString(R.string.exit_after_clean_key);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         mAppsListAdapter = new AppsListAdapter(getActivity());
+
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setTitle(R.string.cleaning_cache);
+        mProgressDialog.setMessage(getString(R.string.cleaning_in_progress));
+        mProgressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                return true;
+            }
+        });
 
         getActivity().getApplication().bindService(new Intent(getActivity(), CleanerService.class),
                 mServiceConnection, Context.BIND_AUTO_CREATE);
@@ -97,8 +118,6 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.cleaner_fragment, container, false);
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         mEmptyView = (TextView) rootView.findViewById(android.R.id.empty);
 
@@ -122,18 +141,6 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
         mProgressBar = rootView.findViewById(R.id.progressBar);
         mProgressBarText = (TextView) rootView.findViewById(R.id.progressBarText);
-
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setTitle(R.string.cleaning_cache);
-        mProgressDialog.setMessage(getString(R.string.cleaning_in_progress));
-        mProgressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                return true;
-            }
-        });
 
         return rootView;
     }
@@ -282,16 +289,13 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
         BidiFormatter bidiFormatter = BidiFormatter.getInstance();
         String sizeStr = bidiFormatter.unicodeWrap(
                 Formatter.formatShortFileSize(getActivity(), lowMemory));
-        mFreeSizeText.setText(getResources().getString(
-                R.string.apps_list_header_memory, sizeStr));
+        mFreeSizeText.setText(getString(R.string.apps_list_header_memory, sizeStr));
         sizeStr = bidiFormatter.unicodeWrap(
                 Formatter.formatShortFileSize(getActivity(), medMemory));
-        mCacheSizeText.setText(getResources().getString(
-                R.string.apps_list_header_memory, sizeStr));
+        mCacheSizeText.setText(getString(R.string.apps_list_header_memory, sizeStr));
         sizeStr = bidiFormatter.unicodeWrap(
                 Formatter.formatShortFileSize(getActivity(), highMemory));
-        mSystemSizeText.setText(getResources().getString(
-                R.string.apps_list_header_memory, sizeStr));
+        mSystemSizeText.setText(getString(R.string.apps_list_header_memory, sizeStr));
         mColorBar.setRatios((float) highMemory / (float) totalMemory,
                 (float) medMemory / (float) totalMemory,
                 (float) lowMemory / (float) totalMemory);
@@ -299,15 +303,15 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     private AppsListAdapter.SortBy getSortBy() {
         try {
-            return AppsListAdapter.SortBy.valueOf(mSharedPreferences.getString(
-                    getString(R.string.sort_by_key), AppsListAdapter.SortBy.CACHE_SIZE.toString()));
+            return AppsListAdapter.SortBy.valueOf(mSharedPreferences.getString(mSortByKey,
+                    AppsListAdapter.SortBy.CACHE_SIZE.toString()));
         } catch (ClassCastException e) {
             return AppsListAdapter.SortBy.CACHE_SIZE;
         }
     }
 
     private void setSortBy(AppsListAdapter.SortBy sortBy) {
-        mSharedPreferences.edit().putString(getString(R.string.sort_by_key), sortBy.toString()).apply();
+        mSharedPreferences.edit().putString(mSortByKey, sortBy.toString()).apply();
 
         mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
     }
@@ -328,7 +332,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.sort_by_key))) {
+        if (key.equals(mSortByKey)) {
             mAppsListAdapter.sort(getSortBy());
 
             if (mSearchView.isShown()) {
@@ -338,7 +342,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     }
 
     @Override
-    public void onScanStarted() {
+    public void onScanStarted(Context context) {
         if (isAdded()) {
             if (mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
@@ -350,14 +354,14 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     }
 
     @Override
-    public void onScanProgressUpdated(int current, int max) {
+    public void onScanProgressUpdated(Context context, int current, int max) {
         if (isAdded()) {
             mProgressBarText.setText(getString(R.string.scanning_m_of_n, current, max));
         }
     }
 
     @Override
-    public void onScanCompleted(List<AppsListItem> apps) {
+    public void onScanCompleted(Context context, List<AppsListItem> apps) {
         mAppsListAdapter.setItems(apps, getSortBy());
 
         if (isAdded()) {
@@ -374,7 +378,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             mAlreadyScanned = true;
 
             if (mCleanerService != null && mSharedPreferences.getBoolean(
-                    getString(R.string.clean_on_app_startup_key), false)) {
+                    mCleanOnAppStartupKey, false)) {
                 mAlreadyCleaned = true;
 
                 mCleanerService.cleanCache();
@@ -383,7 +387,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     }
 
     @Override
-    public void onCleanStarted() {
+    public void onCleanStarted(Context context) {
         if (isAdded()) {
             if (isProgressBarVisible()) {
                 showProgressBar(false);
@@ -396,7 +400,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     }
 
     @Override
-    public void onCleanCompleted(long cacheSize) {
+    public void onCleanCompleted(Context context, long cacheSize) {
         mAppsListAdapter.setItems(new ArrayList<AppsListItem>(), getSortBy());
 
         if (isAdded()) {
@@ -407,13 +411,12 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             }
         }
 
-        Toast.makeText(getActivity(), getString(R.string.cleaned, Formatter.formatShortFileSize(
+        Toast.makeText(context, context.getString(R.string.cleaned, Formatter.formatShortFileSize(
                 getActivity(), cacheSize)), Toast.LENGTH_LONG).show();
 
-        if (!mAlreadyCleaned) {
-            if (mSharedPreferences.getBoolean(getString(R.string.exit_after_clean_key), false)) {
-                getActivity().finish();
-            }
+        if (getActivity() != null && !mAlreadyCleaned &&
+                mSharedPreferences.getBoolean(mExitAfterCleanKey, false)) {
+            getActivity().finish();
         }
     }
 }

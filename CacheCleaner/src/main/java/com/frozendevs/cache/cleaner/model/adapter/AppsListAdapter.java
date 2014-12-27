@@ -96,7 +96,13 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
     public void setItems(List<AppsListItem> items, SortBy sortBy) {
         mItems = items;
 
-        sort(sortBy);
+        if (mItems.size() > 0) {
+            sort(sortBy);
+        } else {
+            mFilteredItems = new ArrayList<>(mItems);
+
+            notifyDataSetChanged();
+        }
     }
 
     public void filterAppsByName(String filter) {

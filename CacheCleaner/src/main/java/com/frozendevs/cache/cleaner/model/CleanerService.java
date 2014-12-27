@@ -1,6 +1,7 @@
 package com.frozendevs.cache.cleaner.model;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
@@ -39,15 +40,15 @@ public class CleanerService extends Service {
     private long mCacheSize = 0;
 
     public static interface OnActionListener {
-        public void onScanStarted();
+        public void onScanStarted(Context context);
 
-        public void onScanProgressUpdated(int current, int max);
+        public void onScanProgressUpdated(Context context, int current, int max);
 
-        public void onScanCompleted(List<AppsListItem> apps);
+        public void onScanCompleted(Context context, List<AppsListItem> apps);
 
-        public void onCleanStarted();
+        public void onCleanStarted(Context context);
 
-        public void onCleanCompleted(long cacheSize);
+        public void onCleanCompleted(Context context, long cacheSize);
     }
 
     public class CleanerServiceBinder extends Binder {
@@ -66,7 +67,7 @@ public class CleanerService extends Service {
         @Override
         protected void onPreExecute() {
             if (mOnActionListener != null) {
-                mOnActionListener.onScanStarted();
+                mOnActionListener.onScanStarted(CleanerService.this);
             }
         }
 
@@ -137,14 +138,14 @@ public class CleanerService extends Service {
         @Override
         protected void onProgressUpdate(Integer... values) {
             if (mOnActionListener != null) {
-                mOnActionListener.onScanProgressUpdated(values[0], values[1]);
+                mOnActionListener.onScanProgressUpdated(CleanerService.this, values[0], values[1]);
             }
         }
 
         @Override
         protected void onPostExecute(List<AppsListItem> result) {
             if (mOnActionListener != null) {
-                mOnActionListener.onScanCompleted(result);
+                mOnActionListener.onScanCompleted(CleanerService.this, result);
             }
 
             mIsScanning = false;
@@ -156,7 +157,7 @@ public class CleanerService extends Service {
         @Override
         protected void onPreExecute() {
             if (mOnActionListener != null) {
-                mOnActionListener.onCleanStarted();
+                mOnActionListener.onCleanStarted(CleanerService.this);
             }
         }
 
@@ -195,7 +196,7 @@ public class CleanerService extends Service {
             mCacheSize = 0;
 
             if (mOnActionListener != null) {
-                mOnActionListener.onCleanCompleted(result);
+                mOnActionListener.onCleanCompleted(CleanerService.this, result);
             }
 
             mIsCleaning = false;
@@ -228,29 +229,29 @@ public class CleanerService extends Service {
             if (action.equals(ACTION_CLEAN_AND_EXIT)) {
                 setOnActionListener(new OnActionListener() {
                     @Override
-                    public void onScanStarted() {
+                    public void onScanStarted(Context context) {
 
                     }
 
                     @Override
-                    public void onScanProgressUpdated(int current, int max) {
+                    public void onScanProgressUpdated(Context context, int current, int max) {
 
                     }
 
                     @Override
-                    public void onScanCompleted(List<AppsListItem> apps) {
+                    public void onScanCompleted(Context context, List<AppsListItem> apps) {
                         if (getCacheSize() > 0) {
                             cleanCache();
                         }
                     }
 
                     @Override
-                    public void onCleanStarted() {
+                    public void onCleanStarted(Context context) {
 
                     }
 
                     @Override
-                    public void onCleanCompleted(long cacheSize) {
+                    public void onCleanCompleted(Context context, long cacheSize) {
                         String msg = getString(R.string.cleaned, Formatter.formatShortFileSize(
                                 CleanerService.this, cacheSize));
 
