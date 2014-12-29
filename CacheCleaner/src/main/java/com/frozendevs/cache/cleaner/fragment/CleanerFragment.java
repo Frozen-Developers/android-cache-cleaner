@@ -162,7 +162,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mAppsListAdapter.filterAppsByName(newText);
+                mAppsListAdapter.sortAndFilter(getSortBy(), newText);
 
                 return true;
             }
@@ -313,7 +313,10 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     private void setSortBy(AppsListAdapter.SortBy sortBy) {
         mSharedPreferences.edit().putString(mSortByKey, sortBy.toString()).apply();
 
-        mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
+        if (mCleanerService != null && !mCleanerService.isScanning() &&
+                !mCleanerService.isCleaning()) {
+            mAppsListAdapter.sortAndFilter(sortBy, mSearchView.getQuery().toString());
+        }
     }
 
     private boolean isProgressBarVisible() {
@@ -332,11 +335,16 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(mSortByKey)) {
-            mAppsListAdapter.sort(getSortBy());
+        if (mCleanerService != null && !mCleanerService.isScanning() &&
+                !mCleanerService.isCleaning()) {
+            if (key.equals(mSortByKey)) {
+                String filter = "";
 
-            if (mSearchView.isShown()) {
-                mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
+                if (isAdded() && mSearchView != null && mSearchView.isShown()) {
+                    filter = mSearchView.getQuery().toString();
+                }
+
+                mAppsListAdapter.sortAndFilter(getSortBy(), filter);
             }
         }
     }
@@ -362,14 +370,16 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onScanCompleted(Context context, List<AppsListItem> apps) {
-        mAppsListAdapter.setItems(apps, getSortBy());
+        String filter = "";
+
+        if (mSearchView != null && mSearchView.isShown()) {
+            filter = mSearchView.getQuery().toString();
+        }
+
+        mAppsListAdapter.setItems(apps, getSortBy(), filter);
 
         if (isAdded()) {
             updateStorageUsage();
-
-            if (mSearchView != null && mSearchView.isShown()) {
-                mAppsListAdapter.filterAppsByName(mSearchView.getQuery().toString());
-            }
 
             showProgressBar(false);
         }
@@ -401,7 +411,13 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onCleanCompleted(Context context, long cacheSize) {
-        mAppsListAdapter.setItems(new ArrayList<AppsListItem>(), getSortBy());
+        String filter = "";
+
+        if (mSearchView != null && mSearchView.isShown()) {
+            filter = mSearchView.getQuery().toString();
+        }
+
+        mAppsListAdapter.setItems(new ArrayList<AppsListItem>(), getSortBy(), filter);
 
         if (isAdded()) {
             updateStorageUsage();

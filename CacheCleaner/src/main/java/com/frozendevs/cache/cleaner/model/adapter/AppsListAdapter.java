@@ -3,7 +3,6 @@ package com.frozendevs.cache.cleaner.model.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
 
     private List<AppsListItem> mItems, mFilteredItems;
     private Context mContext;
+    private SortBy mLastSortBy;
 
     private class ViewHolder {
         ImageView image;
@@ -41,8 +41,8 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
     public AppsListAdapter(Context context) {
         mContext = context;
 
-        mItems = new ArrayList<AppsListItem>();
-        mFilteredItems = new ArrayList<AppsListItem>();
+        mItems = new ArrayList<>();
+        mFilteredItems = new ArrayList<>();
     }
 
     @Override
@@ -93,11 +93,13 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
         return convertView;
     }
 
-    public void setItems(List<AppsListItem> items, SortBy sortBy) {
+    public void setItems(List<AppsListItem> items, SortBy sortBy, String filter) {
         mItems = items;
 
+        mLastSortBy = null;
+
         if (mItems.size() > 0) {
-            sort(sortBy);
+            sortAndFilter(sortBy, filter);
         } else {
             mFilteredItems = new ArrayList<>(mItems);
 
@@ -105,75 +107,55 @@ public class AppsListAdapter extends BaseAdapter implements AdapterView.OnItemCl
         }
     }
 
-    public void filterAppsByName(String filter) {
-        new AsyncTask<String, Void, List<AppsListItem>>() {
+    public void sortAndFilter(final SortBy sortBy, String filter) {
+        if (sortBy != mLastSortBy) {
+            mLastSortBy = sortBy;
 
-            @Override
-            protected List<AppsListItem> doInBackground(String... params) {
-                List<AppsListItem> filteredItems = new ArrayList<AppsListItem>();
+            ArrayList<AppsListItem> items = new ArrayList<>(mItems);
 
-                Locale current = mContext.getResources().getConfiguration().locale;
+            Collections.sort(items, new Comparator<AppsListItem>() {
+                @Override
+                public int compare(AppsListItem lhs, AppsListItem rhs) {
+                    switch (sortBy) {
+                        case APP_NAME:
+                            return lhs.getApplicationName().compareToIgnoreCase(
+                                    rhs.getApplicationName());
 
-                for (AppsListItem item : mItems) {
-                    if (item.getApplicationName().toLowerCase(current).contains(
-                            params[0].toLowerCase(current))) {
-                        filteredItems.add(item);
+                        case CACHE_SIZE:
+                            return (int) (rhs.getCacheSize() - lhs.getCacheSize());
                     }
+
+                    return 0;
                 }
+            });
 
-                return filteredItems;
+            mItems = items;
+        }
+
+        if (!filter.equals("")) {
+            List<AppsListItem> filteredItems = new ArrayList<>();
+
+            Locale current = mContext.getResources().getConfiguration().locale;
+
+            for (AppsListItem item : mItems) {
+                if (item.getApplicationName().toLowerCase(current).contains(
+                        filter.toLowerCase(current))) {
+                    filteredItems.add(item);
+                }
             }
 
-            @Override
-            protected void onPostExecute(List<AppsListItem> result) {
-                mFilteredItems = result;
-
-                notifyDataSetChanged();
-            }
-
-        }.execute(filter);
-    }
-
-    public void clearFilter() {
-        mFilteredItems = mItems;
+            mFilteredItems = filteredItems;
+        } else {
+            mFilteredItems = new ArrayList<>(mItems);
+        }
 
         notifyDataSetChanged();
     }
 
-    public void sort(SortBy sortBy) {
-        new AsyncTask<SortBy, Void, ArrayList<AppsListItem>>() {
+    public void clearFilter() {
+        mFilteredItems = new ArrayList<>(mItems);
 
-            @Override
-            protected ArrayList<AppsListItem> doInBackground(final SortBy... params) {
-                ArrayList<AppsListItem> items = new ArrayList<AppsListItem>(mItems);
-
-                Collections.sort(items, new Comparator<AppsListItem>() {
-                    @Override
-                    public int compare(AppsListItem lhs, AppsListItem rhs) {
-                        switch (params[0]) {
-                            case APP_NAME:
-                                return lhs.getApplicationName().compareToIgnoreCase(
-                                        rhs.getApplicationName());
-
-                            case CACHE_SIZE:
-                                return (int) (rhs.getCacheSize() - lhs.getCacheSize());
-                        }
-
-                        return 0;
-                    }
-                });
-
-                return items;
-            }
-
-            @Override
-            protected void onPostExecute(ArrayList<AppsListItem> result) {
-                mFilteredItems = result;
-
-                notifyDataSetChanged();
-            }
-
-        }.execute(sortBy);
+        notifyDataSetChanged();
     }
 
     @Override
