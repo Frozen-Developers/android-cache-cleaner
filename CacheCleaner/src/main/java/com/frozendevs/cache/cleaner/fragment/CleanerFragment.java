@@ -39,8 +39,7 @@ import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CleanerFragment extends Fragment implements CleanerService.OnActionListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class CleanerFragment extends Fragment implements CleanerService.OnActionListener {
 
     private LinearColorBar mColorBar;
     private TextView mSystemSizeText;
@@ -230,20 +229,6 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     }
 
     @Override
-    public void onStart() {
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-
-        super.onStop();
-    }
-
-    @Override
     public void onResume() {
         updateStorageUsage();
 
@@ -330,22 +315,6 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             mProgressBar.startAnimation(AnimationUtils.loadAnimation(
                     getActivity(), android.R.anim.fade_out));
             mProgressBar.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (mCleanerService != null && !mCleanerService.isScanning() &&
-                !mCleanerService.isCleaning()) {
-            if (key.equals(mSortByKey)) {
-                String filter = "";
-
-                if (isAdded() && mSearchView != null && mSearchView.isShown()) {
-                    filter = mSearchView.getQuery().toString();
-                }
-
-                mAppsListAdapter.sortAndFilter(getSortBy(), filter);
-            }
         }
     }
 
