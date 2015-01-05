@@ -124,15 +124,11 @@ public class CleanerService extends Service {
                 }
 
                 countDownLatch.await();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException | InterruptedException | IllegalAccessException e) {
                 e.printStackTrace();
             }
 
-            return new ArrayList<AppsListItem>(apps);
+            return new ArrayList<>(apps);
         }
 
         @Override
@@ -180,11 +176,7 @@ public class CleanerService extends Service {
                 );
 
                 countDownLatch.await();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException | InterruptedException | IllegalAccessException e) {
                 e.printStackTrace();
             }
 
