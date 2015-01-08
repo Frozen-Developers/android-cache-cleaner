@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Globals -->
+    <string name="app_name">Cache Cleaner</string>
+    
+    <!-- Menu items -->
+    <string name="action_clean">Limpar</string>
+    <string name="action_rescan">Analisar</string>
+    <string name="action_search">Procurar</string>
+    <string name="action_sort_by">Ordenar por</string>
+    <string name="action_settings">Definições</string>
+
+    <!-- Apps list header -->
+    <string name="apps_list_header_title">Memória do dispositivo</string>
+    <string name="apps_list_header_system_prefix">Sistema</string>
+    <string name="apps_list_header_cache_prefix">Cache</string>
+    <string name="apps_list_header_free_prefix">Livre</string>
+    <string name="apps_list_header_footer">Utilização de cache</string>
+    <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
+
+    <!-- Empty list view -->
+    <string name="empty_cache">Cache vazia.</string>
+    <string name="no_such_app">Aplicação inexistente.</string>
+
+    <!-- Progress bar -->
+    <string name="scanning">Análise…</string>
+    <string name="scanning_m_of_n">Analisando %1$d/%2$d</string>
+
+    <!-- Progress dialog -->
+    <string name="cleaning_cache">Limpeza de cache</string>
+    <string name="cleaning_in_progress">Limpeza em curso…</string>
+
+    <!-- Toasts -->
+    <string name="cleaned">Cache limpa (<xliff:g id="memory">%1$s</xliff:g>)</string>
+
+    <!-- Settings -->
+    <string name="settings">Definições</string>
+    <string name="main_preferences">Preferências principais</string>
+    <string name="about">Sobre</string>
+
+    <!-- Clean on app startup preference -->
+    <string name="clean_on_app_startup">Limpar ao iniciar a aplicação</string>
+    <string name="clean_on_app_startup_summary">Limpar cache ao iniciar a aplicação</string>
+    
+    <!-- Exit after clean up -->
+    <string name="exit_after_clean">Fechar após a limpeza</string>
+    <string name="exit_after_clean_summary">Fechar aplicação depois de terminar a limpeza</string>
+    
+    <!-- Clean on system startup preference -->
+    <string name="clean_on_system_startup">Limpar ao iniciar o sistema</string>
+    <string name="clean_on_system_startup_summary">Limpar cache ao iniciar o sistema</string>
+    
+    <!-- About -->
+    <string name="about_app">Sobre o Cache Cleaner</string>
+    <string name="author">Autor</string>
+    <string name="version_number">Número da versão</string>
+    <string name="version_number_unknown">Desconhecido</string>
+    <string name="open_source_licences">Licenças Open Source</string>
+    <string name="special_thanks">Agradecimentos</string>
+    <string name="samuels_graphics_desc">Criação do ícone e imagem na Play Store</string>
+
+    <!-- 'Sort by' dialog -->
+    <string name="sort_by_app_name">Nome da aplicação</string>
+    <string name="sort_by_cache_size">Tamanho de cache</string>
+    
+</resources>
