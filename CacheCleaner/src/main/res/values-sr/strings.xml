@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Globals -->
-    <string name="app_name">Чистач Кеша</string>
+    <string name="app_name">Чистач кеша</string>
 
     <!-- Menu items -->
     <string name="action_clean">Очисти</string>
@@ -16,7 +16,7 @@
     <string name="apps_list_header_system_prefix">Апликације</string>
     <string name="apps_list_header_cache_prefix">Кеш</string>
     <string name="apps_list_header_free_prefix">Слободно</string>
-    <string name="apps_list_header_footer">Кеш коју користе апликације</string>
+    <string name="apps_list_header_footer">Кеш који користе апликације</string>
     <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
 
     <!-- Empty list view -->
@@ -52,13 +52,13 @@
     <string name="clean_on_system_startup_summary">Аутоматски очисти кеш по покретању система</string>
 
     <!-- About -->
-    <string name="about_app">О Чистачу Кеша</string>
+    <string name="about_app">О Чистачу кеша</string>
     <string name="author">Програмер</string>
     <string name="version_number">Издање</string>
     <string name="version_number_unknown">Непознато</string>
     <string name="open_source_licences">Лиценце отвореног кôда</string>
     <string name="special_thanks">Посебна захвала</string>
-    <string name="samuels_graphics_desc">Дизајн иконе и банера Плеј Продавнице</string>
+    <string name="samuels_graphics_desc">Дизајн иконе и банера Плеј продавнице</string>
 
     <!-- 'Sort by' dialog -->
     <string name="sort_by_app_name">имену апликације</string>
