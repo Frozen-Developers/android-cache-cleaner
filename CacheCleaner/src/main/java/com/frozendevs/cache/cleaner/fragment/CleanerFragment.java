@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.SearchView;
 import android.text.format.Formatter;
 import android.view.KeyEvent;
@@ -58,6 +59,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     private boolean mAlreadyScanned = false;
     private boolean mAlreadyCleaned = false;
+    private String mSearchQuery;
 
     private String mSortByKey;
     private String mCleanOnAppStartupKey;
@@ -148,12 +150,14 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
 
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                mSearchQuery = query;
+
                 mSearchView.clearFocus();
 
                 return true;
@@ -161,6 +165,10 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (ViewCompat.isLaidOut(mSearchView)) {
+                    mSearchQuery = newText;
+                }
+
                 mAppsListAdapter.sortAndFilter(getSortBy(), newText);
 
                 return true;
@@ -171,6 +179,10 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionExpand(MenuItem item) {
+                        if (mSearchQuery == null) {
+                            mSearchQuery = "";
+                        }
+
                         mHeaderView.setVisibility(View.GONE);
 
                         mEmptyView.setText(R.string.no_such_app);
@@ -180,6 +192,8 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
+                        mSearchQuery = null;
+
                         mHeaderView.setVisibility(View.VISIBLE);
 
                         mAppsListAdapter.clearFilter();
@@ -189,6 +203,12 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
                         return true;
                     }
                 });
+
+        if (mSearchQuery != null) {
+            MenuItemCompat.expandActionView(searchItem);
+
+            mSearchView.setQuery(mSearchQuery, false);
+        }
 
         super.onCreateOptionsMenu(menu, inflater);
     }
