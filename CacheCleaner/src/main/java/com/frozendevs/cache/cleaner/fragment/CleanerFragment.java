@@ -16,6 +16,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewConfigurationCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.text.format.Formatter;
 import android.view.KeyEvent;
@@ -24,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
@@ -234,6 +237,26 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
             case R.id.action_settings:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+
+            case R.id.action_sort_by:
+                if (ViewConfigurationCompat.hasPermanentMenuKey(
+                        ViewConfiguration.get(getActivity()))) {
+                    item.getSubMenu().clear();
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.action_sort_by);
+                    builder.setItems(new CharSequence[]{
+                            getString(R.string.sort_by_app_name),
+                            getString(R.string.sort_by_cache_size)
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setSortBy(AppsListAdapter.SortBy.values()[which]);
+                        }
+                    });
+                    builder.create().show();
+                }
                 return true;
 
             case R.id.action_sort_by_app_name:
