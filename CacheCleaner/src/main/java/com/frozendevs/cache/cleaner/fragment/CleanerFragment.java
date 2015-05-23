@@ -40,7 +40,6 @@ import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
 import com.frozendevs.cache.cleaner.widget.DividerDecoration;
 import com.frozendevs.cache.cleaner.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CleanerFragment extends Fragment implements CleanerService.OnActionListener {
@@ -49,7 +48,6 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     private AppsListAdapter mAppsListAdapter;
     private TextView mEmptyView;
     private SharedPreferences mSharedPreferences;
-    private SearchView mSearchView;
     private ProgressDialog mProgressDialog;
     private View mProgressBar;
     private TextView mProgressBarText;
@@ -140,20 +138,20 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
 
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 mSearchQuery = query;
 
-                mSearchView.clearFocus();
+                searchView.clearFocus();
 
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (ViewCompat.isLaidOut(mSearchView)) {
+                if (ViewCompat.isLaidOut(searchView)) {
                     String oldText = mSearchQuery;
 
                     mSearchQuery = newText;
@@ -203,7 +201,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
         if (mSearchQuery != null) {
             MenuItemCompat.expandActionView(searchItem);
 
-            mSearchView.setQuery(mSearchQuery, false);
+            searchView.setQuery(mSearchQuery, false);
         }
 
         super.onCreateOptionsMenu(menu, inflater);
@@ -326,7 +324,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
         if (mCleanerService != null && !mCleanerService.isScanning() &&
                 !mCleanerService.isCleaning()) {
-            mAppsListAdapter.sortAndFilter(getActivity(), sortBy, mSearchView.getQuery().toString());
+            mAppsListAdapter.sortAndFilter(getActivity(), sortBy, mSearchQuery);
         }
     }
 
@@ -365,13 +363,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onScanCompleted(Context context, List<AppsListItem> apps) {
-        String filter = "";
-
-        if (mSearchView != null && mSearchView.isShown()) {
-            filter = mSearchView.getQuery().toString();
-        }
-
-        mAppsListAdapter.setItems(getActivity(), apps, getSortBy(), filter);
+        mAppsListAdapter.setItems(getActivity(), apps, getSortBy(), mSearchQuery);
 
         if (isAdded()) {
             updateStorageUsage();
@@ -406,13 +398,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onCleanCompleted(Context context, long cacheSize) {
-        String filter = "";
-
-        if (mSearchView != null && mSearchView.isShown()) {
-            filter = mSearchView.getQuery().toString();
-        }
-
-        mAppsListAdapter.setItems(getActivity(), new ArrayList<AppsListItem>(), getSortBy(), filter);
+        mAppsListAdapter.trashItems();
 
         if (isAdded()) {
             updateStorageUsage();

@@ -224,7 +224,7 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mItems = items;
         }
 
-        if (!filter.equals("")) {
+        if (filter != null && !filter.equals("")) {
             List<AppsListItem> filteredItems = new ArrayList<>();
 
             Locale current = context.getResources().getConfiguration().locale;
@@ -284,5 +284,12 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             notifyItemRemoved(0);
         }
+    }
+
+    public void trashItems() {
+        mItems = new ArrayList<>();
+        mFilteredItems = new ArrayList<>();
+
+        notifyDataSetChanged();
     }
 }
