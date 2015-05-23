@@ -13,11 +13,11 @@ import android.os.IBinder;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.text.BidiFormatter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.text.format.Formatter;
 import android.view.KeyEvent;
@@ -29,27 +29,21 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.settings.applications.LinearColorBar;
 import com.frozendevs.cache.cleaner.R;
 import com.frozendevs.cache.cleaner.activity.SettingsActivity;
 import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.model.CleanerService;
 import com.frozendevs.cache.cleaner.model.adapter.AppsListAdapter;
+import com.frozendevs.cache.cleaner.widget.DividerDecoration;
+import com.frozendevs.cache.cleaner.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CleanerFragment extends Fragment implements CleanerService.OnActionListener {
-
-    private LinearColorBar mColorBar;
-    private TextView mSystemSizeText;
-    private TextView mCacheSizeText;
-    private TextView mFreeSizeText;
-    private View mHeaderView;
 
     private CleanerService mCleanerService;
     private AppsListAdapter mAppsListAdapter;
@@ -59,6 +53,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     private ProgressDialog mProgressDialog;
     private View mProgressBar;
     private TextView mProgressBarText;
+    private LinearLayoutManager mLayoutManager;
 
     private boolean mAlreadyScanned = false;
     private boolean mAlreadyCleaned = false;
@@ -101,7 +96,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        mAppsListAdapter = new AppsListAdapter(getActivity());
+        mAppsListAdapter = new AppsListAdapter();
 
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -123,25 +118,15 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.cleaner_fragment, container, false);
 
-        mEmptyView = (TextView) rootView.findViewById(android.R.id.empty);
+        mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
 
-        ListView listView = (ListView) rootView.findViewById(android.R.id.list);
+        mLayoutManager = new LinearLayoutManager(getActivity());
 
-        View headerLayout = inflater.inflate(R.layout.apps_list_header, listView, false);
-        mHeaderView = headerLayout.findViewById(R.id.apps_list_header);
-
-        listView.setEmptyView(mEmptyView);
-        listView.addHeaderView(headerLayout, null, false);
-        listView.setAdapter(mAppsListAdapter);
-        listView.setOnItemClickListener(mAppsListAdapter);
-
-        mColorBar = (LinearColorBar) rootView.findViewById(R.id.color_bar);
-        mColorBar.setColors(getResources().getColor(R.color.apps_list_system_memory),
-                getResources().getColor(R.color.apps_list_cache_memory),
-                getResources().getColor(R.color.apps_list_free_memory));
-        mSystemSizeText = (TextView) rootView.findViewById(R.id.systemSize);
-        mCacheSizeText = (TextView) rootView.findViewById(R.id.cacheSize);
-        mFreeSizeText = (TextView) rootView.findViewById(R.id.freeSize);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(mAppsListAdapter);
+        recyclerView.setEmptyView(mEmptyView);
+        recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
 
         mProgressBar = rootView.findViewById(R.id.progressBar);
         mProgressBarText = (TextView) rootView.findViewById(R.id.progressBarText);
@@ -169,10 +154,14 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (ViewCompat.isLaidOut(mSearchView)) {
-                    mSearchQuery = newText;
-                }
+                    String oldText = mSearchQuery;
 
-                mAppsListAdapter.sortAndFilter(getSortBy(), newText);
+                    mSearchQuery = newText;
+
+                    if (oldText != null && !oldText.equals(newText)) {
+                        mAppsListAdapter.sortAndFilter(getActivity(), getSortBy(), newText);
+                    }
+                }
 
                 return true;
             }
@@ -186,7 +175,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
                             mSearchQuery = "";
                         }
 
-                        mHeaderView.setVisibility(View.GONE);
+                        mAppsListAdapter.setShowHeaderView(false);
 
                         mEmptyView.setText(R.string.no_such_app);
 
@@ -197,9 +186,13 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
                     public boolean onMenuItemActionCollapse(MenuItem item) {
                         mSearchQuery = null;
 
-                        mHeaderView.setVisibility(View.VISIBLE);
-
                         mAppsListAdapter.clearFilter();
+
+                        mAppsListAdapter.setShowHeaderView(true);
+
+                        if (mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                            mLayoutManager.scrollToPosition(0);
+                        }
 
                         mEmptyView.setText(R.string.empty_cache);
 
@@ -307,26 +300,16 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     }
 
     private void updateStorageUsage() {
-        StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
+        if (mAppsListAdapter != null) {
+            StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
-        long totalMemory = (long) stat.getBlockCount() * (long) stat.getBlockSize();
-        long medMemory = mCleanerService != null ? mCleanerService.getCacheSize() : 0;
-        long lowMemory = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
-        long highMemory = totalMemory - medMemory - lowMemory;
+            long totalMemory = (long) stat.getBlockCount() * (long) stat.getBlockSize();
+            long medMemory = mCleanerService != null ? mCleanerService.getCacheSize() : 0;
+            long lowMemory = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+            long highMemory = totalMemory - medMemory - lowMemory;
 
-        BidiFormatter bidiFormatter = BidiFormatter.getInstance();
-        String sizeStr = bidiFormatter.unicodeWrap(
-                Formatter.formatShortFileSize(getActivity(), lowMemory));
-        mFreeSizeText.setText(getString(R.string.apps_list_header_memory, sizeStr));
-        sizeStr = bidiFormatter.unicodeWrap(
-                Formatter.formatShortFileSize(getActivity(), medMemory));
-        mCacheSizeText.setText(getString(R.string.apps_list_header_memory, sizeStr));
-        sizeStr = bidiFormatter.unicodeWrap(
-                Formatter.formatShortFileSize(getActivity(), highMemory));
-        mSystemSizeText.setText(getString(R.string.apps_list_header_memory, sizeStr));
-        mColorBar.setRatios((float) highMemory / (float) totalMemory,
-                (float) medMemory / (float) totalMemory,
-                (float) lowMemory / (float) totalMemory);
+            mAppsListAdapter.updateStorageUsage(totalMemory, lowMemory, medMemory, highMemory);
+        }
     }
 
     private AppsListAdapter.SortBy getSortBy() {
@@ -343,7 +326,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
         if (mCleanerService != null && !mCleanerService.isScanning() &&
                 !mCleanerService.isCleaning()) {
-            mAppsListAdapter.sortAndFilter(sortBy, mSearchView.getQuery().toString());
+            mAppsListAdapter.sortAndFilter(getActivity(), sortBy, mSearchView.getQuery().toString());
         }
     }
 
@@ -388,7 +371,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             filter = mSearchView.getQuery().toString();
         }
 
-        mAppsListAdapter.setItems(apps, getSortBy(), filter);
+        mAppsListAdapter.setItems(getActivity(), apps, getSortBy(), filter);
 
         if (isAdded()) {
             updateStorageUsage();
@@ -429,7 +412,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             filter = mSearchView.getQuery().toString();
         }
 
-        mAppsListAdapter.setItems(new ArrayList<AppsListItem>(), getSortBy(), filter);
+        mAppsListAdapter.setItems(getActivity(), new ArrayList<AppsListItem>(), getSortBy(), filter);
 
         if (isAdded()) {
             updateStorageUsage();

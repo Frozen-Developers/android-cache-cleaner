@@ -14,13 +14,14 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <ListView
-            android:id="@android:id/list"
+        <com.frozendevs.cache.cleaner.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:scrollbars="vertical" />
 
         <TextView
-            android:id="@android:id/empty"
+            android:id="@+id/empty_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
