@@ -16,7 +16,8 @@
 
         <activity
             android:name=".activity.CleanerActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/Theme.CleanerActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

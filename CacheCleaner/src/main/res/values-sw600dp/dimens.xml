@@ -4,6 +4,6 @@
     <dimen name="activity_horizontal_margin">0dp</dimen>
     <dimen name="activity_vertical_margin">0dp</dimen>
 
-    <dimen name="actionbar_contentInsetStart">16dp</dimen>
+    <dimen name="actionbar_contentInsetStart">24dp</dimen>
 
 </resources>
