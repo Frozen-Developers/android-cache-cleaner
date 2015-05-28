@@ -15,8 +15,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewConfigurationCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.text.format.Formatter;
@@ -26,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -52,6 +49,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     private View mProgressBar;
     private TextView mProgressBarText;
     private LinearLayoutManager mLayoutManager;
+    private Menu mOptionsMenu;
 
     private boolean mAlreadyScanned = false;
     private boolean mAlreadyCleaned = false;
@@ -134,6 +132,8 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        mOptionsMenu = menu;
+
         inflater.inflate(R.menu.main_menu, menu);
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -204,6 +204,8 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             searchView.setQuery(mSearchQuery, false);
         }
 
+        updateOptionsMenu();
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -230,41 +232,36 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
 
-            case R.id.action_sort_by:
-                if (ViewConfigurationCompat.hasPermanentMenuKey(
-                        ViewConfiguration.get(getActivity()))) {
-                    item.getSubMenu().clear();
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(R.string.action_sort_by);
-                    builder.setItems(new CharSequence[]{
-                            getString(R.string.sort_by_app_name),
-                            getString(R.string.sort_by_cache_size)
-                    }, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            setSortBy(AppsListAdapter.SortBy.values()[which]);
-                        }
-                    });
-                    builder.create().show();
-                }
-                return true;
-
             case R.id.action_sort_by_app_name:
                 setSortBy(AppsListAdapter.SortBy.APP_NAME);
+                updateOptionsMenu();
                 return true;
 
             case R.id.action_sort_by_cache_size:
                 setSortBy(AppsListAdapter.SortBy.CACHE_SIZE);
+                updateOptionsMenu();
                 return true;
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        updateOptionsMenu();
+    }
+
+    @Override
+    public void onDestroyOptionsMenu() {
+        mOptionsMenu = null;
+    }
+
+    @Override
     public void onResume() {
         updateStorageUsage();
+
+        updateOptionsMenu();
 
         if (mCleanerService != null) {
             if (mCleanerService.isScanning() && !isProgressBarVisible()) {
@@ -295,6 +292,15 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
         getActivity().getApplication().unbindService(mServiceConnection);
 
         super.onDestroy();
+    }
+
+    private void updateOptionsMenu() {
+        if (mOptionsMenu != null) {
+            mOptionsMenu.findItem(R.id.action_sort_by_app_name).setVisible(
+                    getSortBy() == AppsListAdapter.SortBy.CACHE_SIZE);
+            mOptionsMenu.findItem(R.id.action_sort_by_cache_size).setVisible(
+                    getSortBy() == AppsListAdapter.SortBy.APP_NAME);
+        }
     }
 
     private void updateStorageUsage() {

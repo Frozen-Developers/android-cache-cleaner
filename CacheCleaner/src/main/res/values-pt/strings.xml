@@ -8,7 +8,8 @@
     <string name="action_clean">Limpar</string>
     <string name="action_rescan">Analisar</string>
     <string name="action_search">Procurar</string>
-    <string name="action_sort_by">Ordenar por</string>
+    <string name="action_sort_by_name">Classificar por nome</string>
+    <string name="action_sort_by_size">Classificar por tamanho</string>
     <string name="action_settings">Definições</string>
 
     <!-- Apps list header -->
@@ -59,9 +60,5 @@
     <string name="open_source_licences">Licenças Open Source</string>
     <string name="special_thanks">Agradecimentos</string>
     <string name="samuels_graphics_desc">Criação do ícone e imagem na Play Store</string>
-
-    <!-- 'Sort by' dialog -->
-    <string name="sort_by_app_name">Nome da aplicação</string>
-    <string name="sort_by_cache_size">Tamanho de cache</string>
 
 </resources>

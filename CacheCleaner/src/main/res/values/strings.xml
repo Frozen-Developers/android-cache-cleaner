@@ -9,7 +9,8 @@
     <string name="action_clean">Clean</string>
     <string name="action_rescan">Rescan</string>
     <string name="action_search">Search</string>
-    <string name="action_sort_by">Sort by</string>
+    <string name="action_sort_by_name">Sort by name</string>
+    <string name="action_sort_by_size">Sort by size</string>
     <string name="action_settings">Settings</string>
 
     <!-- Apps list header -->
@@ -65,9 +66,7 @@
     <string name="samuels_graphics" translatable="false">Samuel\'s Graphics</string>
     <string name="samuels_graphics_desc">Icon and Play Store banner design</string>
 
-    <!-- 'Sort by' dialog -->
-    <string name="sort_by_app_name">Application name</string>
-    <string name="sort_by_cache_size">Cache size</string>
+    <!-- 'Sort by' preference -->
     <string name="sort_by_key" translatable="false">sort_by</string>
 
 </resources>

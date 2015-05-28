@@ -8,7 +8,8 @@
     <string name="action_clean">Vyčistiť</string>
     <string name="action_rescan">Reskenovať</string>
     <string name="action_search">Hľadať</string>
-    <string name="action_sort_by">Usporiadať podľa</string>
+    <string name="action_sort_by_name">Zoradiť podľa názvu</string>
+    <string name="action_sort_by_size">Zoradiť podľa veľkosti</string>
     <string name="action_settings">Nastavenia</string>
 
     <!-- Apps list header -->
@@ -59,9 +60,5 @@
     <string name="open_source_licences">Open source licencie</string>
     <string name="special_thanks">Špeciálne poďakovanie</string>
     <string name="samuels_graphics_desc">Dizajn ikony a transparentu pre Play obchod</string>
-
-    <!-- 'Sort by' dialog -->
-    <string name="sort_by_app_name">Názvu aplikácie</string>
-    <string name="sort_by_cache_size">Veľkosti medzipamäte</string>
 
 </resources>

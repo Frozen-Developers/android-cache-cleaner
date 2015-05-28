@@ -8,7 +8,8 @@
     <string name="action_clean">Vider</string>
     <string name="action_rescan">Rescanner</string>
     <string name="action_search">Chercher</string>
-    <string name="action_sort_by">Trier par</string>
+    <string name="action_sort_by_name">Trier par nom</string>
+    <string name="action_sort_by_size">Trier par taille</string>
     <string name="action_settings">Paramètres</string>
 
     <!-- Apps list header -->
@@ -59,9 +60,5 @@
     <string name="open_source_licences">Licences open source</string>
     <string name="special_thanks">Remerciements spéciales</string>
     <string name="samuels_graphics_desc">Icône et design de la bannière pour le Play Store</string>
-
-    <!-- 'Trier par' dialogue -->
-    <string name="sort_by_app_name">Nom de l\'application</string>
-    <string name="sort_by_cache_size">Taille du cache</string>
 
 </resources>

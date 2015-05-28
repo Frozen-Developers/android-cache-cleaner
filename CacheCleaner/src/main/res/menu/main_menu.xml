@@ -21,23 +21,14 @@
         app:showAsAction="ifRoom|collapseActionView" />
 
     <item
-        android:id="@+id/action_sort_by"
-        android:title="@string/action_sort_by"
-        app:showAsAction="never">
+        android:id="@+id/action_sort_by_app_name"
+        android:title="@string/action_sort_by_name"
+        app:showAsAction="never" />
 
-        <menu>
-
-            <item
-                android:id="@+id/action_sort_by_app_name"
-                android:title="@string/sort_by_app_name" />
-
-            <item
-                android:id="@+id/action_sort_by_cache_size"
-                android:title="@string/sort_by_cache_size" />
-
-        </menu>
-
-    </item>
+    <item
+        android:id="@+id/action_sort_by_cache_size"
+        android:title="@string/action_sort_by_size"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
