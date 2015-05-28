@@ -279,7 +279,7 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (show && !oldShow) {
             insertHeaderView(mFilteredItems);
-        } else if (!show && oldShow) {
+        } else if (!show && oldShow && mFilteredItems.size() > 0) {
             mFilteredItems.remove(0);
 
             notifyItemRemoved(0);
