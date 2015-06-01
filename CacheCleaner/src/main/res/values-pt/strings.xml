@@ -8,8 +8,8 @@
     <string name="action_clean">Limpar</string>
     <string name="action_rescan">Analisar</string>
     <string name="action_search">Procurar</string>
-    <string name="action_sort_by_name">Classificar por nome</string>
-    <string name="action_sort_by_size">Classificar por tamanho</string>
+    <string name="action_sort_by_name">Ordenar por nome</string>
+    <string name="action_sort_by_size">ordenar por tamanho</string>
     <string name="action_settings">Definições</string>
 
     <!-- Apps list header -->
@@ -21,8 +21,8 @@
     <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
 
     <!-- Empty list view -->
-    <string name="empty_cache">Cache vazia.</string>
-    <string name="no_such_app">Aplicação inexistente.</string>
+    <string name="empty_cache">Cache vazia</string>
+    <string name="no_such_app">Aplicação inexistente</string>
 
     <!-- Progress bar -->
     <string name="scanning">Análise…</string>
