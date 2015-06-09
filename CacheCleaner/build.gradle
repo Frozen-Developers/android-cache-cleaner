@@ -20,8 +20,8 @@ android {
         applicationId "com.frozendevs.cache.cleaner"
         minSdkVersion 9
         targetSdkVersion 22
-        versionCode 20
-        versionName "2.1.4"
+        versionCode 21
+        versionName "2.1.5"
     }
 
     compileOptions {
