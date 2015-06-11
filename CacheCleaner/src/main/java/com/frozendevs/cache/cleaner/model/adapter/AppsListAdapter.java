@@ -30,10 +30,8 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         CACHE_SIZE
     }
 
-    private enum ViewType {
-        HEADER,
-        ITEM
-    }
+    public static final int VIEW_TYPE_HEADER = 0;
+    public static final int VIEW_TYPE_ITEM = 1;
 
     private List<AppsListItem> mItems = new ArrayList<>();
     private List<AppsListItem> mFilteredItems = new ArrayList<>();
@@ -42,7 +40,7 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private long mTotalMemory, mLowMemory, mMedMemory, mHighMemory;
 
-    private static class ItemViewHolder extends RecyclerView.ViewHolder implements
+    public static class ItemViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
         private ImageView mIcon;
         private TextView mName, mSize;
@@ -87,7 +85,7 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         private LinearColorBar mColorBar;
         private TextView mSystemSizeText;
         private TextView mCacheSizeText;
@@ -135,12 +133,12 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        switch (ViewType.values()[viewType]) {
-            case HEADER:
+        switch (viewType) {
+            case VIEW_TYPE_HEADER:
                 return new HeaderViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.apps_list_header, viewGroup, false));
 
-            case ITEM:
+            case VIEW_TYPE_ITEM:
                 return new ItemViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.list_item, viewGroup, false));
         }
@@ -268,8 +266,7 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        return mFilteredItems.get(position) == null ? ViewType.HEADER.ordinal() :
-                ViewType.ITEM.ordinal();
+        return mFilteredItems.get(position) == null ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
     }
 
     public void setShowHeaderView(boolean show) {
