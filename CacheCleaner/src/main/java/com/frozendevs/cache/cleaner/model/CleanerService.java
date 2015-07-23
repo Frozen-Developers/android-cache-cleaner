@@ -215,52 +215,54 @@ public class CleanerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = intent.getAction();
+        if (intent != null) {
+            String action = intent.getAction();
 
-        if (action != null) {
-            if (action.equals(ACTION_CLEAN_AND_EXIT)) {
-                setOnActionListener(new OnActionListener() {
-                    @Override
-                    public void onScanStarted(Context context) {
+            if (action != null) {
+                if (action.equals(ACTION_CLEAN_AND_EXIT)) {
+                    setOnActionListener(new OnActionListener() {
+                        @Override
+                        public void onScanStarted(Context context) {
 
-                    }
-
-                    @Override
-                    public void onScanProgressUpdated(Context context, int current, int max) {
-
-                    }
-
-                    @Override
-                    public void onScanCompleted(Context context, List<AppsListItem> apps) {
-                        if (getCacheSize() > 0) {
-                            cleanCache();
                         }
-                    }
 
-                    @Override
-                    public void onCleanStarted(Context context) {
+                        @Override
+                        public void onScanProgressUpdated(Context context, int current, int max) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onCleanCompleted(Context context, long cacheSize) {
-                        String msg = getString(R.string.cleaned, Formatter.formatShortFileSize(
-                                CleanerService.this, cacheSize));
-
-                        Log.d(TAG, msg);
-
-                        Toast.makeText(CleanerService.this, msg, Toast.LENGTH_LONG).show();
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                stopSelf();
+                        @Override
+                        public void onScanCompleted(Context context, List<AppsListItem> apps) {
+                            if (getCacheSize() > 0) {
+                                cleanCache();
                             }
-                        }, 5000);
-                    }
-                });
+                        }
 
-                scanCache();
+                        @Override
+                        public void onCleanStarted(Context context) {
+
+                        }
+
+                        @Override
+                        public void onCleanCompleted(Context context, long cacheSize) {
+                            String msg = getString(R.string.cleaned, Formatter.formatShortFileSize(
+                                    CleanerService.this, cacheSize));
+
+                            Log.d(TAG, msg);
+
+                            Toast.makeText(CleanerService.this, msg, Toast.LENGTH_LONG).show();
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    stopSelf();
+                                }
+                            }, 5000);
+                        }
+                    });
+
+                    scanCache();
+                }
             }
         }
 
