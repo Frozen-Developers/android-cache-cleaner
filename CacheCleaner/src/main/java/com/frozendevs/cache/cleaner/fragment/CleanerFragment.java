@@ -17,7 +17,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
-import android.text.format.Formatter;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -403,7 +402,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     }
 
     @Override
-    public void onCleanCompleted(Context context, long cacheSize) {
+    public void onCleanCompleted(Context context) {
         mAppsListAdapter.trashItems();
 
         if (isAdded()) {
@@ -414,8 +413,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             }
         }
 
-        Toast.makeText(context, context.getString(R.string.cleaned, Formatter.formatShortFileSize(
-                getActivity(), cacheSize)), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, R.string.cleaned, Toast.LENGTH_LONG).show();
 
         if (getActivity() != null && !mAlreadyCleaned &&
                 mSharedPreferences.getBoolean(mExitAfterCleanKey, false)) {

@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.StatFs;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -40,16 +39,16 @@ public class CleanerService extends Service {
     private boolean mIsCleaning = false;
     private long mCacheSize = 0;
 
-    public static interface OnActionListener {
-        public void onScanStarted(Context context);
+    public interface OnActionListener {
+        void onScanStarted(Context context);
 
-        public void onScanProgressUpdated(Context context, int current, int max);
+        void onScanProgressUpdated(Context context, int current, int max);
 
-        public void onScanCompleted(Context context, List<AppsListItem> apps);
+        void onScanCompleted(Context context, List<AppsListItem> apps);
 
-        public void onCleanStarted(Context context);
+        void onCleanStarted(Context context);
 
-        public void onCleanCompleted(Context context, long cacheSize);
+        void onCleanCompleted(Context context);
     }
 
     public class CleanerServiceBinder extends Binder {
@@ -160,7 +159,7 @@ public class CleanerService extends Service {
         }
     }
 
-    private class TaskClean extends AsyncTask<Void, Void, Long> {
+    private class TaskClean extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -170,7 +169,7 @@ public class CleanerService extends Service {
         }
 
         @Override
-        protected Long doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             final CountDownLatch countDownLatch = new CountDownLatch(1);
 
             StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
@@ -192,15 +191,15 @@ public class CleanerService extends Service {
                 e.printStackTrace();
             }
 
-            return mCacheSize;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Long result) {
+        protected void onPostExecute(Void result) {
             mCacheSize = 0;
 
             if (mOnActionListener != null) {
-                mOnActionListener.onCleanCompleted(CleanerService.this, result);
+                mOnActionListener.onCleanCompleted(CleanerService.this);
             }
 
             mIsCleaning = false;
@@ -256,9 +255,8 @@ public class CleanerService extends Service {
                         }
 
                         @Override
-                        public void onCleanCompleted(Context context, long cacheSize) {
-                            String msg = getString(R.string.cleaned, Formatter.formatShortFileSize(
-                                    CleanerService.this, cacheSize));
+                        public void onCleanCompleted(Context context) {
+                            String msg = getString(R.string.cleaned);
 
                             Log.d(TAG, msg);
 

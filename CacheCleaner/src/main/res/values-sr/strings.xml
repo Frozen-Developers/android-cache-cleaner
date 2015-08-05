@@ -33,7 +33,7 @@
     <string name="cleaning_in_progress">Чишћење је у току…</string>
 
     <!-- Toasts -->
-    <string name="cleaned">Кеш је очишћен (<xliff:g id="memory">%1$s</xliff:g>)</string>
+    <string name="cleaned">Кеш је очишћен</string>
 
     <!-- Settings -->
     <string name="settings">Поставке</string>

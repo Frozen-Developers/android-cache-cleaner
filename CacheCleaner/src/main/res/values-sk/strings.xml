@@ -33,7 +33,7 @@
     <string name="cleaning_in_progress">Prebieha čistenie…</string>
 
     <!-- Toasts -->
-    <string name="cleaned">Medzipamäť vyčistená (<xliff:g id="memory">%1$s</xliff:g>)</string>
+    <string name="cleaned">Medzipamäť vyčistená</string>
 
     <!-- Settings -->
     <string name="settings">Nastavenia</string>

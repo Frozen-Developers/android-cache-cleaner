@@ -33,7 +33,7 @@
     <string name="cleaning_in_progress">Vidage en cous…</string>
 
     <!-- Toasts -->
-    <string name="cleaned">Cache vidé (<xliff:g id="memory">%1$s</xliff:g>)</string>
+    <string name="cleaned">Cache vidé</string>
 
     <!-- Paramètres -->
     <string name="settings">Paramètres</string>

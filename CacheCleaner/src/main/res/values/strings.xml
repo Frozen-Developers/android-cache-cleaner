@@ -34,7 +34,7 @@
     <string name="cleaning_in_progress">Cleaning in progress…</string>
 
     <!-- Toasts -->
-    <string name="cleaned">Cache cleaned (<xliff:g id="memory">%1$s</xliff:g>)</string>
+    <string name="cleaned">Cache cleaned</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>

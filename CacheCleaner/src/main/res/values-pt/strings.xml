@@ -33,7 +33,7 @@
     <string name="cleaning_in_progress">Limpeza em curso…</string>
 
     <!-- Toasts -->
-    <string name="cleaned">Cache limpa (<xliff:g id="memory">%1$s</xliff:g>)</string>
+    <string name="cleaned">Cache limpa</string>
 
     <!-- Settings -->
     <string name="settings">Definições</string>
