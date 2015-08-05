@@ -66,8 +66,15 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
             updateStorageUsage();
 
-            if (!mCleanerService.isScanning() && !mAlreadyScanned) {
-                mCleanerService.scanCache();
+            if (!mCleanerService.isCleaning() && !mCleanerService.isScanning()) {
+                if (mSharedPreferences.getBoolean(mCleanOnAppStartupKey, false) &&
+                        !mAlreadyCleaned) {
+                    mAlreadyCleaned = true;
+
+                    mCleanerService.cleanCache();
+                } else if (!mAlreadyScanned) {
+                    mCleanerService.scanCache();
+                }
             }
         }
 
@@ -376,16 +383,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             showProgressBar(false);
         }
 
-        if (!mAlreadyScanned) {
-            mAlreadyScanned = true;
-
-            if (mCleanerService != null && mSharedPreferences.getBoolean(
-                    mCleanOnAppStartupKey, false)) {
-                mAlreadyCleaned = true;
-
-                mCleanerService.cleanCache();
-            }
-        }
+        mAlreadyScanned = true;
     }
 
     @Override
