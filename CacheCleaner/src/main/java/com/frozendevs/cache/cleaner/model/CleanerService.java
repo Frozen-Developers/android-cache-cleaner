@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -90,29 +91,13 @@ public class CleanerService extends Service {
                             new IPackageStatsObserver.Stub() {
 
                                 @Override
-                                public void onGetStatsCompleted(PackageStats pStats, boolean succeeded)
+                                public void onGetStatsCompleted(PackageStats pStats,
+                                                                boolean succeeded)
                                         throws RemoteException {
                                     synchronized (apps) {
                                         publishProgress(++mAppCount, packages.size());
 
-                                        if (succeeded && pStats.cacheSize > 0) {
-                                            try {
-                                                apps.add(new AppsListItem(pStats.packageName,
-                                                        getPackageManager().getApplicationLabel(
-                                                                getPackageManager().getApplicationInfo(
-                                                                        pStats.packageName,
-                                                                        PackageManager.GET_META_DATA)
-                                                        ).toString(),
-                                                        getPackageManager().getApplicationIcon(
-                                                                pStats.packageName),
-                                                        pStats.cacheSize
-                                                ));
-
-                                                mCacheSize += pStats.cacheSize;
-                                            } catch (PackageManager.NameNotFoundException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
+                                        mCacheSize += addPackage(apps, pStats, succeeded);
                                     }
 
                                     synchronized (countDownLatch) {
@@ -145,6 +130,33 @@ public class CleanerService extends Service {
             }
 
             mIsScanning = false;
+        }
+
+        private long addPackage(List<AppsListItem> apps, PackageStats pStats, boolean succeeded) {
+            long cacheSize = pStats.cacheSize;
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                cacheSize += pStats.externalCacheSize;
+            }
+
+            if (!succeeded || cacheSize <= 0) {
+                return 0;
+            }
+
+            try {
+                PackageManager packageManager = getPackageManager();
+                ApplicationInfo info = packageManager.getApplicationInfo(pStats.packageName,
+                        PackageManager.GET_META_DATA);
+
+                apps.add(new AppsListItem(pStats.packageName,
+                        packageManager.getApplicationLabel(info).toString(),
+                        packageManager.getApplicationIcon(pStats.packageName),
+                        cacheSize));
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            return cacheSize;
         }
     }
 
