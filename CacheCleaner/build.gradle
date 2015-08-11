@@ -44,6 +44,6 @@ dependencies {
 }
 
 if (project.hasProperty("CacheCleaner.signing") &&
-        new File(project.property("CacheCleaner.signing") + ".gradle").exists()) {
+        file(project.property("CacheCleaner.signing") + ".gradle").exists()) {
     apply from: project.property("CacheCleaner.signing") + ".gradle";
 }
