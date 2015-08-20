@@ -6,9 +6,6 @@
         <item name="colorPrimary">@color/material_blue_grey_900</item>
         <item name="colorPrimaryDark">@color/material_blue_grey_950</item>
         <item name="colorAccent">@color/material_deep_teal_500</item>
-
-        <!-- Preferences -->
-        <item name="android:listChoiceIndicatorMultiple">@drawable/btn_check_light</item>
     </style>
 
     <style name="Theme.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
