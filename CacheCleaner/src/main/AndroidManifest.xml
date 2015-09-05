@@ -41,7 +41,8 @@
             android:name=".activity.SettingsActivity"
             android:exported="false"
             android:label="@string/settings"
-            android:parentActivityName=".activity.CleanerActivity">
+            android:parentActivityName=".activity.CleanerActivity"
+            android:theme="@style/Theme.SettingsActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

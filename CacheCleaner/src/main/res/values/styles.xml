@@ -17,4 +17,8 @@
         <item name="actionBarStyle">@style/Theme.ActionBar</item>
     </style>
 
+    <style name="Theme.SettingsActivity" parent="@style/Theme.Application">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
 </resources>
