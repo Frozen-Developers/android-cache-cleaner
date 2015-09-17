@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.frozendevs.cache.cleaner.R;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class CleanerService extends Service {
 
             final CountDownLatch countDownLatch = new CountDownLatch(packages.size());
 
-            final List<AppsListItem> apps = new ArrayList<AppsListItem>();
+            final List<AppsListItem> apps = new ArrayList<>();
 
             try {
                 for (ApplicationInfo pkg : packages) {
@@ -186,6 +187,29 @@ public class CleanerService extends Service {
                         }
                 );
 
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    if (isExternalStorageWritable()) {
+                        final File externalDataDirectory = new File(Environment
+                                .getExternalStorageDirectory().getAbsolutePath() + "/Android/data");
+
+                        final String externalCachePath = externalDataDirectory.getAbsolutePath() +
+                                "/%s/cache";
+
+                        final File[] files = externalDataDirectory.listFiles();
+
+                        for (File file : files) {
+                            if (!deleteDirectory(new File(String.format(externalCachePath,
+                                    file.getName())), true)) {
+                                Log.e(TAG, "External storage suddenly becomes unavailable");
+
+                                break;
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "External storage is unavailable");
+                    }
+                }
+
                 countDownLatch.await();
             } catch (InvocationTargetException | InterruptedException | IllegalAccessException e) {
                 e.printStackTrace();
@@ -203,6 +227,34 @@ public class CleanerService extends Service {
             }
 
             mIsCleaning = false;
+        }
+
+        private boolean deleteDirectory(File file, boolean directoryOnly) {
+            if (!isExternalStorageWritable()) {
+                return false;
+            }
+
+            if (!file.exists() || (directoryOnly && !file.isDirectory())) {
+                return true;
+            }
+
+            if (file.isDirectory()) {
+                final File[] children = file.listFiles();
+
+                for (File child : children) {
+                    if (!deleteDirectory(child, false)) {
+                        return false;
+                    }
+                }
+            }
+
+            file.delete();
+
+            return true;
+        }
+
+        private boolean isExternalStorageWritable() {
+            return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
         }
     }
 
