@@ -70,4 +70,8 @@
     <!-- 'Sort by' preference -->
     <string name="sort_by_key" translatable="false">sort_by</string>
 
+    <!-- Messages -->
+    <string name="message_title_not_compatible">Not compatible</string>
+    <string name="message_not_compatible">Due to limitations in Android 6.0 and newer, Cache Cleaner will not work properly on your device and we recommend you uninstalling this application.</string>
+
 </resources>
