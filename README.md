@@ -10,6 +10,10 @@ Cache Cleaner for Android:
 
 That says it all.
 
+Incompatibility with Android 6.0 and newer
+------------------------------------------
+Starting with Android 6.0, ```CLEAR_APP_CACHE``` permission seems to be no longer available to regular applications and since this permission is required for cleaning cache, Cache Cleaner does not work on Android 6.0 and newer.
+
 Download
 --------
 
