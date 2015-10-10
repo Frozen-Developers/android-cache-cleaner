@@ -35,6 +35,7 @@
 
     <!-- Toasts -->
     <string name="cleaned">Cache cleaned</string>
+    <string name="toast_could_not_clean">Could not clean the cache</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>

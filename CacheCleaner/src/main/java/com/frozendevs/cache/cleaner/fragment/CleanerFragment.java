@@ -400,8 +400,10 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
     }
 
     @Override
-    public void onCleanCompleted(Context context) {
-        mAppsListAdapter.trashItems();
+    public void onCleanCompleted(Context context, boolean succeeded) {
+        if (succeeded) {
+            mAppsListAdapter.trashItems();
+        }
 
         if (isAdded()) {
             updateStorageUsage();
@@ -411,9 +413,10 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             }
         }
 
-        Toast.makeText(context, R.string.cleaned, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, succeeded ? R.string.cleaned : R.string.toast_could_not_clean,
+                Toast.LENGTH_LONG).show();
 
-        if (getActivity() != null && !mAlreadyCleaned &&
+        if (succeeded && getActivity() != null && !mAlreadyCleaned &&
                 mSharedPreferences.getBoolean(mExitAfterCleanKey, false)) {
             getActivity().finish();
         }

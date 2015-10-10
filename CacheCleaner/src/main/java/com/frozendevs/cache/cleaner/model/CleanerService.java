@@ -49,7 +49,7 @@ public class CleanerService extends Service {
 
         void onCleanStarted(Context context);
 
-        void onCleanCompleted(Context context);
+        void onCleanCompleted(Context context, boolean succeeded);
     }
 
     public class CleanerServiceBinder extends Binder {
@@ -160,7 +160,7 @@ public class CleanerService extends Service {
         }
     }
 
-    private class TaskClean extends AsyncTask<Void, Void, Void> {
+    private class TaskClean extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -170,7 +170,7 @@ public class CleanerService extends Service {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             final CountDownLatch countDownLatch = new CountDownLatch(1);
 
             StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
@@ -211,19 +211,23 @@ public class CleanerService extends Service {
                 }
 
                 countDownLatch.await();
-            } catch (InvocationTargetException | InterruptedException | IllegalAccessException e) {
+            } catch (InterruptedException | IllegalAccessException e) {
                 e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                return false;
             }
 
-            return null;
+            return true;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            mCacheSize = 0;
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                mCacheSize = 0;
+            }
 
             if (mOnActionListener != null) {
-                mOnActionListener.onCleanCompleted(CleanerService.this);
+                mOnActionListener.onCleanCompleted(CleanerService.this, result);
             }
 
             mIsCleaning = false;
@@ -307,12 +311,16 @@ public class CleanerService extends Service {
                 }
 
                 @Override
-                public void onCleanCompleted(Context context) {
-                    String msg = getString(R.string.cleaned);
+                public void onCleanCompleted(Context context, boolean succeeded) {
+                    if (succeeded) {
+                        Log.d(TAG, "Cache cleaned");
+                    }
+                    else {
+                        Log.e(TAG, "Could not clean the cache");
+                    }
 
-                    Log.d(TAG, msg);
-
-                    Toast.makeText(CleanerService.this, msg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(CleanerService.this, succeeded ? R.string.cleaned :
+                            R.string.toast_could_not_clean, Toast.LENGTH_LONG).show();
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
