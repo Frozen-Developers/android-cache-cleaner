@@ -10,6 +10,9 @@ gradle*
 
 # Temp
 *~
+\#*
+.\#*
+*.autosave
 
 # Windows
 Thumbs.db
