@@ -34,6 +34,7 @@
 
     <!-- Toasts -->
     <string name="cleaned">Medzipamäť vyčistená</string>
+    <string name="toast_could_not_clean">Nemožno vyčistiť medzipamäť</string>
 
     <!-- Settings -->
     <string name="settings">Nastavenia</string>
