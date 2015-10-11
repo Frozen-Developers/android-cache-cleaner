@@ -50,8 +50,8 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
 
             mIcon = (ImageView) itemView.findViewById(R.id.app_icon);
-            mName = (TextView) itemView.findViewById(R.id.app_name);
-            mSize = (TextView) itemView.findViewById(R.id.app_size);
+            mName = (TextView)  itemView.findViewById(R.id.app_name);
+            mSize = (TextView)  itemView.findViewById(R.id.app_size);
 
             itemView.setOnClickListener(this);
         }
@@ -121,9 +121,10 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     Formatter.formatShortFileSize(context, highMemory));
             mSystemSizeText.setText(context.getString(R.string.apps_list_header_memory, sizeStr));
 
-            mColorBar.setRatios((float) highMemory / (float) totalMemory,
-                    (float) medMemory / (float) totalMemory,
-                    (float) lowMemory / (float) totalMemory);
+            mColorBar.setRatios(
+                    (float) highMemory / (float) totalMemory,
+                    (float) medMemory  / (float) totalMemory,
+                    (float) lowMemory  / (float) totalMemory);
         }
     }
 
@@ -163,7 +164,7 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public long getItemId(int i) {
-        AppsListItem item = mFilteredItems.get(i);
+        final AppsListItem item = mFilteredItems.get(i);
 
         return item != null ? item.hashCode() : 0;
     }

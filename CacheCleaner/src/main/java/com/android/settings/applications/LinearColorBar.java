@@ -16,19 +16,19 @@ import android.view.MotionEvent;
 import android.widget.LinearLayout;
 
 public class LinearColorBar extends LinearLayout {
-    static final int LEFT_COLOR = 0xff009688;
+    static final int LEFT_COLOR   = 0xff009688;
     static final int MIDDLE_COLOR = 0xff009688;
-    static final int RIGHT_COLOR = 0xffced7db;
-    static final int GRAY_COLOR = 0xff555555;
-    static final int WHITE_COLOR = 0xffffffff;
+    static final int RIGHT_COLOR  = 0xffced7db;
+    static final int GRAY_COLOR   = 0xff555555;
+    static final int WHITE_COLOR  = 0xffffffff;
 
     private float mRedRatio;
     private float mYellowRatio;
     private float mGreenRatio;
 
-    private int mLeftColor = LEFT_COLOR;
+    private int mLeftColor   = LEFT_COLOR;
     private int mMiddleColor = MIDDLE_COLOR;
-    private int mRightColor = RIGHT_COLOR;
+    private int mRightColor  = RIGHT_COLOR;
 
     private boolean mShowIndicator = true;
     private boolean mShowingGreen;
@@ -50,9 +50,9 @@ public class LinearColorBar extends LinearLayout {
     final Paint mColorGradientPaint = new Paint();
     final Paint mEdgeGradientPaint = new Paint();
 
-    public static final int REGION_RED = 1<<0;
+    public static final int REGION_RED    = 1<<0;
     public static final int REGION_YELLOW = 1<<1;
-    public static final int REGION_GREEN = 1<<2;
+    public static final int REGION_GREEN  = 1<<2;
     public static final int REGION_ALL = REGION_RED | REGION_YELLOW | REGION_GREEN;
 
     public interface OnRegionTappedListener {
@@ -197,14 +197,15 @@ public class LinearColorBar extends LinearLayout {
 
         int indicatorLeft, indicatorRight;
         if (mShowingGreen) {
-            indicatorLeft = right2;
+            indicatorLeft  = right2;
             indicatorRight = right3;
         } else {
-            indicatorLeft = right;
+            indicatorLeft  = right;
             indicatorRight = right2;
         }
 
-        if (mLastInterestingLeft != indicatorLeft || mLastInterestingRight != indicatorRight) {
+        if (mLastInterestingLeft != indicatorLeft ||
+	    mLastInterestingRight != indicatorRight) {
             mColorPath.reset();
             mEdgePath.reset();
             if (mShowIndicator && indicatorLeft < indicatorRight) {
