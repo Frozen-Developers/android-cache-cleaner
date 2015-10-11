@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+    <!--
+        Copyright (C) 2014-2015  Nicola Spanti (RyDroid) <translations@nicola-spanti.info>
+        Copyright (C) 2015  Kuci <kuci24@gmail.com>
+
+        Permission is hereby granted, free of charge, to any person obtaining a copy of
+        this software and associated documentation files (the "Software"), to deal in
+        the Software without restriction, including without limitation the rights to
+        use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+        the Software, and to permit persons to whom the Software is furnished to do so,
+        subject to the following conditions:
+
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+        FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+        COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+        IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+        CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    -->
+
     <!-- Globals -->
     <string name="app_name">Cache Cleaner</string>
 
@@ -20,7 +42,7 @@
     <string name="apps_list_header_footer">Utilisation du cache par l\'app</string>
     <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
 
-    <!-- Empty list view -->
+    <!-- Vue pour une liste vide -->
     <string name="empty_cache">Le cache est vide.</string>
     <string name="no_such_app">Pas de telle application.</string>
 
@@ -34,6 +56,7 @@
 
     <!-- Toasts -->
     <string name="cleaned">Cache vidé</string>
+    <string name="toast_could_not_clean">Impossible de vider le cache</string>
 
     <!-- Paramètres -->
     <string name="settings">Paramètres</string>
@@ -44,7 +67,7 @@
     <string name="clean_on_app_startup">Vider au démmarage de l\'app</string>
     <string name="clean_on_app_startup_summary">Vider automatiquement le cache au démmarage de l\'app</string>
 
-    <!-- Exit after clean up -->
+    <!-- Quitter après le vidage -->
     <string name="exit_after_clean">Quitter après le vidage</string>
     <string name="exit_after_clean_summary">Quitter après que le boutton nettoyer soit cliqué et que le vidage soit fini</string>
 
@@ -60,5 +83,9 @@
     <string name="open_source_licences">Licences open source</string>
     <string name="special_thanks">Remerciements spéciales</string>
     <string name="samuels_graphics_desc">Icône et design de la bannière pour le Play Store</string>
+
+    <!-- Messages -->
+    <string name="message_title_not_compatible">Pas compatible</string>
+    <string name="message_not_compatible">À cause de limitations d'Android 6.0 et plus, Cache Cleaner ne marchera pas correctement sur votre appareil, donc nous vous recommandons de désinstaller cette application.</string>
 
 </resources>
