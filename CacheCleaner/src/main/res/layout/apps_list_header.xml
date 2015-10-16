@@ -57,13 +57,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="?android:attr/textColorSecondary" />
 
-            <ImageView
-                android:layout_width="0dip"
-                android:layout_height="1px"
-                android:layout_weight="1"
-                android:background="@drawable/dotted_line"
-                android:baselineAlignBottom="true"
-                android:contentDescription="@null" />
+            <include layout="@layout/dotted_line" />
 
             <TextView
                 android:id="@+id/systemSize"
@@ -110,13 +104,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="?android:attr/textColorSecondary" />
 
-            <ImageView
-                android:layout_width="0dip"
-                android:layout_height="1px"
-                android:layout_weight="1"
-                android:background="@drawable/dotted_line"
-                android:baselineAlignBottom="true"
-                android:contentDescription="@null" />
+            <include layout="@layout/dotted_line" />
 
             <TextView
                 android:id="@+id/cacheSize"
@@ -163,13 +151,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="?android:attr/textColorSecondary" />
 
-            <ImageView
-                android:layout_width="0dip"
-                android:layout_height="1px"
-                android:layout_weight="1"
-                android:background="@drawable/dotted_line"
-                android:baselineAlignBottom="true"
-                android:contentDescription="@null" />
+            <include layout="@layout/dotted_line" />
 
             <TextView
                 android:id="@+id/freeSize"
