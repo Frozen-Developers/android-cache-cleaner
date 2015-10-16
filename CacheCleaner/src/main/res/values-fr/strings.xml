@@ -86,6 +86,6 @@
 
     <!-- Messages -->
     <string name="message_title_not_compatible">Pas compatible</string>
-    <string name="message_not_compatible">À cause de limitations d'Android 6.0 et plus, Cache Cleaner ne marchera pas correctement sur votre appareil, donc nous vous recommandons de désinstaller cette application.</string>
+    <string name="message_not_compatible">À cause de limitations d\'Android 6.0 et plus, Cache Cleaner ne marchera pas correctement sur votre appareil, donc nous vous recommandons de désinstaller cette application.</string>
 
 </resources>
