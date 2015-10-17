@@ -331,6 +331,15 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             long totalMemory = (long) stat.getBlockCount() * (long) stat.getBlockSize();
             long medMemory = mCleanerService != null ? mCleanerService.getCacheSize() : 0;
             long lowMemory = (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
+                    !Environment.isExternalStorageEmulated()) {
+                stat = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
+
+                totalMemory += (long) stat.getBlockCount() * (long) stat.getBlockSize();
+                lowMemory += (long) stat.getAvailableBlocks() * (long) stat.getBlockSize();
+            }
+
             long highMemory = totalMemory - medMemory - lowMemory;
 
             mAppsListAdapter.updateStorageUsage(totalMemory, lowMemory, medMemory, highMemory);
