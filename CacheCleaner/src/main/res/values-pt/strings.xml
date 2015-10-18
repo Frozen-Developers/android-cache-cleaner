@@ -9,7 +9,7 @@
     <string name="action_rescan">Analisar</string>
     <string name="action_search">Procurar</string>
     <string name="action_sort_by_name">Ordenar por nome</string>
-    <string name="action_sort_by_size">ordenar por tamanho</string>
+    <string name="action_sort_by_size">Ordenar por tamanho</string>
     <string name="action_settings">Definições</string>
 
     <!-- Apps list header -->
@@ -33,11 +33,11 @@
     <string name="cleaning_in_progress">Limpeza em curso…</string>
 
     <!-- Toasts -->
-    <string name="cleaned">Cache limpa</string>
+    <string name="cleaned">Cache apagada</string>
 
     <!-- Settings -->
     <string name="settings">Definições</string>
-    <string name="main_preferences">Preferências principais</string>
+    <string name="main_preferences">Definições principais</string>
     <string name="about">Sobre</string>
 
     <!-- Clean on app startup preference -->
@@ -60,5 +60,9 @@
     <string name="open_source_licences">Licenças Open Source</string>
     <string name="special_thanks">Agradecimentos</string>
     <string name="samuels_graphics_desc">Criação do ícone e imagem na Play Store</string>
+
+    <!-- Messages -->
+    <string name="message_title_not_compatible">Não compatível</string>
+    <string name="message_not_compatible">Devido às limitações impostas em sistemas Android iguais ou superiores à versão 6.0, esta aplicação não funcionará corretamente e recomenda-se a sua desinstalação.</string>
 
 </resources>
