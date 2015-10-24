@@ -36,6 +36,7 @@
     <!-- Toasts -->
     <string name="cleaned">Cache cleaned</string>
     <string name="toast_could_not_clean">Could not clean the cache</string>
+    <string name="toast_could_not_clean_reason">Could not clean the cache: %1$s</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>
@@ -69,5 +70,9 @@
 
     <!-- 'Sort by' preference -->
     <string name="sort_by_key" translatable="false">sort_by</string>
+
+    <!-- Rationales -->
+    <string name="rationale_title">Insufficient permissions</string>
+    <string name="rationale_storage">Storage permission is needed to clean external cache.</string>
 
 </resources>

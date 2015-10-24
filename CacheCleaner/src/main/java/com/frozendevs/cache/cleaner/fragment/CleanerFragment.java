@@ -1,5 +1,6 @@
 package com.frozendevs.cache.cleaner.fragment;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,15 +8,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
@@ -40,6 +44,12 @@ import com.frozendevs.cache.cleaner.widget.RecyclerView;
 import java.util.List;
 
 public class CleanerFragment extends Fragment implements CleanerService.OnActionListener {
+
+    private static final int REQUEST_STORAGE = 0;
+
+    private static final String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     private CleanerService mCleanerService;
     private AppsListAdapter mAppsListAdapter;
@@ -72,7 +82,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
                         !mAlreadyCleaned) {
                     mAlreadyCleaned = true;
 
-                    mCleanerService.cleanCache();
+                    cleanCache();
                 } else if (!mAlreadyScanned) {
                     mCleanerService.scanCache();
                 }
@@ -224,7 +234,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
                         !mCleanerService.isCleaning() && mCleanerService.getCacheSize() > 0) {
                     mAlreadyCleaned = false;
 
-                    mCleanerService.cleanCache();
+                    cleanCache();
                 }
                 return true;
 
@@ -361,6 +371,45 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             mProgressBar.startAnimation(AnimationUtils.loadAnimation(
                     getActivity(), android.R.anim.fade_out));
             mProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void showStorageRationale() {
+        AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
+        dialog.setTitle(R.string.rationale_title);
+        dialog.setMessage(getString(R.string.rationale_storage));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        dialog.show();
+    }
+
+    private void cleanCache() {
+        if (!CleanerService.canCleanExternalCache(getActivity())) {
+            if (shouldShowRequestPermissionRationale(PERMISSIONS_STORAGE[0])) {
+                showStorageRationale();
+            } else {
+                requestPermissions(PERMISSIONS_STORAGE, REQUEST_STORAGE);
+            }
+        } else {
+            mCleanerService.cleanCache();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_STORAGE) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mCleanerService.cleanCache();
+            } else {
+                showStorageRationale();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.frozendevs.cache.cleaner.model;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.StatFs;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -176,16 +178,20 @@ public class CleanerService extends Service {
             StatFs stat = new StatFs(Environment.getDataDirectory().getAbsolutePath());
 
             try {
-                mFreeStorageAndNotifyMethod.invoke(getPackageManager(),
-                        (long) stat.getBlockCount() * (long) stat.getBlockSize(),
-                        new IPackageDataObserver.Stub() {
-                            @Override
-                            public void onRemoveCompleted(String packageName, boolean succeeded)
-                                    throws RemoteException {
-                                countDownLatch.countDown();
+                if (canCleanInternalCache(CleanerService.this)) {
+                    mFreeStorageAndNotifyMethod.invoke(getPackageManager(),
+                            (long) stat.getBlockCount() * (long) stat.getBlockSize(),
+                            new IPackageDataObserver.Stub() {
+                                @Override
+                                public void onRemoveCompleted(String packageName, boolean succeeded)
+                                        throws RemoteException {
+                                    countDownLatch.countDown();
+                                }
                             }
-                        }
-                );
+                    );
+                } else {
+                    countDownLatch.countDown();
+                }
 
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     if (isExternalStorageWritable()) {
@@ -202,7 +208,7 @@ public class CleanerService extends Service {
                                     file.getName())), true)) {
                                 Log.e(TAG, "External storage suddenly becomes unavailable");
 
-                                break;
+                                return false;
                             }
                         }
                     } else {
@@ -293,6 +299,15 @@ public class CleanerService extends Service {
         }
 
         if (action.equals(ACTION_CLEAN_AND_EXIT)) {
+            if (!canCleanExternalCache(this)) {
+                Log.e(TAG, "Could not clean the cache: Insufficient permissions");
+
+                Toast.makeText(this, getString(R.string.toast_could_not_clean_reason,
+                        getString(R.string.rationale_title)), Toast.LENGTH_LONG).show();
+
+                return START_NOT_STICKY;
+            }
+
             setOnActionListener(new OnActionListener() {
                 @Override
                 public void onScanStarted(Context context) {
@@ -363,5 +378,18 @@ public class CleanerService extends Service {
 
     public long getCacheSize() {
         return mCacheSize;
+    }
+
+    private static boolean hasPermission(Context context, String permission) {
+        return ContextCompat.checkSelfPermission(context, permission) ==
+                PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean canCleanInternalCache(Context context) {
+        return hasPermission(context, Manifest.permission.CLEAR_APP_CACHE);
+    }
+
+    public static boolean canCleanExternalCache(Context context) {
+        return hasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 }
