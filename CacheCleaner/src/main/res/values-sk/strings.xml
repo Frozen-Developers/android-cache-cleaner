@@ -62,8 +62,4 @@
     <string name="special_thanks">Špeciálne poďakovanie</string>
     <string name="samuels_graphics_desc">Dizajn ikony a transparentu pre Play obchod</string>
 
-    <!-- Messages -->
-    <string name="message_title_not_compatible">Aplikácia je nekompatibilná</string>
-    <string name="message_not_compatible">Kvôli limitáciám v systéme Android 6.0 a novších, Čistič medzipamäte nebude správne pracovať s vašim zariadením a odporúčame Vám túto aplikáciu odinštalovať.</string>
-
 </resources>

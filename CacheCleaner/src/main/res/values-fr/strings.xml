@@ -84,8 +84,4 @@
     <string name="special_thanks">Remerciements spéciales</string>
     <string name="samuels_graphics_desc">Icône et design de la bannière pour le Play Store</string>
 
-    <!-- Messages -->
-    <string name="message_title_not_compatible">Pas compatible</string>
-    <string name="message_not_compatible">À cause de limitations d\'Android 6.0 et plus, Cache Cleaner ne marchera pas correctement sur votre appareil, donc nous vous recommandons de désinstaller cette application.</string>
-
 </resources>

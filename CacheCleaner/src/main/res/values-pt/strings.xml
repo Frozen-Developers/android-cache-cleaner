@@ -62,8 +62,4 @@
     <string name="special_thanks">Agradecimentos</string>
     <string name="samuels_graphics_desc">Criação do ícone e imagem na Play Store</string>
 
-    <!-- Messages -->
-    <string name="message_title_not_compatible">Não compatível</string>
-    <string name="message_not_compatible">Devido às limitações impostas em sistemas Android iguais ou superiores à versão 6.0, esta aplicação não funcionará corretamente e recomenda-se a sua desinstalação.</string>
-
 </resources>

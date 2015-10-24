@@ -62,8 +62,4 @@
     <string name="special_thanks">Посебна захвала</string>
     <string name="samuels_graphics_desc">Дизајн иконе и банера Плеј продавнице</string>
 
-    <!-- Messages -->
-    <string name="message_title_not_compatible">Некомпатибилан</string>
-    <string name="message_not_compatible">Због ограничења у Андроиду 6 и новијим, Чистач кеша неће радити исправно на вашем уређају и препоручујемо вам да га деинсталирате.</string>
-
 </resources>

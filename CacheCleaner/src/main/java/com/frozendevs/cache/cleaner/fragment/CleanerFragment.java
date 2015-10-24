@@ -16,7 +16,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
@@ -116,19 +115,6 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
         getActivity().getApplication().bindService(new Intent(getActivity(), CleanerService.class),
                 mServiceConnection, Context.BIND_AUTO_CREATE);
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
-            dialog.setTitle(R.string.message_title_not_compatible);
-            dialog.setMessage(getString(R.string.message_not_compatible));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-            dialog.show();
-        }
     }
 
     @Override
