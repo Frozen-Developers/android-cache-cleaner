@@ -19,7 +19,6 @@ android {
     defaultConfig {
         applicationId "com.frozendevs.cache.cleaner"
         minSdkVersion 9
-        maxSdkVersion 22
         targetSdkVersion 23
         versionCode 22
         versionName "2.1.6"
