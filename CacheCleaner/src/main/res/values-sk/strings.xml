@@ -35,6 +35,7 @@
     <!-- Toasts -->
     <string name="cleaned">Medzipamäť vyčistená</string>
     <string name="toast_could_not_clean">Nemožno vyčistiť medzipamäť</string>
+    <string name="toast_could_not_clean_reason">Nemožno vyčistiť medzipamäť: %1$s</string>
 
     <!-- Settings -->
     <string name="settings">Nastavenia</string>
@@ -61,5 +62,9 @@
     <string name="open_source_licences">Open source licencie</string>
     <string name="special_thanks">Špeciálne poďakovanie</string>
     <string name="samuels_graphics_desc">Dizajn ikony a transparentu pre Play obchod</string>
+
+    <!-- Rationales -->
+    <string name="rationale_title">Nedostatočné povolenia</string>
+    <string name="rationale_storage">Povolenie úložiska je potrebné na čistenie externej medzipamäte.</string>
 
 </resources>
