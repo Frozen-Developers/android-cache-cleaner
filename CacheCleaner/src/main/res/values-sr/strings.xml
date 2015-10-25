@@ -14,7 +14,7 @@
 
     <!-- Apps list header -->
     <string name="apps_list_header_title">Меморија уређаја</string>
-    <string name="apps_list_header_system_prefix">Апликације</string>
+    <string name="apps_list_header_used_prefix">У употреби</string>
     <string name="apps_list_header_cache_prefix">Кеш</string>
     <string name="apps_list_header_free_prefix">Слободно</string>
     <string name="apps_list_header_footer">Кеш који користе апликације</string>

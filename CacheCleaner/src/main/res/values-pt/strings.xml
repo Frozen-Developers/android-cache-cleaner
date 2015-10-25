@@ -14,7 +14,7 @@
 
     <!-- Apps list header -->
     <string name="apps_list_header_title">Memória do dispositivo</string>
-    <string name="apps_list_header_system_prefix">Sistema</string>
+    <string name="apps_list_header_used_prefix">Em uso</string>
     <string name="apps_list_header_cache_prefix">Cache</string>
     <string name="apps_list_header_free_prefix">Livre</string>
     <string name="apps_list_header_footer">Utilização de cache</string>
