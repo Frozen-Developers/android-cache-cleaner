@@ -57,6 +57,7 @@
     <!-- Toasts -->
     <string name="cleaned">Cache vidé</string>
     <string name="toast_could_not_clean">Impossible de vider le cache</string>
+    <string name="toast_could_not_clean_reason">Impossible de vider le cache : %1$s</string>
 
     <!-- Paramètres -->
     <string name="settings">Paramètres</string>
@@ -83,5 +84,9 @@
     <string name="open_source_licences">Licences open source</string>
     <string name="special_thanks">Remerciements spéciales</string>
     <string name="samuels_graphics_desc">Icône et design de la bannière pour le Play Store</string>
+
+    <!-- Rationales -->
+    <string name="rationale_title">Permissions insuffisantes</string>
+    <string name="rationale_storage">La permission de stockage est nécessaire pour vider le cache externe.</string>
 
 </resources>
