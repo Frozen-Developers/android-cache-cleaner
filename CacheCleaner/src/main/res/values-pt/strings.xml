@@ -35,6 +35,7 @@
     <!-- Toasts -->
     <string name="cleaned">Cache apagada</string>
     <string name="toast_could_not_clean">Não foi possível limpar a cache</string>
+    <string name="toast_could_not_clean_reason">Não foi possível limpar a cache: %1$s</string>
 
     <!-- Settings -->
     <string name="settings">Definições</string>
@@ -61,5 +62,9 @@
     <string name="open_source_licences">Licenças Open Source</string>
     <string name="special_thanks">Agradecimentos</string>
     <string name="samuels_graphics_desc">Criação do ícone e imagem na Play Store</string>
+
+    <!-- Rationales -->
+    <string name="rationale_title">Permissões insuficientes</string>
+    <string name="rationale_storage">Requer permissão de armazenamento para limpar a cache externa.</string>
 
 </resources>
