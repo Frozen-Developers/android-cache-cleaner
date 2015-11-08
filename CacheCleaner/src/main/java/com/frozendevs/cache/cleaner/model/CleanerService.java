@@ -244,16 +244,18 @@ public class CleanerService extends Service {
                 return false;
             }
 
-            if (!file.exists() || (directoryOnly && !file.isDirectory())) {
+            if (file == null || !file.exists() || (directoryOnly && !file.isDirectory())) {
                 return true;
             }
 
             if (file.isDirectory()) {
                 final File[] children = file.listFiles();
 
-                for (File child : children) {
-                    if (!deleteDirectory(child, false)) {
-                        return false;
+                if (children != null) {
+                    for (File child : children) {
+                        if (!deleteDirectory(child, false)) {
+                            return false;
+                        }
                     }
                 }
             }
