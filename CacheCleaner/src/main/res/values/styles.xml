@@ -17,8 +17,19 @@
         <item name="actionBarStyle">@style/Theme.ActionBar</item>
     </style>
 
-    <style name="Theme.SettingsActivity" parent="@style/Theme.Application">
+    <style name="Theme.SettingsActivityBase" parent="@style/Theme.Application" />
+
+    <style name="Theme.SettingsActivity" parent="@style/Theme.SettingsActivityBase">
+        <item name="android:listSeparatorTextViewStyle">@style/Theme.ListSeparatorTextView</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <style name="Theme.ListSeparatorTextView" parent="">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
     </style>
 
 </resources>

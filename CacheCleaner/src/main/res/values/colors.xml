@@ -11,4 +11,6 @@
 
     <color name="dotted_line">#8a000000</color>
 
+    <color name="preference_fallback_accent_color">@color/accent</color>
+
 </resources>

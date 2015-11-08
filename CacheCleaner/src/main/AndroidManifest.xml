@@ -3,6 +3,9 @@
     package="com.frozendevs.cache.cleaner"
     android:installLocation="internalOnly">
 
+    <uses-sdk xmlns:tools="http://schemas.android.com/tools"
+        tools:overrideLibrary="android.support.v14.preference" />
+
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
