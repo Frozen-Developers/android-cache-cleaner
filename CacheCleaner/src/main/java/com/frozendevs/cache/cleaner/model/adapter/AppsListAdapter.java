@@ -225,7 +225,13 @@ public class AppsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (filter != null && !filter.equals("")) {
             List<AppsListItem> filteredItems = new ArrayList<>();
 
-            Locale current = context.getResources().getConfiguration().locale;
+            Locale current;
+
+            try {
+                current = context.getResources().getConfiguration().locale;
+            } catch (NullPointerException e) {
+                current = Locale.getDefault();
+            }
 
             for (AppsListItem item : mItems) {
                 if (item.getApplicationName().toLowerCase(current).contains(
