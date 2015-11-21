@@ -1,15 +1,24 @@
+import org.ajoberstar.grgit.Grgit
+
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.3.0'
+        classpath 'org.ajoberstar:gradle-git:1.3.2'
     }
 }
 apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
+}
+
+ext {
+    git = Grgit.open()
+    gitVersionCode = git.tag.list().size() + 1
+    gitVersionName = "${git.describe()}"
 }
 
 android {
@@ -20,8 +29,8 @@ android {
         applicationId "com.frozendevs.cache.cleaner"
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 23
-        versionName "2.2.0"
+        versionCode = gitVersionCode
+        versionName = gitVersionName
     }
 
     compileOptions {
