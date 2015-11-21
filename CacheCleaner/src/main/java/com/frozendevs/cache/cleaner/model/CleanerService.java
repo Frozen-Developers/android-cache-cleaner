@@ -201,15 +201,19 @@ public class CleanerService extends Service {
                         final String externalCachePath = externalDataDirectory.getAbsolutePath() +
                                 "/%s/cache";
 
-                        final File[] files = externalDataDirectory.listFiles();
+                        if (externalDataDirectory.isDirectory()) {
+                            final File[] files = externalDataDirectory.listFiles();
 
-                        for (File file : files) {
-                            if (!deleteDirectory(new File(String.format(externalCachePath,
-                                    file.getName())), true)) {
-                                Log.e(TAG, "External storage suddenly becomes unavailable");
+                            for (File file : files) {
+                                if (!deleteDirectory(new File(String.format(externalCachePath,
+                                        file.getName())), true)) {
+                                    Log.e(TAG, "External storage suddenly becomes unavailable");
 
-                                return false;
+                                    return false;
+                                }
                             }
+                        } else {
+                            Log.e(TAG, "External data directory is not a directory!");
                         }
                     } else {
                         Log.d(TAG, "External storage is unavailable");
