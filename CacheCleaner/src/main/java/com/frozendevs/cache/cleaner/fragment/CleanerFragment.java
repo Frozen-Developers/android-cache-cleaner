@@ -168,12 +168,12 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (ViewCompat.isLaidOut(searchView)) {
+                if (ViewCompat.isLaidOut(searchView) && mSearchQuery != null) {
                     String oldText = mSearchQuery;
 
                     mSearchQuery = newText;
 
-                    if (oldText != null && !oldText.equals(newText)) {
+                    if (!oldText.equals(newText)) {
                         mAppsListAdapter.sortAndFilter(getActivity(), getSortBy(), newText);
                     }
                 }
