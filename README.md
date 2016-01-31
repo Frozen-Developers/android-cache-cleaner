@@ -1,4 +1,4 @@
-Android Cache Cleaner [![Build Status](https://travis-ci.org/Frozen-Developers/android-cache-cleaner.svg)](https://travis-ci.org/Frozen-Developers/android-cache-cleaner)
+Cache Cleaner [![Build Status](https://travis-ci.org/Frozen-Developers/android-cache-cleaner.svg)](https://travis-ci.org/Frozen-Developers/android-cache-cleaner)
 ======================
 
 Cache Cleaner for Android:
