@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -234,7 +235,15 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
                         !mCleanerService.isCleaning() && mCleanerService.getCacheSize() > 0) {
                     mAlreadyCleaned = false;
 
-                    cleanCache();
+                    if( Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP ){
+
+                        startActivityForResult(new Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS), 0);
+
+                        Toast.makeText( getContext(), getResources().getText(R.string.clean_help_6_0), Toast.LENGTH_LONG ).show();
+
+                    }else {
+                        cleanCache();
+                    }
                 }
                 return true;
 
