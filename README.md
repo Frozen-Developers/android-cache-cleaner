@@ -12,7 +12,7 @@ That says it all.
 
 Partial incompatibility with Android 6.0 and newer
 ------------------------------------------
-Starting with Android 6.0, ```CLEAR_APP_CACHE``` permission seems to be no longer available to regular applications and since this permission is required for cleaning of internal cache, Cache Cleaner is not able to clean internal cache on Android 6.0 and newer. However, cleaning of external cache is still supported.
+Starting with Android 6.0, ```CLEAR_APP_CACHE``` permission seems to be no longer available to regular applications and since this permission is required for cleaning of internal cache, Cache Cleaner is not able to clean internal cache on Android 6.0 and newer. However, cleaning of external cache is still supported. So this app will take you to the Settings -> Internal Storage -> Cached data to clean internal cache.
 
 Download
 --------
