@@ -75,4 +75,6 @@
     <string name="rationale_title">Insufficient permissions</string>
     <string name="rationale_storage">Storage permission is needed to clean external cache.</string>
 
+    <string name="clean_help_6.0">Tap "Cached data" and click "OK" to clear all cache</string>
+
 </resources>
