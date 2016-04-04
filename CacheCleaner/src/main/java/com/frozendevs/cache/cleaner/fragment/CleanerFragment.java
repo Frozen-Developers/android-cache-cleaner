@@ -484,6 +484,13 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
         Toast.makeText(context, succeeded ? R.string.cleaned : R.string.toast_could_not_clean,
                 Toast.LENGTH_LONG).show();
 
+        if( Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP ){
+
+            startActivityForResult(new Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS), 0);
+            Toast.makeText( getContext(), getResources().getText(R.string.clean_help_6_0), Toast.LENGTH_LONG ).show();
+
+        }
+
         if (succeeded && getActivity() != null && !mAlreadyCleaned &&
                 mSharedPreferences.getBoolean(mExitAfterCleanKey, false)) {
             getActivity().finish();
