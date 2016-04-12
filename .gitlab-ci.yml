@@ -1,12 +1,10 @@
+stages:
+    - build
+
 build:
+    stage: build
     script:
         - gradle build
-        # Prevent build artifacts from being removed before deployment
-        - cp -r CacheCleaner/build/outputs/ ../artifacts/
-    type: build
-
-deploy:
-    script:
-        - publish-artifacts $DEPLOY_DESTINATION android-cache-cleaner ../artifacts/
-        - rm -rf ../artifacts/
-    type: deploy
+    artifacts:
+        paths:
+            - CacheCleaner/build/outputs/
