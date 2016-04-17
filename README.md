@@ -10,9 +10,17 @@ Cache Cleaner for Android:
 
 That says it all.
 
+Deprecation
+-----------
+You do not need this app anymore if you are on Android 6.0 or newer. Just go to `Settings` ->
+`Storage & USB`-> `Internal storage` and click on `Cached data` in order to clear all the cache.
+
 Partial incompatibility with Android 6.0 and newer
 ------------------------------------------
-Starting with Android 6.0, ```CLEAR_APP_CACHE``` permission seems to be no longer available to regular applications and since this permission is required for cleaning of internal cache, Cache Cleaner is not able to clean internal cache on Android 6.0 and newer. However, cleaning of external cache is still supported.
+Starting with Android 6.0, ```CLEAR_APP_CACHE``` permission seems to be no longer available to
+regular applications and since this permission is required for cleaning of internal cache, Cache
+Cleaner is not able to clean internal cache on Android 6.0 and newer. However, cleaning of external
+cache is still supported.
 
 Download
 --------
