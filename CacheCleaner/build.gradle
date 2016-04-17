@@ -47,6 +47,7 @@ android {
     }
 
     lintOptions {
+        ignore 'GoogleAppIndexingWarning', 'UnusedAttribute'
         textOutput 'stdout'
         textReport true
         warning 'MissingTranslation'
