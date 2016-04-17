@@ -11,6 +11,7 @@ before_script:
 android:
   components:
     - tools
+    - platform-tools
     - build-tools-23.0.3
     - android-23
     - extra-android-m2repository
