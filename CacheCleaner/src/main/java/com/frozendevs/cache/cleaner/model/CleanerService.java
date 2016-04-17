@@ -135,9 +135,13 @@ public class CleanerService extends Service {
         }
 
         private long addPackage(List<AppsListItem> apps, PackageStats pStats, boolean succeeded) {
-            long cacheSize = pStats.cacheSize;
+            long cacheSize = 0;
 
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                cacheSize += pStats.cacheSize;
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 cacheSize += pStats.externalCacheSize;
             }
 
@@ -193,7 +197,7 @@ public class CleanerService extends Service {
                     countDownLatch.countDown();
                 }
 
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     if (isExternalStorageWritable()) {
                         final File externalDataDirectory = new File(Environment
                                 .getExternalStorageDirectory().getAbsolutePath() + "/Android/data");
