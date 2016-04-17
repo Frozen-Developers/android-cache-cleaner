@@ -46,6 +46,8 @@ android {
     }
 
     lintOptions {
+        textOutput 'stdout'
+        textReport true
         warning 'MissingTranslation'
     }
 }
