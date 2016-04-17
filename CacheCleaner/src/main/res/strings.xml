@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Globals -->
+    <string name="app_name">Cache Cleaner</string>
+
+    <!-- Menu items -->
+    <string name="action_clean">Limpiar</string>
+    <string name="action_rescan">Reescanear</string>
+    <string name="action_search">Buscar</string>
+    <string name="action_sort_by_name">Ordenar por nombre</string>
+    <string name="action_sort_by_size">Ordenar por tamaño</string>
+    <string name="action_settings">Ajustes</string>
+
+    <!-- Apps list header -->
+    <string name="apps_list_header_title">Memoria del dispositivo</string>
+    <string name="apps_list_header_used_prefix">En uso</string>
+    <string name="apps_list_header_cache_prefix">Caché</string>
+    <string name="apps_list_header_free_prefix">Libre</string>
+    <string name="apps_list_header_footer">Uso de caché de la aplicación</string>
+    <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
+
+    <!-- Empty list view -->
+    <string name="empty_cache">Caché vacío.</string>
+    <string name="no_such_app">No hay tal aplicación.</string>
+
+    <!-- Progress bar -->
+    <string name="scanning">Escaneando…</string>
+    <string name="scanning_m_of_n">Escaneando %1$d/%2$d</string>
+
+    <!-- Progress dialog -->
+    <string name="cleaning_cache">Limpieza de caché</string>
+    <string name="cleaning_in_progress">Limpieza en progreso…</string>
+
+    <!-- Toasts -->
+    <string name="cleaned">Caché limpiado</string>
+    <string name="toast_could_not_clean">No se pudo limpiar caché</string>
+    <string name="toast_could_not_clean_reason">No se pudo limpiar caché: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings">Ajustes</string>
+    <string name="main_preferences">Preferencias principales</string>
+    <string name="about">Acerca de</string>
+
+    <!-- Clean on app startup preference -->
+    <string name="clean_on_app_startup">Limpiar al iniciar la aplicación</string>
+    <string name="clean_on_app_startup_summary">Limpiar caché automáticamente al iniciar la aplicación</string>
+
+    <!-- Exit after clean up -->
+    <string name="exit_after_clean">Salir después de limpiar</string>
+    <string name="exit_after_clean_summary">Salir cuando la limpieza esté completada</string>
+
+    <!-- Clean on system startup preference -->
+    <string name="clean_on_system_startup">Limpiar al iniciar el sistema</string>
+    <string name="clean_on_system_startup_summary">Limpiar caché automaticamente al iniciar el sistena</string>
+
+    <!-- About -->
+    <string name="about_app">Acerca de Cache Cleaner</string>
+    <string name="author">Autor</string>
+    <string name="version_number">Número de versión</string>
+    <string name="version_number_unknown">Desconocido</string>
+    <string name="open_source_licences">Licencias de código abierto</string>
+    <string name="special_thanks">Agradecimiento especial</string>
+    <string name="samuels_graphics_desc">Diseño de icono y banner en Play Store</string>
+
+    <!-- Rationales -->
+    <string name="rationale_title">Permisos insuficientes</string>
+    <string name="rationale_storage">El permiso de almacenamiento es necesario para limpiar caché externo.</string>
+
+</resources>
