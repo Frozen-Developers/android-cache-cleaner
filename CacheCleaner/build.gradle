@@ -57,10 +57,10 @@ android {
 }
 
 dependencies {
-    compile('com.android.support:support-v4:23.3.0')
-    compile('com.android.support:appcompat-v7:23.3.0@aar')
-    compile('com.android.support:recyclerview-v7:23.3.0@aar')
-    compile('com.android.support:support-vector-drawable:23.3.0@aar')
+    compile('com.android.support:support-v4:23.4.0')
+    compile('com.android.support:appcompat-v7:23.4.0@aar')
+    compile('com.android.support:recyclerview-v7:23.4.0@aar')
+    compile('com.android.support:support-vector-drawable:23.4.0@aar')
 }
 
 if (project.hasProperty("CacheCleaner.signing") &&
