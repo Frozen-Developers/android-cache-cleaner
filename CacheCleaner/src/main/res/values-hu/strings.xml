@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Globals -->
+    <string name="app_name">Gyorsítótár tisztító</string>
+
+    <!-- Menu items -->
+    <string name="action_clean">Tisztítás</string>
+    <string name="action_rescan">Átvizsgálás újra</string>
+    <string name="action_search">Keresés</string>
+    <string name="action_sort_by_name">Rendezés név szerint</string>
+    <string name="action_sort_by_size">Rendezés méret szerint</string>
+    <string name="action_settings">Beállítások</string>
+
+    <!-- Apps list header -->
+    <string name="apps_list_header_title">Eszközmemória</string>
+    <string name="apps_list_header_used_prefix">Használt</string>
+    <string name="apps_list_header_cache_prefix">Gyorsítótár</string>
+    <string name="apps_list_header_free_prefix">Szabad</string>
+    <string name="apps_list_header_footer">App gyorsítótár használat</string>
+    <string name="apps_list_header_memory"><xliff:g id="memory">%1$s</xliff:g></string>
+
+    <!-- Empty list view -->
+    <string name="empty_cache">A gyorsítótár üres.</string>
+    <string name="no_such_app">Nincs ilyen alkalmazás.</string>
+
+    <!-- Progress bar -->
+    <string name="scanning">Átvizsgálás…</string>
+    <string name="scanning_m_of_n">Átvizsgálás %1$d/%2$d</string>
+
+    <!-- Progress dialog -->
+    <string name="cleaning_cache">Gyorsítótár tisztítása</string>
+    <string name="cleaning_in_progress">Tisztítás folyamatban…</string>
+
+    <!-- Toasts -->
+    <string name="cleaned">Gyorsítótár kitisztítva</string>
+    <string name="toast_could_not_clean">A gyorsítótár nem tisztítható</string>
+    <string name="toast_could_not_clean_reason">A gyorsítótár nem tisztítható: %1$s</string>
+
+    <!-- Settings -->
+    <string name="settings">Beállítások</string>
+    <string name="main_preferences">Fő beállítások</string>
+    <string name="about">Névjegy</string>
+
+    <!-- Clean on app startup preference -->
+    <string name="clean_on_app_startup">Tisztítás az app indításakor</string>
+    <string name="clean_on_app_startup_summary">Automatikus tisztítás az app indításakor</string>
+
+    <!-- Exit after clean up -->
+    <string name="exit_after_clean">Tisztítás után kilépés</string>
+    <string name="exit_after_clean_summary">Kilépés, a Tisztítás gombra kattintás, és a tisztítás befejeződése után</string>
+
+    <!-- Clean on system startup preference -->
+    <string name="clean_on_system_startup">Tisztítás a rendszer indításakor</string>
+    <string name="clean_on_system_startup_summary">Automatikus tisztítás a rendszer indításakor</string>
+
+    <!-- About -->
+    <string name="about_app">A gyorsítótár tisztító névjegye</string>
+    <string name="author">Szerzők</string>
+    <string name="version_number">Verziószám</string>
+    <string name="version_number_unknown">Ismeretlen</string>
+    <string name="open_source_licences">Nyílt forráskódú licencek</string>
+    <string name="special_thanks">Külön köszönet</string>
+    <string name="samuels_graphics_desc">Ikon és Play Store banner dizájn</string>
+
+    <!-- Rationales -->
+    <string name="rationale_title">Elégtelen jogosultság</string>
+    <string name="rationale_storage">Tárolás jogosultság szükséges a külső gyorsítótár tisztításához.</string>
+
+</resources>
