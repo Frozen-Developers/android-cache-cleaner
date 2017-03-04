@@ -1,0 +1,63 @@
+<resources>
+<!-- Globals -->
+<string name="app_name">Laikinosios atminties valytojas</string>
+<!-- Menuitems -->
+<string name="action_clean">Valyti</string>
+<string name="action_rescan">Tikrinti iš naujo</string>
+<string name="action_search">Ieškoti</string>
+<string name="action_sort_by_name">Rikiuoti pagal pavadinimą</string>
+<string name="action_sort_by_size">Rikiuoti pagal dydį</string>
+<string name="action_settings">Nustatymai</string>
+<!-- Apps list header-->
+<string name="apps_list_header_title">Įrenginio atmintis</string>
+<string name="apps_list_header_used_prefix">Išnaudota</string>
+<string name="apps_list_header_cache_prefix">Laikinoji atmintis</string>
+<string name="apps_list_header_free_prefix">Laisva</string>
+<string name="apps_list_header_footer">Programėlės laikinosis atminties
+naudojimas</string>
+<string name="apps_list_header_memory"><xliff:g id=\"atmintis\">%1$s</xliff:g></string>
+<!-- Emptylist view-->
+<string name="empty_cache">Laikinoji atmintis tuščia.</string>
+<string name="no_such_app">Nėra tokios programėlės</string>
+<!-- Progress bar-->
+<string name="scanning">Nuskaito...</string>
+<string name="scanning_m_of_n">Nuskaito %1$d/%2$d</string>
+<!-- Progress dialog -->
+<string name="cleaning_cache">Valoma laikinoji atmintis</string>
+<string name="cleaning_in_progress">Vyksta valymas...</string>
+<!-- Toasts -->
+<string name="cleaned">Laikinoji atmintis išvalyta</string>
+<string name="toast_could_not_clean">Negalima išvalyti laikinosios atminties</string>
+<string name="toast_could_not_clean_reason">Negalima išvalyti laikinosios atminties:
+%1$s</string>
+<!-- Settings -->
+<string name="settings">Nustatymai</string>
+<string name="main_preferences">Pagrindiniai nustatymai</string>
+<string name="about">Apie</string>
+<!-- Cleanonapp startup preference -->
+<string name="clean_on_app_startup">Valyti kai programėlė paleidžiama</string>
+<string name="clean_on_app_startup_summary">Automatiškai valyti laikinąją atmintį, kai
+paleidžiama programėlė</string>
+<!-- Exit aftercleanup -->
+<string name="exit_after_clean">Išjungtipo išvalymo</string>
+<string name="exit_after_clean_summary">Išjungti kai valymo mygtukas paspaustas ir
+valymas baigtas</string>
+<!-- Cleanonsystemstartup preference -->
+<string name="clean_on_system_startup">Valyti kai įjungiama sistema</string>
+<string name="clean_on_system_startup_summary">Automatiškai valyti laikinąją atmintį kai
+pajungiama sistema</string>
+<!-- About -->
+<string name="about_app">Apie laikinosios atminties valytoją</string>
+<string name="author">Autorius</string>
+<string name="version_number">Versijos numeris</string>
+<string name="version_number_unknown">Nežinoma</string>
+<string name="open_source_licences">Atviro kodo leidimai</string>
+<string name="special_thanks">Speciali padėka</string>
+<string name="samuels_graphics_desc">Įmonėlės ir Play parduotuvės skelbimo
+dizainas</string>
+<!-- 'Sort by' preference -->
+<!-- Rationales -->
+<string name="rationale_title">Nepakankami leidimai</string>
+<string name="rationale_storage">Reikalingas saugyklos leidimas išvalyti išorinę laikinąją
+atmintį</string>
+</resources>
