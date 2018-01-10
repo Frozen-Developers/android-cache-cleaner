@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Globals -->
+    <string name="app_name">Zwischenspeicher Reiniger</string>
+
+    <!-- Menu items -->
+    <string name="action_clean">Reinigen</string>
+    <string name="action_rescan">Erneut scannen</string>
+    <string name="action_search">Suche</string>
+    <string name="action_sort_by_name">Nach Name sortieren</string>
+    <string name="action_sort_by_size">Nach Grösse sortieren</string>
+    <string name="action_settings">Einstellungen</string>
+
+    <!-- Apps list header -->
+    <string name="apps_list_header_title">Gerätespeicher</string>
+    <string name="apps_list_header_used_prefix">Genutzt</string>
+    <string name="apps_list_header_cache_prefix">Zwischenspeicher</string>
+    <string name="apps_list_header_free_prefix">Frei</string>
+    <string name="apps_list_header_footer">App Zwischenspeicher Nutzung</string>
+    <string name="apps_list_header_memory">&lt;xliff:g id=\"memory\" &gt;%1$s&lt;/xliff:g&gt;</string>
+
+    <!-- Empty list view -->
+    <string name="empty_cache">Zwischenspeicher ist leer.</string>
+    <string name="no_such_app">Keine solche Anwendung.</string>
+
+    <!-- Progress bar -->
+    <string name="scanning">Scannen ...</string>
+    <string name="scanning_m_of_n">Scannen %1$d/%2$d</string>
+
+    <!-- Progress dialog -->
+    <string name="cleaning_cache">Reinige Zwischenspeicher</string>
+    <string name="cleaning_in_progress">Säuberung im Gange…</string>
+
+    <!-- Toasts -->
+    <string name="cleaned">Zwischenspeicher bereinigt</string>
+    <string name="toast_could_not_clean">Der Zwischenspeicher konnte nicht gereinigt werden</string>
+    <string name="toast_could_not_clean_reason">Der Zwischenspeicher konnte nicht gereinigt werden: % 1$s</string>
+
+    <!-- Settings -->
+    <string name="settings">Einstellungen</string>
+    <string name="main_preferences">Haupteinstellungen</string>
+    <string name="about">Über</string>
+
+    <!-- Clean on app startup preference -->
+    <string name="clean_on_app_startup">Beim Start der App bereinigen</string>
+    <string name="clean_on_app_startup_summary">Zwischenspeicher beim Start der Anwendung automatisch bereinigen</string>
+
+    <!-- Exit after clean up -->
+    <string name="exit_after_clean">Beenden nach dem Bereinigen</string>
+    <string name="exit_after_clean_summary">Klicken Sie auf Beenden, nachdem die Schaltfläche \"Bereinigen\" angeklickt wurde und die Bereinigung abgeschlossen ist</string>
+
+    <!-- Clean on system startup preference -->
+    <string name="clean_on_system_startup">Beim Systemstart reinigen</string>
+    <string name="clean_on_system_startup_summary">Zwischenspeicher beim Systemstart automatisch bereinigen</string>
+
+    <!-- About -->
+    <string name="about_app">Über Zwischenspeicher Reiniger</string>
+    <string name="author">Autor</string>
+    <string name="version_number">Version Nummer</string>
+    <string name="version_number_unknown">Unbekannt</string>
+    <string name="open_source_licences">Open Source Lizenzen</string>
+    <string name="special_thanks">Besonderes Dankeschön</string>
+    <string name="samuels_graphics_desc">Symbol und Play Store Banner Design</string>
+
+    <!-- 'Sort by' preference -->
+
+    <!-- Rationales -->
+    <string name="rationale_title">Nicht ausreichende Berechtigungen</string>
+    <string name="rationale_storage">Eine Speicherberechtigung ist erforderlich, um den externen Zwischenspeicher zu bereinigen.</string>
+
+</resources>
