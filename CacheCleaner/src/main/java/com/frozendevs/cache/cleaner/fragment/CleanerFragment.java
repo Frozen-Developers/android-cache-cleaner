@@ -145,7 +145,7 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
 
             } else {
 
-                showDialog(getActivity(), "Enable Usage Access Settings", "You need to allow Usage Access Settings to use Cleaner");
+                showDialog(getActivity(), "Usage Access Settings", "You need to allow Usage Access Settings to access cache of all app.");
             }
         } else {
             startCleanerService();
