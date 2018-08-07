@@ -1,6 +1,8 @@
 package com.frozendevs.cache.cleaner.fragment;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -34,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.frozendevs.cache.cleaner.R;
+import com.frozendevs.cache.cleaner.activity.CleanerActivity;
 import com.frozendevs.cache.cleaner.activity.SettingsActivity;
 import com.frozendevs.cache.cleaner.model.AppsListItem;
 import com.frozendevs.cache.cleaner.model.CleanerService;
@@ -42,6 +46,8 @@ import com.frozendevs.cache.cleaner.widget.DividerDecoration;
 import com.frozendevs.cache.cleaner.widget.RecyclerView;
 
 import java.util.List;
+
+import static com.frozendevs.cache.cleaner.activity.CleanerActivity.USAGE_ACCESS_SETTINGS;
 
 public class CleanerFragment extends Fragment implements CleanerService.OnActionListener {
 
@@ -96,10 +102,10 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
         }
     };
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
         setRetainInstance(true);
 
@@ -123,6 +129,59 @@ public class CleanerFragment extends Fragment implements CleanerService.OnAction
             }
         });
 
+        startService();
+    }
+
+
+    void startService() {
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            boolean usageStats = CleanerActivity.checkUsageStatsEnabled(getActivity());
+
+            if (usageStats) {
+
+                startCleanerService();
+
+            } else {
+
+                showDialog(getActivity(), "Usage Access Settings", "You need to allow Usage Access Settings to access cache of all app.");
+            }
+        } else {
+            startCleanerService();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void showDialog(Activity activity, String title, CharSequence message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        if (title != null) builder.setTitle(title);
+
+        builder.setMessage(message);
+        builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                Intent usageIntent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                startActivityForResult(usageIntent, USAGE_ACCESS_SETTINGS);
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == USAGE_ACCESS_SETTINGS)
+            startService();
+
+    }
+
+    private void startCleanerService() {
         getActivity().getApplication().bindService(new Intent(getActivity(), CleanerService.class),
                 mServiceConnection, Context.BIND_AUTO_CREATE);
     }

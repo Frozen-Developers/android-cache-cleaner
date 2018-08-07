@@ -2,6 +2,8 @@ package com.frozendevs.cache.cleaner.model;
 
 import android.Manifest;
 import android.app.Service;
+import android.app.usage.StorageStats;
+import android.app.usage.StorageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -17,6 +19,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.StatFs;
+import android.os.storage.StorageManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,6 +32,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import static android.content.pm.PackageManager.GET_META_DATA;
 
 public class CleanerService extends Service {
 
@@ -83,36 +88,69 @@ public class CleanerService extends Service {
 
             publishProgress(0, packages.size());
 
-            final CountDownLatch countDownLatch = new CountDownLatch(packages.size());
 
             final List<AppsListItem> apps = new ArrayList<>();
 
-            try {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                final StorageStatsManager storageStatsManager = (StorageStatsManager) getSystemService(Context.STORAGE_STATS_SERVICE);
+
+                final StorageManager storageManager = (StorageManager) getSystemService(Context.STORAGE_SERVICE);
+
                 for (ApplicationInfo pkg : packages) {
-                    mGetPackageSizeInfoMethod.invoke(getPackageManager(), pkg.packageName,
-                            new IPackageStatsObserver.Stub() {
 
-                                @Override
-                                public void onGetStatsCompleted(PackageStats pStats,
-                                                                boolean succeeded)
-                                        throws RemoteException {
-                                    synchronized (apps) {
-                                        publishProgress(++mAppCount, packages.size());
+                    try {
 
-                                        mCacheSize += addPackage(apps, pStats, succeeded);
-                                    }
+                        ApplicationInfo info = getPackageManager().getApplicationInfo(pkg.packageName, GET_META_DATA);
+                        StorageStats storageStats = storageStatsManager.queryStatsForUid(info.storageUuid, info.uid);
 
-                                    synchronized (countDownLatch) {
-                                        countDownLatch.countDown();
+                        publishProgress(++mAppCount, packages.size());
+                        long cacheSize = storageStats.getCacheBytes();
+                        mCacheSize += cacheSize;
+
+                        try {
+                            PackageManager packageManager = getPackageManager();
+
+                            apps.add(new AppsListItem(pkg.packageName,
+                                    packageManager.getApplicationLabel(info).toString(),
+                                    packageManager.getApplicationIcon(pkg.packageName),
+                                    cacheSize));
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception ignored) {
+                    }
+                }
+            } else {
+                final CountDownLatch countDownLatch = new CountDownLatch(packages.size());
+                try {
+                    for (ApplicationInfo pkg : packages) {
+                        mGetPackageSizeInfoMethod.invoke(getPackageManager(), pkg.packageName,
+                                new IPackageStatsObserver.Stub() {
+
+                                    @Override
+                                    public void onGetStatsCompleted(PackageStats pStats,
+                                                                    boolean succeeded)
+                                            throws RemoteException {
+                                        synchronized (apps) {
+                                            publishProgress(++mAppCount, packages.size());
+
+                                            mCacheSize += addPackage(apps, pStats, succeeded);
+                                        }
+
+                                        synchronized (countDownLatch) {
+                                            countDownLatch.countDown();
+                                        }
                                     }
                                 }
-                            }
-                    );
-                }
+                        );
+                    }
 
-                countDownLatch.await();
-            } catch (InvocationTargetException | InterruptedException | IllegalAccessException e) {
-                e.printStackTrace();
+                    countDownLatch.await();
+                } catch (InvocationTargetException | InterruptedException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
 
             return new ArrayList<>(apps);
@@ -339,8 +377,7 @@ public class CleanerService extends Service {
                 public void onCleanCompleted(Context context, boolean succeeded) {
                     if (succeeded) {
                         Log.d(TAG, "Cache cleaned");
-                    }
-                    else {
+                    } else {
                         Log.e(TAG, "Could not clean the cache");
                     }
 
